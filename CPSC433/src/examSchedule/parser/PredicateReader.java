@@ -85,6 +85,10 @@ public class PredicateReader extends Entity implements PredicateReaderInterface 
 		super(name);
 	}
 	
+	public PredicateReader() {
+		super();
+	}
+	
 	/**
 	 * Copy constructor.
 	 * @param p a PredicateReader to copy.

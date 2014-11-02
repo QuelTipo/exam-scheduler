@@ -1,7 +1,8 @@
-package examSchedule.parser;
+package examSchedule;
 
 import java.util.Vector;
 
+import examSchedule.parser.*;
 import examSchedule.parser.Predicate.ParamType;
 
 public class Environment extends PredicateReader implements ExamSchedulePredicates, EnvironmentInterface {
@@ -276,5 +277,4 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		}
 		return singletonEnv;
 	}
-
 }

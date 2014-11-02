@@ -63,7 +63,7 @@ public class ExamSchedule {
 			}
 			// not a time, so it must be a filename to read a solution to evaluate from...
 			catch (NumberFormatException ex) {
-				env.setCurrentSolution(new Solution(args[1]));
+				env.setCurrentSolution(new TempSolution(args[1]));
 			}
 
 			// if we did something usefull above, print the results...
