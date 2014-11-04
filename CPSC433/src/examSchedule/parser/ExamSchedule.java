@@ -92,7 +92,7 @@ public class ExamSchedule {
 	 */
 	public static void doSearch(final EnvironmentInterface env, final String outFileName, final long timeLimit) {
 		//To be filled in as part of the assignment...
-		System.out.println("No search currently implemented.");
+		env.printDetails();
 	}
 	
 	/**

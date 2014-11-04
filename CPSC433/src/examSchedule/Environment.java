@@ -1,5 +1,6 @@
 package examSchedule;
 
+import java.util.TreeSet;
 import java.util.Vector;
 
 import examSchedule.parser.*;
@@ -8,6 +9,9 @@ import examSchedule.parser.Predicate.ParamType;
 public class Environment extends PredicateReader implements ExamSchedulePredicates, EnvironmentInterface {
 
 	private static EnvironmentInterface singletonEnv;
+	
+	private TreeSet<Student> studentList = new TreeSet<Student>();
+	private TreeSet<Instructor> instructorList = new TreeSet<Instructor>();
 	
 	public Environment(String string) {
 		super(string);
@@ -38,7 +42,13 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 
 	@Override
 	public void a_student(String p) {
-		// TODO Auto-generated method stub
+		
+		Student s = new Student(p);
+		int alreadyIn = findStudent(s);
+		if (alreadyIn > 0) {
+			studentList.add(s);
+		}
+		
 		
 	}
 
@@ -50,7 +60,12 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 
 	@Override
 	public void a_instructor(String p) {
-		// TODO Auto-generated method stub
+		
+		Instructor instructor = new Instructor(p);
+		int alreadyIn = findInstructor(instructor);
+		if (alreadyIn > 0) {
+			instructorList.add(instructor);
+		}
 		
 	}
 
@@ -277,4 +292,39 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		}
 		return singletonEnv;
 	}
+	
+	private int findStudent(Student s) {
+		
+		for (Student nextStudent : studentList) {
+			if (nextStudent.equals(s)) {
+				return 0;
+			}
+		}
+		
+		return 1;
+	}
+	
+	private int findInstructor(Instructor instructor) {
+		
+		for (Instructor nextInstructor : instructorList) {
+			if (nextInstructor.equals(instructor)) {
+				return 0;
+			}
+		}
+		return 1;
+	}
+	
+	public void printDetails() {
+		
+		for (Student s : studentList) {
+			System.out.println(s.toString());
+		}
+		
+		System.out.println();
+		
+		for (Instructor instructor : instructorList) {
+			System.out.println(instructor.toString());
+		}
+	}
+
 }

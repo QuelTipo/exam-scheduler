@@ -17,4 +17,6 @@ public interface EnvironmentInterface extends PredicateReaderInterface {
 	 */
 	public void setCurrentSolution(SolutionInterface currentSolution);
 	
+	public void printDetails();
+	
 }
