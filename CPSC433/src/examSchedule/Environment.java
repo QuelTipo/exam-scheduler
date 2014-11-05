@@ -164,7 +164,7 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 	@Override
 	public void a_session(String s, String r, String d, Long t, Long l) {
 		
-			// Ensure the room exists
+		// Ensure the room exists
 		Room room = f_room(r);
 		if (room ==  null) {
 			room = new Room(r);
@@ -187,8 +187,6 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		else {
 			session.update(room, day, t, l);
 		}
-		
-		
 	}
 
 	@Override
@@ -455,20 +453,43 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 	}
 
 	@Override
-	public void a_enrolled(String student, String c, String l) {
-		// TODO Auto-generated method stub
+	public void a_enrolled(String s, String c, String l) {
+		// Ensure the course exists
+		Course course = f_course(s);
+		if (course == null) {
+			course = new Course(s);
+			courseList.add(course);
+		}
 		
+		// Ensure the lecture exists
+		Lecture lecture = f_lecture(c, l);
+		if (lecture == null) {
+			lecture = new Lecture(course, l);
+			lectureList.add(lecture);
+		}
+		
+		// Ensure the student exists
+		Student student = f_student(s);
+		if (student == null) {
+			student = new Student(s);
+			studentList.add(student);
+		}
+		else {
+			// Add the specified course and lecture to the student
+			if (student.checkForCourse(course, lecture) == false) {
+				student.addCourse(course, lecture);
+			}
+		}
 	}
 
 	@Override
-	public boolean e_enrolled(String student, String c, String l) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean e_enrolled(String s, String c, String l) {
+		return e_student(s);
 	}
 
 	@Override
 	public void a_enrolled(String student, Vector<Pair<ParamType, Object>> list) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 
@@ -491,7 +512,7 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 	}
 
 	@Override
-	public void a_assign(String c, String lec, String session) {
+	public void a_assign(String c, String lec, String s) {
 		// Ensure the course exists
 		Course course = f_course(c);
 		if (course == null) {
@@ -505,10 +526,17 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 			lecture = new Lecture(course, lec);
 			lectureList.add(lecture);
 		}
+		
+		// Ensure the session exists
+		Session session = f_session(s);
+		if (session == null) {
+			session = new Session(s);
+			sessionList.add(session);
+		}
 	}
 
 	@Override
-	public boolean e_assign(String c, String lec, String session) {
+	public boolean e_assign(String c, String lec, String s) {
 		// TODO Auto-generated method stub
 		return false;
 	}
@@ -524,28 +552,7 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		}
 		return singletonEnv;
 	}
-	
-	private int findStudent(Student s) {
-		
-		for (Student nextStudent : studentList) {
-			if (nextStudent.equals(s)) {
-				return 0;
-			}
-		}
-		
-		return 1;
-	}
-	
-	private int findInstructor(Instructor instructor) {
-		
-		for (Instructor nextInstructor : instructorList) {
-			if (nextInstructor.equals(instructor)) {
-				return 0;
-			}
-		}
-		return 1;
-	}
-	
+			
 	public void printDetails() {
 		
 		for (Student s : studentList) {
