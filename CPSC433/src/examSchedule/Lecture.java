@@ -18,11 +18,34 @@ public class Lecture extends Entity {
 		this.length = 0;		
 	}
 
+	public Lecture(Course c, String lec, Instructor ins) {
+		super(c.getName()+lec);
+		this.course = c;
+		this.lecture = lec;
+		this.instructor = ins;
+	}
+	
+	public Lecture(Course c, String lec, long l) {
+		super(c.getName()+lec);
+		this.course = c;
+		this.lecture = lec;
+		this.length = l;
+	}
+
+	
 	public Lecture(Course c, String lec, Instructor ins, long l) {
 		super(c.getName()+lec);
 		this.course = c;
 		this.lecture = lec;
 		this.instructor = ins;
+		this.length = l;
+	}
+	
+	public void update(Instructor ins) {
+		this.instructor = ins;
+	}
+	
+	public void update(long l) {
 		this.length = l;
 	}
 	

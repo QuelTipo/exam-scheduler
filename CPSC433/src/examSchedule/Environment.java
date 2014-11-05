@@ -47,31 +47,34 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 
 	@Override
 	public void a_student(String p) {
-		
-		Student s = new Student(p);
-		int alreadyIn = findStudent(s);
-		if (alreadyIn > 0) {
-			studentList.add(s);
+		Student student = f_student(p);
+		if (student == null) {
+			student = new Student(p);
+			studentList.add(student);
 		}
-		
-		
 	}
 
+	public Student f_student(String p) {
+		for (Student student : studentList) {
+			if (student.getName().equals(p)) {
+				return student;
+			}
+		}
+		return null;
+	}
+	
 	@Override
 	public boolean e_student(String p) {
-		// TODO Auto-generated method stub
-		return false;
+		return f_student(p) != null ? true : false;
 	}
 
 	@Override
 	public void a_instructor(String p) {
-		
-		Instructor instructor = new Instructor(p);
-		int alreadyIn = findInstructor(instructor);
-		if (alreadyIn > 0) {
+		Instructor instructor = f_instructor(p);
+		if (instructor == null) {
+			instructor = new Instructor(p);
 			instructorList.add(instructor);
 		}
-		
 	}
 
 	public Instructor f_instructor(String ins) {
@@ -90,8 +93,11 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 
 	@Override
 	public void a_room(String p) {
-		// TODO Auto-generated method stub
-		
+		Room room = f_room(p);
+		if (room == null) {
+			room = new Room(p);
+			roomList.add(room);
+		}
 	}
 
 	public Room f_room(String r) {
@@ -111,8 +117,11 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 
 	@Override
 	public void a_course(String p) {
-		// TODO Auto-generated method stub
-		
+		Course course = f_course(p);
+		if (course == null) {
+			course = new Course(p);
+			courseList.add(course);
+		}
 	}
 
 	public Course f_course(String p) {
@@ -131,8 +140,6 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 
 	@Override
 	public void a_session(String p) {
-
-	// Ensure the session is there
 		Session session = f_session(p);
 		if (session == null) {
 			session = new Session(p);
@@ -157,30 +164,28 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 	@Override
 	public void a_session(String s, String r, String d, Long t, Long l) {
 		
-		// Ensure the room exists
+			// Ensure the room exists
 		Room room = f_room(r);
 		if (room ==  null) {
 			room = new Room(r);
 			roomList.add(room);
 		}
 		
-		// ...
+		// Ensure the day exists
 		Day day = f_day(d);
 		if (day == null) {
 			day = new Day(d);
 			dayList.add(day);
 		}
 		
-		// Ensure the session is there
+		// Ensure the session exists
 		Session session = f_session(s);
 		if (session == null) {
 			session = new Session(s);
 			sessionList.add(session);
 		}
 		else {
-			if (session.getRoom() == null) {
-				session.update(room, day, t, l);
-			}
+			session.update(room, day, t, l);
 		}
 		
 		
@@ -194,14 +199,25 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 	
 	@Override
 	public void a_day(String p) {
-		// TODO Auto-generated method stub
-		
+		Day day = f_day(p);
+		if (day == null) {
+			day = new Day(p);
+			dayList.add(day);
+		}
 	}
 
+	public Day f_day(String p) {
+		for (Day day : dayList) {
+			if (day.getName().equals(p)) {
+				return day;
+			}
+		}
+		return null;
+	}
+	
 	@Override
 	public boolean e_day(String p) {
-		// TODO Auto-generated method stub
-		return false;
+		return f_day(p) != null ? true : false;
 	}
 
 	@Override
@@ -261,104 +277,181 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		}
 		// So at this point there is a lecture, which we may have to overwrite
 		else {
-			if ((lecture.getInstructor() == null) && (lecture.getLength() == 0)) {
-				lecture.update(instructor, length);
-			}
+			lecture.update(instructor, length);
 		}
 	}
 
 	@Override
 	public void a_instructs(String p, String c, String l) {
-		// TODO Auto-generated method stub
+		// Ensure the instructor exists
+		Instructor instructor = f_instructor(p);
+		if (instructor == null) {
+			instructor = new Instructor(p);
+			instructorList.add(instructor);
+		}
 		
+		// Ensure the course exists
+		Course course = f_course(c);
+		if (course == null) {
+			course = new Course(c);
+			courseList.add(course);
+		}
+		
+		// Ensure the lecture exists
+		Lecture lecture = f_lecture(c, l);
+		if (lecture == null) {
+			lecture = new Lecture(course, l, instructor);
+			lectureList.add(lecture);
+		}
+		else {
+			// Update the instructor
+			lecture.update(instructor);
+		}
 	}
-
+	
 	@Override
 	public boolean e_instructs(String p, String c, String l) {
-		// TODO Auto-generated method stub
-		return false;
+		return f_lecture(c, l) != null ? true : false;
 	}
 
 	@Override
 	public void a_examLength(String c, String lec, Long hours) {
-		// TODO Auto-generated method stub
+		// Ensure the course exists
+		Course course = f_course(c);
+		if (course == null) {
+			course = new Course(c);
+			courseList.add(course);
+		}
+		
+		// Ensure the lecture exists
+		Lecture lecture = f_lecture(c, lec);
+		if (lecture == null) {
+			lecture = new Lecture(course, lec, hours);
+			lectureList.add(lecture);
+		}
+		else {
+			lecture.update(hours);
+		}
 		
 	}
 
 	@Override
 	public boolean e_examLength(String c, String lec, Long hours) {
-		// TODO Auto-generated method stub
-		return false;
+		return f_lecture(c, lec) != null ? true : false;
 	}
 
 	@Override
-	public void a_roomAssign(String p, String room) {
-		// TODO Auto-generated method stub
+	public void a_roomAssign(String p, String r) {
+		// Ensure the room exists
+		Room room = f_room(r);
+		if (room == null) {
+			room = new Room(r);
+			roomList.add(room);
+		}
 		
+		// Ensure the session exists
+		Session session = f_session(p);
+		if (session == null) {
+			session = new Session(p, room);
+			sessionList.add(session);
+		}
+		else {
+			session.update(room);
+		}
 	}
 
 	
 	@Override
-	public boolean e_roomAssign(String p, String room) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean e_roomAssign(String p, String r) {
+		return f_session(p) != null ? true : false;
 	}
 
 	@Override
-	public void a_dayAssign(String p, String day) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	public Day f_day(String d) {
-		for (Day day : dayList) {
-			if (day.getName().equals(d)) {
-				return day;
-			}
+	public void a_dayAssign(String p, String d) {
+		// Ensure the day exists
+		Day day = f_day(d);
+		if (day == null) {
+			day = new Day(d);
+			dayList.add(day);
 		}
-		return null;
+		
+		// Ensure the session exists
+		Session session = f_session(p);
+		if (session == null) {
+			session = new Session(p, day);
+			sessionList.add(session);
+		}
+		else {
+			session.update(day);
+		}
 	}
 	
 	@Override
 	public boolean e_dayAssign(String p, String day) {
-		// TODO Auto-generated method stub
-		return false;
+		return f_session(p) != null ? true : false;
 	}
 
 	@Override
 	public void a_time(String p, Long time) {
-		// TODO Auto-generated method stub
+		// Ensure the session exists
+		Session session = f_session(p);
+		if (session == null) {
+			session = new Session(p, time, true);
+			sessionList.add(session);
+		}
+		else {
+			session.update(time, true);
+		}
 		
 	}
 
 	@Override
 	public boolean e_time(String p, Long time) {
-		// TODO Auto-generated method stub
-		return false;
+		return f_session(p) != null ? true : false;
 	}
 
 	@Override
 	public void a_length(String p, Long length) {
-		// TODO Auto-generated method stub
+		// Ensure the session exists
+		Session session = f_session(p);
+		if (session == null) {
+			session = new Session(p, length, false);
+			sessionList.add(session);
+		}
+		else {
+			session.update(length, false);
+		}
 		
 	}
 
 	@Override
 	public boolean e_length(String p, Long length) {
-		// TODO Auto-generated method stub
-		return false;
+		return f_session(p) != null ? true : false;
 	}
 
 	@Override
-	public void a_at(String session, String day, Long time, Long length) {
-		// TODO Auto-generated method stub
+	public void a_at(String s, String d, Long t, Long l) {
+		// Ensure the day exists
+		Day day = f_day(d);
+		if (day == null) {
+			day = new Day(d);
+			dayList.add(day);
+		}
 		
+		// Ensure the session exists
+		Session session = f_session(s);
+		if (session == null) {
+			session = new Session(s, day, t, l);
+			sessionList.add(session);
+		}
+		else {
+			session.update(day, t, l);
+		}
 	}
 
 	@Override
-	public boolean e_at(String session, String day, Long time, Long length) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean e_at(String s, String d, Long t, Long l) {
+		return f_session(s) != null ? true : false;
 	}
 
 	@Override
@@ -381,20 +474,37 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 
 	@Override
 	public void a_capacity(String r, Long cap) {
-		// TODO Auto-generated method stub
+		Room room = f_room(r);
+		if (room == null) {
+			room = new Room(r, cap);
+			roomList.add(room);
+		}
+		else {
+			room.update(cap);
+		}
 		
 	}
 
 	@Override
 	public boolean e_capacity(String r, Long cap) {
-		// TODO Auto-generated method stub
-		return false;
+		return e_room(r);
 	}
 
 	@Override
 	public void a_assign(String c, String lec, String session) {
-		// TODO Auto-generated method stub
+		// Ensure the course exists
+		Course course = f_course(c);
+		if (course == null) {
+			course = new Course(c);
+			courseList.add(course);
+		}
 		
+		// Ensure the lecture exists
+		Lecture lecture = f_lecture(c, lec);
+		if (lecture == null) {
+			lecture = new Lecture(course, lec);
+			lectureList.add(lecture);
+		}
 	}
 
 	@Override
