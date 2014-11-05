@@ -72,6 +72,6 @@ public class Lecture extends Entity {
 	
 	
 	public String toString() {
-		return "lecture(" + getName() + ")";
+		return "lecture(" + this.course.getName() + "," + getName() + "," + this.instructor.getName() + "," + this.length + ")";
 	}
 }

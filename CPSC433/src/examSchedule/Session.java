@@ -102,6 +102,6 @@ public class Session extends Entity {
 	}
 	
 	public String toString() {
-		return "lecture(" + getName() + ")";
+		return "lecture(" + getName() + "," + this.room.getName() + "," + this.day.getName() + "," + this.time + "," + this.length + ")";
 	}
 }
