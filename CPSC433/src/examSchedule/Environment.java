@@ -17,6 +17,7 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 	private TreeSet<Session> sessionList = new TreeSet<Session>();
 	private TreeSet<Day> dayList = new TreeSet<Day>();
 	private TreeSet<Room> roomList = new TreeSet<Room>();
+	private TreeSet<Assign> assignList = new TreeSet<Assign>();
 	
 	public Environment(String string) {
 		super(string);
@@ -490,7 +491,6 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 	@Override
 	public void a_enrolled(String student, Vector<Pair<ParamType, Object>> list) {
 		
-		
 	}
 
 	@Override
@@ -533,12 +533,27 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 			session = new Session(s);
 			sessionList.add(session);
 		}
+		
+		// Ensure the assignment exists
+		Assign assign = f_assign(c, lec, s);
+		if (assign == null) {
+			assign = new Assign(lecture, session);
+			assignList.add(assign);
+		}
 	}
 
+	public Assign f_assign(String c, String lec, String s) {
+		for (Assign assign : assignList) {
+			if (assign.getName().equals(c+lec+s)) {
+				return assign;
+			}
+		}
+		return null;
+	}
+	
 	@Override
 	public boolean e_assign(String c, String lec, String s) {
-		// TODO Auto-generated method stub
-		return false;
+		return f_assign(c, lec, s) != null ? true : false;
 	}
 	
 	//calls the fromFile() declared in PredicateReader.java
