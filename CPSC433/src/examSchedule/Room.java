@@ -20,6 +20,10 @@ public class Room extends Entity {
 		this.capacity = capacity;
 	}
 	
+	public String getCapacityPredicate() {
+		return "capacity("+getName()+","+capacity+")";
+	}
+	
 	public String toString() {
 		return "room("+getName()+")";
 	}

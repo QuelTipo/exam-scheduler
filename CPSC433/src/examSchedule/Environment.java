@@ -182,11 +182,11 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		// Ensure the session exists
 		Session session = f_session(s);
 		if (session == null) {
-			session = new Session(s);
+			session = new Session(s,room,day,t,l);
 			sessionList.add(session);
 		}
 		else {
-			session.update(room, day, t, l);
+			session.update(room, day, t.longValue(), l.longValue());
 		}
 	}
 
@@ -282,30 +282,35 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 
 	@Override
 	public void a_instructs(String p, String c, String l) {
-		// Ensure the instructor exists
-		Instructor instructor = f_instructor(p);
-		if (instructor == null) {
-			instructor = new Instructor(p);
-			instructorList.add(instructor);
-		}
-		
 		// Ensure the course exists
 		Course course = f_course(c);
 		if (course == null) {
 			course = new Course(c);
 			courseList.add(course);
 		}
-		
+				
 		// Ensure the lecture exists
 		Lecture lecture = f_lecture(c, l);
 		if (lecture == null) {
-			lecture = new Lecture(course, l, instructor);
+			lecture = new Lecture(course, l);
 			lectureList.add(lecture);
 		}
-		else {
-			// Update the instructor
-			lecture.update(instructor);
+				
+		// Ensure the instructor exists
+		Instructor instructor = f_instructor(p);
+		if (instructor == null) {
+			instructor = new Instructor(p);
+			instructorList.add(instructor);
+			instructor.addCourse(course, lecture);
+			
+		} else {
+		// Add the specified course and lecture to the student
+			if (instructor.checkForCourse(course, lecture) == false) {
+				instructor.addCourse(course, lecture);
+			}
 		}
+		
+		lecture.update(instructor);
 	}
 	
 	@Override
@@ -456,9 +461,9 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 	@Override
 	public void a_enrolled(String s, String c, String l) {
 		// Ensure the course exists
-		Course course = f_course(s);
+		Course course = f_course(c);
 		if (course == null) {
-			course = new Course(s);
+			course = new Course(c);
 			courseList.add(course);
 		}
 		
@@ -474,6 +479,7 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		if (student == null) {
 			student = new Student(s);
 			studentList.add(student);
+			student.addCourse(course, lecture);
 		}
 		else {
 			// Add the specified course and lecture to the student
@@ -492,6 +498,7 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 	public void a_enrolled(String student, Vector<Pair<ParamType, Object>> list) {
 		
 	}
+	
 
 	@Override
 	public void a_capacity(String r, Long cap) {
@@ -510,6 +517,7 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 	public boolean e_capacity(String r, Long cap) {
 		return e_room(r);
 	}
+	
 
 	@Override
 	public void a_assign(String c, String lec, String s) {
@@ -579,6 +587,54 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		for (Instructor instructor : instructorList) {
 			System.out.println(instructor.toString());
 		}
-	}
+		
+		System.out.println();
+		
+		for (Day day : dayList) {
+			System.out.println(day.toString());
+		}
+		
+		System.out.println();
+		
+		for (Course course : courseList) {
+			System.out.println(course.toString());
+		}
+		
+		System.out.println();
+		
+		for (Room room : roomList) {
+			System.out.println(room.toString());
+		}
+		
+		System.out.println();
+		
+		for (Lecture lecture : lectureList) {
+			System.out.println(lecture.toString());
+		}
+		
+		for (Student s : studentList) {
+			s.getEnrolledPredicates();
+		}
+		
+		for (Session ses : sessionList) {
+			System.out.println(ses.toString());
+		}
+		
+		for (Room room : roomList) {
+			System.out.println(room.getCapacityPredicate());
+		}
+		
+		for (Instructor instructor : instructorList) {
+			instructor.getInstructsPredicates();
+		}
+		
+		for (Lecture lecture : lectureList) {
+			System.out.println(lecture.getExamLengthPredicate());
+		}
+		
+		for (Session session : sessionList) {
+			System.out.println(session.getAtPredicate());
+		}
+	}	
 
 }

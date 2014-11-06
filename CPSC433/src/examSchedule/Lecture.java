@@ -70,8 +70,12 @@ public class Lecture extends Entity {
 		return this.length;
 	}
 	
+	public String getExamLengthPredicate() {
+		return "examLength("+this.course.getName()+","+getLecture()+","+getLength()+")";
+	}
+	
 	
 	public String toString() {
-		return "lecture(" + this.course.getName() + "," + getName() + "," + this.instructor.getName() + "," + this.length + ")";
+		return "lecture(" + this.course.getName() + "," + getLecture() + "," + this.instructor.getName() + "," + this.length + ")";
 	}
 }

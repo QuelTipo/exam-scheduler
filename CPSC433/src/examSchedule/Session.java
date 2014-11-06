@@ -45,7 +45,7 @@ public class Session extends Entity {
 		
 		this.day = d;
 		this.time = t;
-		this.time = l;
+		this.length = l;
 	}
 	
 	public Session(String s, Room r, Day d, long t, long l) {
@@ -54,7 +54,7 @@ public class Session extends Entity {
 		this.room = r;
 		this.day = d;
 		this.time = t;
-		this.time = l;
+		this.length = l;
 	}
 
 	public void update(Room r) {
@@ -75,14 +75,14 @@ public class Session extends Entity {
 	public void update(Day d, long t, long l) {
 		this.day = d;
 		this.time = t;
-		this.time = l;
+		this.length = l;
 	}
 	
 	public void update(Room r, Day d, long t, long l) {
 		this.room = r;
 		this.day = d;
 		this.time = t;
-		this.time = l;
+		this.length = l;
 	}
 	
 	public Room getRoom() {
@@ -101,7 +101,11 @@ public class Session extends Entity {
 		return this.length;
 	}
 	
+	public String getAtPredicate() {
+		return "at("+getName()+","+day.getName()+","+time+","+length+")";
+	}
+	
 	public String toString() {
-		return "lecture(" + getName() + "," + this.room.getName() + "," + this.day.getName() + "," + this.time + "," + this.length + ")";
+		return "session(" + getName() + "," + this.room.getName() + "," + this.day.getName() + "," + this.time + "," + this.length + ")";
 	}
 }

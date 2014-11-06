@@ -18,6 +18,12 @@ public class Student extends Entity {
 		return "student("+getName()+")";
 	}
 	
+	public void getEnrolledPredicates() {
+		for (Pair<Course, Lecture> pair : this.courses) {
+			System.out.println("enrolled("+getName()+","+pair.getKey().getName()+","+pair.getValue().getLecture()+")");
+		}
+	}
+	
 	public boolean checkForCourse(Course course, Lecture lecture) {
 		for (Pair<Course, Lecture> pair : this.courses) {
 			if ((pair.getKey().getName().equals(course.getName())) && (pair.getValue().getName().equals(lecture.getName()))) {
