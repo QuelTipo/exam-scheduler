@@ -23,7 +23,7 @@ public class Student extends Entity {
 		for (Pair<Course, Lecture> pair : this.courses) {
 			es = es + pair.getKey().getName() + "," + pair.getValue().getLecture() + ",";
 		}
-		es = es.substring(0, es.length() - 1) + "]";
+		es = es.substring(0, es.length() - 1) + "])";
 		return es;
 	}
 	

@@ -507,10 +507,9 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 			
 			String course = coursePair.getValue().toString();
 			String lecture = lecturePair.getValue().toString();
-		
+			
+			a_enrolled(s,course,lecture);
 		}
-		
-		
 		
 		//Vector<String> vec = (Vector<String>)list.get(0).getValue();
 		//for (int i = 0; i < vec.size(); i+=2) {
@@ -663,53 +662,67 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 			details = details + s.toString() + "\n";
 		}
 		
-		System.out.println();
+		details = details + "\n";
 		
 		for (Instructor instructor : instructorList) {
 			details = details + instructor.toString() + "\n";
 		}
 		
-		System.out.println();
+		details = details + "\n";
 		
 		for (Day day : dayList) {
 			details = details + day.toString() + "\n";
 		}
 		
-		System.out.println();
+		details = details + "\n";
 		
 		for (Course course : courseList) {
 			details = details + course.toString() + "\n";
 		}
 		
-		System.out.println();
+		details = details + "\n";
 		
 		for (Room room : roomList) {
 			details = details + room.toString() + "\n";
 		}
+		
+		details = details + "\n";
 				
 		for (Lecture lecture : lectureList) {
 			details = details + lecture.toString() + "\n";
 		}
 		
+		details = details + "\n";
+		
 		for (Student student : studentList) {
 			details = details + student.getEnrolledPredicates() + "\n";
 		}
+		
+		details = details + "\n";
 		
 		for (Session session : sessionList) {
 			details = details + session.toString() + "\n";
 		}
 		
+		details = details + "\n";
+		
 		for (Room room : roomList) {
 			details = details + room.getCapacityPredicate() + "\n";
 		}
 		
+		details = details + "\n";
+		
 		for (Instructor instructor : instructorList) {
-			details = details + instructor.getInstructsPredicates() + "\n";
+			details = details + instructor.getInstructsPredicates();
 		}
+		
+		details = details + "\n";
 		
 		for (Lecture lecture : lectureList) {
 			details = details + lecture.getExamLengthPredicate() + "\n";
 		}
+		
+		details = details + "\n";
 		
 		for (Session session : sessionList) {
 			details = details + session.getAtPredicate() + "\n";
