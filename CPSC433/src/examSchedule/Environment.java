@@ -661,7 +661,7 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		}
 	}	
 	
-	public void getDetails() {
+	public String getDetails() {
 		
 		String details = "";
 		
@@ -697,8 +697,8 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 			details = details + lecture.toString() + "\n";
 		}
 		
-		for (Student s : studentList) {
-			details = details + s.getEnrolledPredicates() + "\n";
+		for (Student student : studentList) {
+			details = details + student.getEnrolledPredicates() + "\n";
 		}
 		
 		for (Session session : sessionList) {
@@ -720,6 +720,8 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		for (Session session : sessionList) {
 			details = details + session.getAtPredicate() + "\n";
 		}
+		
+		return details;
 	}	
 
 }
