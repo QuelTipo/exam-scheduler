@@ -21,7 +21,7 @@ public class Student extends Entity {
 	public String getEnrolledPredicates() {
 		String es = "";
 		for (Pair<Course, Lecture> pair : this.courses) {
-			es = es + "enrolled("+getName()+","+pair.getKey().getName()+","+pair.getValue().getLecture()+")" + ";";
+			es = es + "enrolled("+getName()+","+pair.getKey().getName()+","+pair.getValue().getLecture()+")\n";
 		}
 		return es;
 	}
