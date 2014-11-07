@@ -495,7 +495,15 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 	}
 
 	@Override
-	public void a_enrolled(String student, Vector<Pair<ParamType, Object>> list) {
+	public void a_enrolled(String s, Vector<Pair<ParamType, Object>> list) {
+		// The object part of the pair is the vector courses and lectures
+		// This means the vector should only have 1 pair in it
+		assert(list.size() == 1);
+		
+		Vector<String> vec = (Vector<String>)list.get(0).getValue();
+		for (int i = 0; i < vec.size(); i+=2) {
+			a_enrolled(s, vec.get(i), vec.get(i+1));
+		}
 		
 	}
 	
