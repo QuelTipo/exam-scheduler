@@ -24,10 +24,12 @@ public class Instructor extends Entity {
 		return false;
 	}
 	
-	public void getInstructsPredicates() {
+	public String getInstructsPredicates() {
+		String is = "";
 		for (Pair<Course, Lecture> pair : this.courses) {
-			System.out.println("instructs("+getName()+","+pair.getKey().getName()+","+pair.getValue().getLecture()+")");
+			is = is + "instructs("+getName()+","+pair.getKey().getName()+","+pair.getValue().getLecture()+")";
 		}
+		return is;
 	}
 	
 	public void addCourse(Course course, Lecture lecture) {

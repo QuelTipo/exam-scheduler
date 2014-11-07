@@ -1,6 +1,7 @@
 package examSchedule.parser;
 
 import examSchedule.Environment;
+import java.io.*;
 
 /**
  * This class can function as the main() for your assignment program.  Use it in conjunction
@@ -47,6 +48,21 @@ public class ExamSchedule {
 		if (args.length>0) {
 			fromFile = args[0];
 			env.fromFile(fromFile);
+			
+		    
+		    String output = env.getDetails();
+		    
+		    BufferedWriter writer;
+		    try {
+		      writer = new BufferedWriter(new FileWriter(fromFile+".out"));
+		      writer.write(output);
+		      writer.close();
+		    }
+		    catch (IOException e) {
+		      System.err.println("Failed to write output");
+		      return;
+		    }			
+			
 		}
 		else {
 			System.out.println("Synopsis: ExamSchedule <env-file> [<solution-file>|<time-in-ms>]");

@@ -660,5 +660,66 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 			System.out.println(session.getAtPredicate());
 		}
 	}	
+	
+	public void getDetails() {
+		
+		String details = "";
+		
+		for (Student s : studentList) {
+			details = details + s.toString() + "\n";
+		}
+		
+		System.out.println();
+		
+		for (Instructor instructor : instructorList) {
+			details = details + instructor.toString() + "\n";
+		}
+		
+		System.out.println();
+		
+		for (Day day : dayList) {
+			details = details + day.toString() + "\n";
+		}
+		
+		System.out.println();
+		
+		for (Course course : courseList) {
+			details = details + course.toString() + "\n";
+		}
+		
+		System.out.println();
+		
+		for (Room room : roomList) {
+			details = details + room.toString() + "\n";
+		}
+				
+		for (Lecture lecture : lectureList) {
+			details = details + lecture.toString() + "\n";
+		}
+		
+		for (Student s : studentList) {
+			details = details + s.getEnrolledPredicates() + "\n";
+		}
+		
+		for (Session session : sessionList) {
+			details = details + session.toString() + "\n";
+		}
+		
+		for (Room room : roomList) {
+			details = details + room.getCapacityPredicate() + "\n";
+		}
+		
+		for (Instructor instructor : instructorList) {
+			details = details + instructor.getInstructsPredicates() + "\n";
+		}
+		
+		for (Lecture lecture : lectureList) {
+			details = details + lecture.getExamLengthPredicate() + "\n";
+		}
+		
+		for (Session session : sessionList) {
+			details = details + session.getAtPredicate() + "\n";
+		}
+	}	
 
 }

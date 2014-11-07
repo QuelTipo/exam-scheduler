@@ -19,4 +19,6 @@ public interface EnvironmentInterface extends PredicateReaderInterface {
 	
 	public void printDetails();
 	
+	public String getDetails();
+	
 }
