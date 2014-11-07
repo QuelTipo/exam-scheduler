@@ -19,10 +19,11 @@ public class Student extends Entity {
 	}
 	
 	public String getEnrolledPredicates() {
-		String es = "";
+		String es = "enrolled(" + getName() + ",[";
 		for (Pair<Course, Lecture> pair : this.courses) {
-			es = es + "enrolled("+getName()+","+pair.getKey().getName()+","+pair.getValue().getLecture()+")\n";
+			es = es + pair.getKey().getName() + "," + pair.getValue().getLecture() + ",";
 		}
+		es = es.substring(0, es.length() - 1) + "]";
 		return es;
 	}
 	
