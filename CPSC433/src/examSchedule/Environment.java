@@ -225,8 +225,11 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		// Ensure the course object is there
 		Course course = f_course(c);
 		if (course == null) {
-			course = new Course(c);
+			course = new Course(c, lec);
 			courseList.add(course);
+		}
+		else {
+			course.update(lec);
 		}
 		
 		// Ensure the lecture object is there
@@ -257,8 +260,11 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		// Ensure the course object is there
 		Course course = f_course(c);
 		if (course == null) {
-			course = new Course(c);
+			course = new Course(c, lec);
 			courseList.add(course);
+		}
+		else {
+			course.update(lec);
 		}
 		
 		// Ensure the instructor exists
@@ -285,8 +291,11 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		// Ensure the course exists
 		Course course = f_course(c);
 		if (course == null) {
-			course = new Course(c);
+			course = new Course(c, l);
 			courseList.add(course);
+		}
+		else {
+			course.update(l);
 		}
 				
 		// Ensure the lecture exists
@@ -323,8 +332,11 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		// Ensure the course exists
 		Course course = f_course(c);
 		if (course == null) {
-			course = new Course(c);
+			course = new Course(c, lec);
 			courseList.add(course);
+		}
+		else {
+			course.update(lec);
 		}
 		
 		// Ensure the lecture exists
@@ -463,8 +475,11 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		// Ensure the course exists
 		Course course = f_course(c);
 		if (course == null) {
-			course = new Course(c);
+			course = new Course(c, l);
 			courseList.add(course);
+		}
+		else {
+			course.update(l);
 		}
 		
 		// Ensure the lecture exists
@@ -504,7 +519,6 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		for (int i = 0; i < vec.size(); i+=2) {
 			a_enrolled(s, vec.get(i), vec.get(i+1));
 		}
-		
 	}
 	
 
@@ -518,7 +532,6 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		else {
 			room.update(cap);
 		}
-		
 	}
 
 	@Override
@@ -532,8 +545,11 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		// Ensure the course exists
 		Course course = f_course(c);
 		if (course == null) {
-			course = new Course(c);
+			course = new Course(c, lec);
 			courseList.add(course);
+		}
+		else {
+			course.update(lec);
 		}
 		
 		// Ensure the lecture exists
