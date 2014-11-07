@@ -1,18 +1,18 @@
 package examSchedule;
 
-import java.util.Vector;
+import java.util.TreeSet;
 
 import examSchedule.parser.Entity;
 import examSchedule.parser.Pair;
 
 public class Instructor extends Entity {
 
-	private Vector<Pair<Course, Lecture>> courses;
+	private TreeSet<Pair<Course, Lecture>> courses;
 	
 	public Instructor(String name) {
 		super(name);
 		
-		courses = new Vector<Pair<Course,Lecture>>();
+		courses = new TreeSet<Pair<Course,Lecture>>();
 	}
 	
 	public boolean checkForCourse(Course course, Lecture lecture) {
