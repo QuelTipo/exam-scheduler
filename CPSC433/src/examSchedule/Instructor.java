@@ -27,7 +27,7 @@ public class Instructor extends Entity {
 	public String getInstructsPredicates() {
 		String is = "";
 		for (Pair<Course, Lecture> pair : this.courses) {
-			is = is + "instructs("+getName()+","+pair.getKey().getName()+","+pair.getValue().getLecture()+")";
+			is = is + "instructs("+getName()+","+pair.getKey().getName()+","+pair.getValue().getLecture()+")\n";
 		}
 		return is;
 	}
