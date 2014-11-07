@@ -225,11 +225,8 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		// Ensure the course object is there
 		Course course = f_course(c);
 		if (course == null) {
-			course = new Course(c, lec);
+			course = new Course(c);
 			courseList.add(course);
-		}
-		else {
-			course.update(lec);
 		}
 		
 		// Ensure the lecture object is there
@@ -260,11 +257,8 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		// Ensure the course object is there
 		Course course = f_course(c);
 		if (course == null) {
-			course = new Course(c, lec);
+			course = new Course(c);
 			courseList.add(course);
-		}
-		else {
-			course.update(lec);
 		}
 		
 		// Ensure the instructor exists
@@ -291,11 +285,8 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		// Ensure the course exists
 		Course course = f_course(c);
 		if (course == null) {
-			course = new Course(c, l);
+			course = new Course(c);
 			courseList.add(course);
-		}
-		else {
-			course.update(l);
 		}
 				
 		// Ensure the lecture exists
@@ -332,11 +323,8 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		// Ensure the course exists
 		Course course = f_course(c);
 		if (course == null) {
-			course = new Course(c, lec);
+			course = new Course(c);
 			courseList.add(course);
-		}
-		else {
-			course.update(lec);
 		}
 		
 		// Ensure the lecture exists
@@ -475,11 +463,8 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		// Ensure the course exists
 		Course course = f_course(c);
 		if (course == null) {
-			course = new Course(c, l);
+			course = new Course(c);
 			courseList.add(course);
-		}
-		else {
-			course.update(l);
 		}
 		
 		// Ensure the lecture exists
@@ -545,11 +530,8 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		// Ensure the course exists
 		Course course = f_course(c);
 		if (course == null) {
-			course = new Course(c, lec);
+			course = new Course(c);
 			courseList.add(course);
-		}
-		else {
-			course.update(lec);
 		}
 		
 		// Ensure the lecture exists
