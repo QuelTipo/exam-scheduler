@@ -1,0 +1,15 @@
+1. Dealing with hard and soft contraints
+   -We need a way of determining whether a partial solution conforms to the given hard constraints, and by partial solution I mean we should make this general enough to handle both incomplete and complete solutions
+   -We need a way of measuring the penalty associated with a given partial solution, as well as identify individual assignments or groups of assignments within this partial solution that are greatly increasing the penalty
+   -We need to decide whether we want a PartialSolution class which will contain this functionality, or leave it as a function of the Environment
+
+2. Generation of our inital set of solutions
+   -This will be done via a Or-Tree based search, which will attempt to generate valid, complete solutions without regard to the penalties of said solutions
+
+3. Implement extension rules
+   -Mutation should be fairly simple, given a solution, we select the single assignment contributing the most to the solution's penalty, and change it to something better
+   -Crossover will be more difficult, as we need a way to split each solution into 2 parts and combine them into another valid solution, hopefully with a better penalty
+
+4. Implement kontrol
+   -When applying the extension rules, I suspect we'll get the best bang for our buck if we apply multiple rules every generation via a simple Or-Tree search
+   -We need to ensure that the queue of extension rules to try doesn't get unmanageably large
