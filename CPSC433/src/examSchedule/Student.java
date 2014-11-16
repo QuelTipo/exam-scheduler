@@ -1,17 +1,17 @@
 package examSchedule;
 
-import java.util.Vector;
+import java.util.TreeSet;
 import examSchedule.parser.Entity;
 import examSchedule.parser.Pair;
 
 public class Student extends Entity {
 
-	private Vector<Pair<Course, Lecture>> courses;
+	private TreeSet<Pair<Course, Lecture>> courses;
 	
 	public Student(String name) {
 		super(name);
 		
-		courses = new Vector<Pair<Course, Lecture>>();
+		courses = new TreeSet<Pair<Course, Lecture>>();
 	}
 	
 	public String toString() {
@@ -38,5 +38,9 @@ public class Student extends Entity {
 	
 	public void addCourse(Course course, Lecture lecture) {
 		this.courses.add(new Pair<Course, Lecture>(course, lecture));
+	}
+	
+	public TreeSet<Pair<Course, Lecture>> getCourses() {
+		return courses;
 	}
 }
