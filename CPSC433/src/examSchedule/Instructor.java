@@ -36,6 +36,10 @@ public class Instructor extends Entity {
 		this.courses.add(new Pair<Course, Lecture>(course, lecture));
 	}
 	
+	public TreeSet<Pair<Course, Lecture>> getCourses() {
+		return courses;
+	}
+	
 	public String toString() {
 		return "instructor(" + getName() + ")";
 	}
