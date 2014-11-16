@@ -14,7 +14,13 @@ public class Assign extends Entity {
 		this.session = s;
 	}
 	
+	public Lecture getLecture() {
+		return lecture;
+	}
 	
+	public Session getSession() {
+		return session;
+	}
 	
 	public String toString() {
 		return "assign(" + this.lecture.getCourse().getName() + "," + this.lecture.getLecture() + "," + this.session.getName() + ")";
