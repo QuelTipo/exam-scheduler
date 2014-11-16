@@ -267,6 +267,9 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 			lecture = new Lecture(course, lec);
 			lectureList.add(lecture);
 		}
+		
+		// Add a pointer to the lecture to the course
+		course.addLecture(lecture);
 	}
 
 	public Lecture f_lecture(String c, String lec) {
@@ -310,6 +313,9 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		else {
 			lecture.update(instructor, length);
 		}
+		
+		// Add a pointer to the lecture to the course
+		course.addLecture(lecture);
 	}
 
 	@Override
@@ -335,14 +341,18 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 			instructorList.add(instructor);
 			instructor.addCourse(course, lecture);
 			
-		} else {
-		// Add the specified course and lecture to the student
+		} 
+		else {
+			// Add the specified course and lecture to the student
 			if (instructor.checkForCourse(course, lecture) == false) {
 				instructor.addCourse(course, lecture);
 			}
 		}
 		
 		lecture.update(instructor);
+		
+		// Add a pointer to the lecture to the course
+		course.addLecture(lecture);
 	}
 	
 	@Override
@@ -369,6 +379,8 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 			lecture.update(hours);
 		}
 		
+		// Add a pointer to the lecture to the course
+		course.addLecture(lecture);
 	}
 
 	@Override
@@ -506,6 +518,9 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 			lectureList.add(lecture);
 		}
 		
+		// Add a pointer to the lecture to the course
+		course.addLecture(lecture);
+		
 		// Ensure the student exists
 		Student student = f_student(s);
 		if (student == null) {
@@ -528,12 +543,7 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 
 	@Override
 	public void a_enrolled(String s, Vector<Pair<ParamType, Object>> list) {
-		// The object part of the pair is the vector courses and lectures
-		// This means the vector should only have 1 pair in it
-	
-				
-		int i;
-		for (i = 0; i < list.size(); i=i+2) {
+		for (int i = 0; i < list.size(); i=i+2) {
 			Pair<ParamType,Object> coursePair = list.get(i);
 			Pair<ParamType,Object> lecturePair = list.get(i+1);
 			
@@ -542,11 +552,6 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 			
 			a_enrolled(s,course,lecture);
 		}
-		
-		//Vector<String> vec = (Vector<String>)list.get(0).getValue();
-		//for (int i = 0; i < vec.size(); i+=2) {
-		//	a_enrolled(s, vec.get(i), vec.get(i+1));
-		//}
 	}
 	
 
@@ -583,6 +588,9 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 			lecture = new Lecture(course, lec);
 			lectureList.add(lecture);
 		}
+		
+		// Add a pointer to the lecture to the course
+		course.addLecture(lecture);
 		
 		// Ensure the session exists
 		Session session = f_session(s);
