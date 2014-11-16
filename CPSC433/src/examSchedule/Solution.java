@@ -185,8 +185,33 @@ public class Solution {
 			cumulativePenalty += (collisions * 20);
 		}
 		
-		
 		// Every lecture for the same course should have the same exam timeslot - 50
+		// For every course
+		for (Course course : environment.getCourseList()) {
+			
+			TreeSet<Pair<Day, Integer>> set = new TreeSet<Pair<Day, Integer>>();
+			
+			// And for every lecture that course has
+			for (Lecture lecture : course.getLectures()) {
+				
+				// Search the list of assignment for the matching one
+				for (Assign assign : assignments) {
+					
+					// When we find the assignment
+					if (assign.getName() == lecture.getName()) {
+						
+						// Add the day/time pair for that session to our set
+						Session session = assign.getSession();
+						Pair<Day, Integer> dayTimePair = new Pair<Day, Integer>(session.getDay(), (int)session.getLength());
+						set.add(dayTimePair);
+					}
+				}
+			}
+			
+			// Now we have a set of day/time pairs for the lectures of this course, increment the penalty accordingly
+			cumulativePenalty += ((set.size() - 1) * 50);
+			
+		}
 		
 		// No student writes for longer than 5 hours in a single day - 50
 		
