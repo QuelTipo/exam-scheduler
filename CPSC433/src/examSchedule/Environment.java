@@ -28,6 +28,38 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 
 	}
 
+	public TreeSet<Student> getStudentList() {
+		return studentList;
+	}
+	
+	public TreeSet<Instructor> getInstructorList() {
+		return instructorList;
+	}
+	
+	public TreeSet<Course> getCourseList() {
+		return courseList;
+	}
+	
+	public TreeSet<Lecture> getLectureList() {
+		return lectureList;
+	}
+	
+	public TreeSet<Session> getSessionList() {
+		return sessionList;
+	}
+	
+	public TreeSet<Day> getDayList() {
+		return dayList;
+	}
+	
+	public TreeSet<Room> getRoomList() {
+		return roomList;
+	}
+	
+	public TreeSet<Assign> getFixedAssignments() {
+		return assignList;
+	}
+		
 	@Override
 	public void a_search(String search, String control, Long maxTime) {
 		// TODO Auto-generated method stub
@@ -593,66 +625,6 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		return singletonEnv;
 	}
 			
-	public void printDetails() {
-		
-		for (Student s : studentList) {
-			System.out.println(s.toString());
-		}
-		
-		System.out.println();
-		
-		for (Instructor instructor : instructorList) {
-			System.out.println(instructor.toString());
-		}
-		
-		System.out.println();
-		
-		for (Day day : dayList) {
-			System.out.println(day.toString());
-		}
-		
-		System.out.println();
-		
-		for (Course course : courseList) {
-			System.out.println(course.toString());
-		}
-		
-		System.out.println();
-		
-		for (Room room : roomList) {
-			System.out.println(room.toString());
-		}
-		
-		System.out.println();
-		
-		for (Lecture lecture : lectureList) {
-			System.out.println(lecture.toString());
-		}
-		
-		for (Student s : studentList) {
-			s.getEnrolledPredicates();
-		}
-		
-		for (Session ses : sessionList) {
-			System.out.println(ses.toString());
-		}
-		
-		for (Room room : roomList) {
-			System.out.println(room.getCapacityPredicate());
-		}
-		
-		for (Instructor instructor : instructorList) {
-			instructor.getInstructsPredicates();
-		}
-		
-		for (Lecture lecture : lectureList) {
-			System.out.println(lecture.getExamLengthPredicate());
-		}
-		
-		for (Session session : sessionList) {
-			System.out.println(session.getAtPredicate());
-		}
-	}	
 	
 	public String getDetails() {
 		
