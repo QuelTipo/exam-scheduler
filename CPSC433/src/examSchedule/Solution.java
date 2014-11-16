@@ -1,7 +1,9 @@
 package examSchedule;
 
 import java.util.TreeSet;
+
 import examSchedule.Environment;
+import examSchedule.parser.Pair;
 
 public class Solution {
 	
@@ -11,6 +13,8 @@ public class Solution {
 	private long numLectures;
 	private boolean complete;
 	private TreeSet<Assign> assignments;
+	private long penalty;
+	
 	
 	// Default constructor
 	public Solution(Environment env) {
@@ -19,8 +23,11 @@ public class Solution {
 		numLectures = environment.getLectureList().size();
 		
 		complete = numLectures == assignments.size() ? true : false;
+		
+		penalty = calculatePenalty();
 	}
 		
+	
 	// Add an assignment to a solution
 	public boolean addAssignment(Assign assign) {
 		
@@ -91,6 +98,7 @@ public class Solution {
 		return true;
 	}
 	
+	
 	public boolean isValidSolution(TreeSet<Assign> proposedAssignments) {
 		
 		// Ensure that every lecture is assigned to one exam session
@@ -109,10 +117,97 @@ public class Solution {
 	}
 	
 	
+	public long calculatePenalty() {
+		
+		long cumulativePenalty = 0;
+		
+		// No student writes more than one exam in a timeslot - 100
+		// For every student
+		for (Student student : environment.getStudentList()) {
+
+			TreeSet<Pair<Day, Integer>> set = new TreeSet<Pair<Day, Integer>>();
+			int collisions = 0;
+						
+			// And for every course that that student is enrolled in
+			for (Pair<Course, Lecture> pair : student.getCourses()) {
+				
+				// Search our list of assignments for the course/lecture pair
+				String name = pair.getValue().getName();
+				for (Assign assign : assignments) {
+					
+					// When we find the assignment
+					if (assign.getName() == name) {
+						
+						Session session = assign.getSession();
+						Pair<Day, Integer> dayTimePair = new Pair<Day, Integer>(session.getDay(), (int)session.getLength());
+						
+						// Attempt to add the pair to our set
+						// If we fail to add it, it was already in there, so we increment the collision counter
+						if (set.add(dayTimePair) == false)
+							collisions++;
+					}
+				}
+			}
+			
+			// Now we have the number of collisions for the student, so we increment the penalty accordingly
+			cumulativePenalty += (collisions * 100);
+		}
+		
+		// No instructor invigulates in more than one room at the same time - 20
+		// For every instructor
+		for (Instructor instructor : environment.getInstructorList()) {
+			
+			TreeSet<Pair<Day, Integer>> set = new TreeSet<Pair<Day, Integer>>();
+			int collisions = 0;
+			
+			// And for every course that an instructor is registered to teach
+			for (Pair<Course, Lecture> pair : instructor.getCourses()) {
+				
+				// Search our list of assignment for the course/lecture pair
+				String name = pair.getValue().getName();
+				for (Assign assign : assignments) {
+					
+					// When we find the assignment
+					if (assign.getName() == name) {
+						
+						Session session = assign.getSession();
+						Pair<Day, Integer> dayTimePair = new Pair<Day, Integer>(session.getDay(), (int)session.getLength());
+						
+						// Attempt to add the pair to our set
+						// If we fail to add it, it was already in there, so we increment the collision counter
+						if (set.add(dayTimePair) == false)
+							collisions++;
+					}
+				}
+			}
+			
+			// Now we have the number of collisions for the student, so we increment the penalty accordingly
+			cumulativePenalty += (collisions * 20);
+		}
+		
+		
+		// Every lecture for the same course should have the same exam timeslot - 50
+		
+		// No student writes for longer than 5 hours in a single day - 50
+		
+		// No student should write exams with no break between them - 50
+		
+		// All the exams taking place in a particular session should have the same length - 20
+		
+		// Every exam in a session should take up the full time of the session - 5
+		
+		return cumulativePenalty;
+	}
+	
+	
 	// Return the completeness of a solution
 	public boolean isComplete() {
 		return complete;
 	}
 	
+	
+	public long getPenalty() {
+		return penalty;
+	}
 	
 }
