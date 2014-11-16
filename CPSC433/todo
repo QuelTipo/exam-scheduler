@@ -1,7 +1,5 @@
 1. Dealing with hard and soft contraints
-   -We need a way of determining whether a partial solution conforms to the given hard constraints, and by partial solution I mean we should make this general enough to handle both incomplete and complete solutions
    -We need a way of measuring the penalty associated with a given partial solution, as well as identify individual assignments or groups of assignments within this partial solution that are greatly increasing the penalty
-   -We need to decide whether we want a PartialSolution class which will contain this functionality, or leave it as a function of the Environment
 
 2. Generation of our inital set of solutions
    -This will be done via a Or-Tree based search, which will attempt to generate valid, complete solutions without regard to the penalties of said solutions
@@ -13,3 +11,6 @@
 4. Implement kontrol
    -When applying the extension rules, I suspect we'll get the best bang for our buck if we apply multiple rules every generation via a simple Or-Tree search
    -We need to ensure that the queue of extension rules to try doesn't get unmanageably large
+
+5. Optimizations
+   -The lecture class really should maintain a count of the number of students enrolled in an instance, will make hard constraint checking much more efficient
