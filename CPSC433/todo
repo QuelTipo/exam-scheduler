@@ -14,3 +14,4 @@
 
 5. Optimizations
    -The lecture class really should maintain a count of the number of students enrolled in an instance, will make hard constraint checking much more efficient
+   -Penalty calculation could probably be made much more efficient, i.e. reduce unnecessary tree traversals. This would mean restructuring it a bit
