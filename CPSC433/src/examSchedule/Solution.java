@@ -214,8 +214,74 @@ public class Solution {
 		}
 		
 		// No student writes for longer than 5 hours in a single day - 50
+		// For every day
+		for (Day day : environment.getDayList()) {
+			
+			// For every student
+			for (Student student : environment.getStudentList()) {
+				
+				int totalExamTime = 0;
+				// For every course/lecture pair that student is enrolled in
+				for (Pair<Course, Lecture> pair : student.getCourses()) {
+					
+					Lecture lecture = pair.getValue();					
+					// Now look for the correct assignment
+					for (Assign assign : assignments) {
+						
+						if (assign.equals(lecture.getName()))
+							totalExamTime += lecture.getLength();
+					}
+				}
+				
+				// Check the total exam time for that student on that day
+				if (totalExamTime > 5)
+					cumulativePenalty += 50;
+			}
+		}
+		
 		
 		// No student should write exams with no break between them - 50
+		// For every student
+		for (Student student : environment.getStudentList()) {
+			
+			TreeSet<Assign> set = new TreeSet<Assign>();
+			
+			// For every course/lecture pair they are enrolled in
+			for (Pair<Course, Lecture> pair : student.getCourses()) {
+				
+				Lecture lecture = pair.getValue();					
+				// Find the right assignment
+				for (Assign assign : assignments) {
+					
+					// And add it to the set
+					if (assign.equals(lecture.getName()))
+						set.add(assign);
+				}
+			}
+			
+			// At this point we have the assignments for all the course/lecture pairs
+			// Iterate over the set, making sure an exam doesn't start when another finishes
+			for (Assign a1 : set) {
+				
+				for (Assign a2 : set) {
+				
+					// We don't need to worry if its the same exam
+					if (a1.equals(a2))
+						continue;
+					
+					Lecture l1 = a1.getLecture();
+					Session s1 = a1.getSession();
+					Session s2 = a2.getSession(); 
+					
+					// If the 2 sessions are on the same day
+					if (s1.getDay().equals(s2.getDay()))
+						
+						// If s2 starts when l1 finishes, increase the penalty counter
+						if (s2.getTime() == (s1.getTime() + l1.getLength()))
+							cumulativePenalty += 50;
+				}
+			}
+		}
 		
 		// All the exams taking place in a particular session should have the same length - 20
 		// For every session
