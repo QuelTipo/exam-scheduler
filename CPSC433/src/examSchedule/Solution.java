@@ -163,7 +163,7 @@ public class Solution {
 			// And for every course that an instructor is registered to teach
 			for (Pair<Course, Lecture> pair : instructor.getCourses()) {
 				
-				// Search our list of assignment for the course/lecture pair
+				// Search our list of assignments for the course/lecture pair
 				String name = pair.getValue().getName();
 				for (Assign assign : assignments) {
 					
@@ -218,8 +218,36 @@ public class Solution {
 		// No student should write exams with no break between them - 50
 		
 		// All the exams taking place in a particular session should have the same length - 20
+		// For every session
+		for (Session session : environment.getSessionList()) {
+			
+			TreeSet<Pair<Session, Integer>> set = new TreeSet<Pair<Session, Integer>>();
+			
+			for (Assign assign : assignments) {
+				
+				// If this is the right assignment
+				if (assign.getSession().equals(session)) {
+					
+					int length = (int)assign.getLecture().getLength();
+					Pair<Session, Integer> pair = new Pair<Session, Integer>(session, length);
+					// Attempt to add the session/length pair to our set
+					// If we fail, it was already in there, no worries
+					set.add(pair);
+				}
+			}
+			
+			// Note - they should all be the same length, hence the -1
+			cumulativePenalty += ((set.size() - 1) * 20);
+		}
 		
 		// Every exam in a session should take up the full time of the session - 5
+		// For every assignment
+		for (Assign assign : assignments) {
+			
+			// If the exam is shorter than the session, increase the penalty by 5
+			if (assign.getLecture().getLength() < assign.getSession().getLength())
+				cumulativePenalty += 5;
+		}
 		
 		return cumulativePenalty;
 	}
