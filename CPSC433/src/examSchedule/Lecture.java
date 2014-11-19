@@ -8,6 +8,7 @@ public class Lecture extends Entity {
 	private String lecture;
 	private Instructor instructor;
 	private long length;
+	private long numStudents;
 	
 	public Lecture(Course c, String lec) {
 		super(c.getName()+lec);
@@ -15,7 +16,8 @@ public class Lecture extends Entity {
 		this.course = c;
 		this.lecture = lec;
 		this.instructor = null;
-		this.length = 0;		
+		this.length = 0;	
+		this.numStudents = 0;
 	}
 
 	public Lecture(Course c, String lec, Instructor ins) {
@@ -23,6 +25,7 @@ public class Lecture extends Entity {
 		this.course = c;
 		this.lecture = lec;
 		this.instructor = ins;
+		this.numStudents = 0;
 	}
 	
 	public Lecture(Course c, String lec, long l) {
@@ -30,6 +33,7 @@ public class Lecture extends Entity {
 		this.course = c;
 		this.lecture = lec;
 		this.length = l;
+		this.numStudents = 0;
 	}
 
 	
@@ -39,6 +43,7 @@ public class Lecture extends Entity {
 		this.lecture = lec;
 		this.instructor = ins;
 		this.length = l;
+		this.numStudents = 0;
 	}
 	
 	public void update(Instructor ins) {
@@ -54,6 +59,10 @@ public class Lecture extends Entity {
 		this.length = l;
 	}
 
+	public void addStudent() {
+		this.numStudents++;
+	}
+	
 	public Course getCourse() {
 		return this.course;
 	}
@@ -68,6 +77,10 @@ public class Lecture extends Entity {
 	
 	public long getLength() {
 		return this.length;
+	}
+	
+	public long getNumStudents() {
+		return this.numStudents;
 	}
 	
 	public String getExamLengthPredicate() {

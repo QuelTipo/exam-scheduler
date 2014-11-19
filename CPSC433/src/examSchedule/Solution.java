@@ -82,12 +82,7 @@ public class Solution {
 			long numStudents = 0;
 			for (Assign assign : proposedAssignments) {
 				if (assign.getSession().getRoom() == room) {
-					// This can be optimized - we'll need to maintain a count of the number of students taking a given lecture
-					Lecture lecture = assign.getLecture();
-					for (Student student : environment.getStudentList()) {
-						if (student.checkForCourse(lecture.getCourse(), lecture))
-							numStudents++;
-					}
+					numStudents += assign.getLecture().getNumStudents();
 				}
 			}
 			if (numStudents > room.getCapacity())

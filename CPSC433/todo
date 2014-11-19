@@ -10,5 +10,4 @@
    -We need to ensure that the queue of extension rules to try doesn't get unmanageably large
 
 4. Optimizations
-   -The lecture class really should maintain a count of the number of students enrolled in an instance, will make hard constraint checking much more efficient
    -Penalty calculation could probably be made much more efficient. At the moment we’re calculating each penalty on it’s own, we could probably combine at least a couple of them and remove a couple of tree traversals. Also, having a way to search for an assignment in a treeset would be handy and make things a lot more efficient.
