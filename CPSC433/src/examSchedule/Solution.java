@@ -34,39 +34,47 @@ public class Solution {
 		// Create a new tree set of assignments
 		TreeSet<Assign> proposedAssignments = assignments;
 		proposedAssignments.add(assign);
-		
-		// If it is not a valid partial solution, return false
-		if (isValidPartialSolution(proposedAssignments) == false) 
-			return false;
-		
-		// If it is of size numLectures 
-		if (proposedAssignments.size() == numLectures) {
 				
-			// AND is not a valid complete solution, return false
-			if (isValidSolution(proposedAssignments) == false) 
+		// If the proposed solution is a partial solution
+		if (proposedAssignments.size() < numLectures) {
+			// Then return false if it is invalid
+			if (isValidSolution(proposedAssignments, false) == false)
+				return false;
+		}
+		// Otherwise it should be a complete solution
+		else {
+			// Return false is it is invalid
+			if (isValidSolution(proposedAssignments, true) == false)
 				return false;
 		}
 
-		// If we've gotten to here, we know we're dealing with at the very least, a valid partial solution
+		// If we've gotten to here, we know we're dealing with at least a valid partial solution
 		// Update our tree set of assignments and return; 
 		assignments = proposedAssignments;
-		complete = numLectures == assignments.size() ? true : false;
+		complete = assignments.size() == numLectures;
 		return true;
 	}
 	
 	
-	// Ensure the solution is a valid partial solution
-	public boolean isValidPartialSolution(TreeSet<Assign> proposedAssignments) {
+	// Ensure the solution is a valid solution, partial or complete
+	public boolean isValidSolution(TreeSet<Assign> proposedAssignments, boolean complete) {
 		
-		// Ensure no lecture is assigned to more than one exam session
 		for (Lecture lecture : environment.getLectureList()) {
 			int numAssigns = 0;
 			for (Assign assign : proposedAssignments) {
 				if (assign.getLecture().equals(lecture))
 					numAssigns++;
 			}
-			if (numAssigns > 1)
-				return false;
+			// In the case of a partial solution, ensure no lecture is assigned to more than one exam session
+			if (complete) {
+				if (numAssigns != 1)
+					return false;
+			}
+			// In the case of a complete solution, ensure that every lecture is assigned exactly once
+			else {
+				if (numAssigns > 1)
+					return false;
+			}
 		}
 		
 		// Ensure that the number of students writing an exam in any room is less than or equal to the capacity of that room
@@ -97,25 +105,7 @@ public class Solution {
 		// If we reach here, we're dealing with a valid partial solution
 		return true;
 	}
-	
-	
-	public boolean isValidSolution(TreeSet<Assign> proposedAssignments) {
 		
-		// Ensure that every lecture is assigned to one exam session
-		for (Lecture lecture : environment.getLectureList()) {
-			int numAssigns = 0;			
-			for (Assign assign : proposedAssignments) {
-				if (assign.getLecture() .equals(lecture))
-					numAssigns++;
-			}
-			if (numAssigns > 1)
-				return false;
-		}
-		
-		// If we reach here, we've got a valid, complete solution
-		return true;
-	}
-	
 	
 	public long calculatePenalty() {
 		
