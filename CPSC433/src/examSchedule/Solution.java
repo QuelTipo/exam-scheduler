@@ -4,8 +4,9 @@ import java.util.TreeSet;
 
 import examSchedule.Environment;
 import examSchedule.parser.Pair;
+import examSchedule.parser.SolutionInterface;
 
-public class Solution {
+public class Solution implements SolutionInterface {
 	
 	// A pointer to our global environment, necessary for hard and soft constraint checking
 	private Environment environment;
@@ -85,7 +86,7 @@ public class Solution {
 					numStudents += assign.getLecture().getNumStudents();
 				}
 			}
-			if (numStudents > room.getCapacity())
+			if (!room.canHold(numStudents))
 				return false;
 		}
 		
@@ -312,6 +313,27 @@ public class Solution {
 	
 	public long getPenalty() {
 		return penalty;
+	}
+
+
+	@Override
+	public boolean isSolved() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public boolean hasViolations() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
+	public int getGoodness() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 	
 }
