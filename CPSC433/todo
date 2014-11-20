@@ -1,13 +1,16 @@
 1. Generation of our inital set of solutions
    -This will be done via a Or-Tree based search, which will attempt to generate valid, complete solutions without regard to the penalties of said solutions
+   -To ensure that we have a good variety of starting solutions, we should generate them randomly, that is begin with our fixed assignments, and then for each unassigned lecture, attempt to place it in a random session, until we have a complete soltion
 
 2. Implement extension rules
-   -Mutation should be fairly simple, given a solution, we select the single assignment contributing the most to the solution's penalty, and change it to something better
-   -Crossover will be more difficult, as we need a way to split each solution into 2 parts and combine them into another valid solution, hopefully with a better penalty
+   -This section is going to require a modification to how we determine the penalty for a given solution. We need to do it in such a way that we can generate a mapping of assignments to component penalties, so we can rank the goodness of each assignment. This shouldn’t be very difficult, we just need to reorganize how we’re currently doing the penalty assessment
+   -For mutation, we just choose the worst n assignments for a solution, unassign them, and then do an or tree search to reassign them, guaranteeing that we get the best reassignment of those n lectures. This will be a method of the solution class
+   -For combination, we obviously want more assignments from the better solution than the less good solution, so we determine a ratio based on the difference between the penalties of the 2 solutions, take the best n assignments from the better solution, and then complete the solution by adding in assignments from the less good solution one at a time. If we are unable to complete the solution like this, and this in’t hard to imagine, then we simply do an or tree search to complete the rest, random or intelligent depending on how many assignments we have left. Once again, this should be a method of Solution. 
 
 3. Implement kontrol
-   -When applying the extension rules, I suspect we'll get the best bang for our buck if we apply multiple rules every generation via a simple Or-Tree search
-   -We need to ensure that the queue of extension rules to try doesn't get unmanageably large
+   -When applying the extension rules, I suspect we'll get the best bang for our buck if we apply multiple rules every generation via a simple Or-Tree search, allowing us to balance short term loss with long term gain
+   -We need to ensure that the queue of extension rules to try doesn't get unmanageably large, not sure how much of an issue this will be though
+   -I suspect we’ll need a search class that will implement this stuff
 
 4. Optimizations
-   -Penalty calculation could probably be made much more efficient. At the moment we’re calculating each penalty on it’s own, we could probably combine at least a couple of them and remove a couple of tree traversals. Also, having a way to search for an assignment in a treeset would be handy and make things a lot more efficient.
+   -Penalty calculation could be made more efficient, but remember we need to do it in a way that we can map assignments to their associated penalties.
