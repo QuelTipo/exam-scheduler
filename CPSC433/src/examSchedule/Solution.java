@@ -347,4 +347,8 @@ public class Solution implements SolutionInterface {
 		return 0;
 	}
 	
+	public TreeSet<Lecture> getUnassignedLectures() {
+		return unassignedLectures;
+	}
+	
 }
