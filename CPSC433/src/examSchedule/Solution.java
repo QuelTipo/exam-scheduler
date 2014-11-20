@@ -15,7 +15,7 @@ public class Solution implements SolutionInterface {
 	private boolean complete;
 	private TreeSet<Assign> assignments;
 	private long penalty;
-	private TreeSet<Lecture> unassignedLectures;
+	
 	
 	// Default constructor
 	public Solution(Environment env) {
@@ -26,16 +26,6 @@ public class Solution implements SolutionInterface {
 		complete = numLectures == assignments.size() ? true : false;
 		
 		penalty = calculatePenalty();
-		
-		// Our inital list of unassigned lectures will contain every lecture
-		unassignedLectures = environment.getLectureList();
-		// Now we'll remove the lectures which are assigned
-		for (Assign assign : assignments) {
-			Lecture lecture = assign.getLecture();
-			if (unassignedLectures.contains(lecture))
-				unassignedLectures.remove(lecture);
-		}
-		
 	}
 		
 	
@@ -63,7 +53,6 @@ public class Solution implements SolutionInterface {
 		// Update our tree set of assignments and return; 
 		assignments = proposedAssignments;
 		complete = assignments.size() == numLectures;
-		unassignedLectures.remove(assign.getLecture());
 		return true;
 	}
 	
