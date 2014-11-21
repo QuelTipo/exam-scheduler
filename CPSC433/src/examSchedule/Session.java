@@ -1,6 +1,7 @@
 package examSchedule;
 
 import examSchedule.parser.Entity;
+import java.util.Vector;
 
 public class Session extends Entity {
 
@@ -9,6 +10,8 @@ public class Session extends Entity {
 	private long time;
 	private long length;
 	
+	private Vector<Lecture> lectures;
+	
 	public Session(String s) {
 		super(s);
 				
@@ -16,6 +19,8 @@ public class Session extends Entity {
 		this.day = null;
 		this.time = 0;
 		this.length = 0;
+		
+		this.lectures = new Vector<Lecture>();
 	}
 
 	public Session(String s, Room r) {
@@ -85,6 +90,10 @@ public class Session extends Entity {
 		this.length = l;
 	}
 	
+	public void addLecture(Lecture lec) {
+		this.lectures.add(lec);
+	}
+	
 	public Room getRoom() {
 		return this.room;
 	}
@@ -99,6 +108,10 @@ public class Session extends Entity {
 	
 	public long getLength() {
 		return this.length;
+	}
+	
+	public Vector<Lecture> getLectures() {
+		return lectures;
 	}
 	
 	public String getAtPredicate() {
