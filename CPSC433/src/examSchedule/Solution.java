@@ -94,7 +94,7 @@ public class Solution implements SolutionInterface {
 			long numStudents = 0;
 			for (Assign assign : proposedAssignments) {
 				if (assign.getSession().getRoom() == room) {
-					numStudents += assign.getLecture().getNumStudents();
+					numStudents += assign.getLecture().getStudents().size();
 				}
 			}
 			if (!room.canHold(numStudents))

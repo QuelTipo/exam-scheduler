@@ -1,6 +1,7 @@
 package examSchedule;
 
 import examSchedule.parser.Entity;
+import java.util.Vector;
 
 public class Lecture extends Entity {
 
@@ -8,7 +9,8 @@ public class Lecture extends Entity {
 	private String lecture;
 	private Instructor instructor;
 	private long length;
-	private long numStudents;
+	
+	private Vector<Student> students;
 	
 	public Lecture(Course c, String lec) {
 		super(c.getName()+lec);
@@ -17,7 +19,8 @@ public class Lecture extends Entity {
 		this.lecture = lec;
 		this.instructor = null;
 		this.length = 0;	
-		this.numStudents = 0;
+		
+		this.students = new Vector<Student>();
 	}
 
 	public Lecture(Course c, String lec, Instructor ins) {
@@ -25,7 +28,8 @@ public class Lecture extends Entity {
 		this.course = c;
 		this.lecture = lec;
 		this.instructor = ins;
-		this.numStudents = 0;
+		
+		this.students = new Vector<Student>();
 	}
 	
 	public Lecture(Course c, String lec, long l) {
@@ -33,7 +37,8 @@ public class Lecture extends Entity {
 		this.course = c;
 		this.lecture = lec;
 		this.length = l;
-		this.numStudents = 0;
+		
+		this.students = new Vector<Student>();
 	}
 
 	
@@ -43,7 +48,8 @@ public class Lecture extends Entity {
 		this.lecture = lec;
 		this.instructor = ins;
 		this.length = l;
-		this.numStudents = 0;
+		
+		this.students = new Vector<Student>();
 	}
 	
 	public void update(Instructor ins) {
@@ -59,8 +65,8 @@ public class Lecture extends Entity {
 		this.length = l;
 	}
 
-	public void addStudent() {
-		this.numStudents++;
+	public void addStudent(Student student) {
+		this.students.add(student);
 	}
 	
 	public Course getCourse() {
@@ -79,8 +85,8 @@ public class Lecture extends Entity {
 		return this.length;
 	}
 	
-	public long getNumStudents() {
-		return this.numStudents;
+	public Vector<Student> getStudents() {
+		return this.students;
 	}
 	
 	public String getExamLengthPredicate() {

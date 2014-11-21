@@ -536,7 +536,7 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		}
 		
 		// Increment the course's enrolled student count
-		lecture.addStudent();
+		lecture.addStudent(student);
 	}
 
 	@Override
