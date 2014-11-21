@@ -495,6 +495,9 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		else {
 			session.update(day, t, l);
 		}
+		
+		// Add a pointer to the session to the day
+		day.addSession(session);
 	}
 
 	@Override
