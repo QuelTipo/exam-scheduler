@@ -1,6 +1,9 @@
 package examSchedule;
 
 import java.util.TreeSet;
+import java.util.Vector;
+import java.util.Map;
+import java.util.HashMap;
 
 import examSchedule.Environment;
 import examSchedule.parser.Pair;
@@ -117,69 +120,76 @@ public class Solution implements SolutionInterface {
 	public long calculatePenalty() {
 		
 		long cumulativePenalty = 0;
-		
-		// No student writes more than one exam in a timeslot - 100
-		// For every student
-		for (Student student : environment.getStudentList()) {
 
-			TreeSet<Pair<Day, Integer>> set = new TreeSet<Pair<Day, Integer>>();
-			int collisions = 0;
-						
-			// And for every course that that student is enrolled in
-			for (Pair<Course, Lecture> pair : student.getCourses()) {
-				
-				// Search our list of assignments for the course/lecture pair
-				String name = pair.getValue().getName();
-				for (Assign assign : assignments) {
-					
-					// When we find the assignment
-					if (assign.getName() == name) {
-						
-						Session session = assign.getSession();
-						Pair<Day, Integer> dayTimePair = new Pair<Day, Integer>(session.getDay(), (int)session.getLength());
-						
-						// Attempt to add the pair to our set
-						// If we fail to add it, it was already in there, so we increment the collision counter
-						if (set.add(dayTimePair) == false)
-							collisions++;
-					}
-				}
-			}
-			
-			// Now we have the number of collisions for the student, so we increment the penalty accordingly
-			cumulativePenalty += (collisions * 100);
-		}
-		
+		// Iterate over every assignment
+		// No student writes more than one exam in a timeslot - 100
 		// No instructor invigulates in more than one room at the same time - 20
-		// For every instructor
-		for (Instructor instructor : environment.getInstructorList()) {
+		// No student should write exams with no break between them - 50 
+		// Every exam in a session should take up the full time of the session - 5
+		for (Assign assign : assignments) {
 			
-			TreeSet<Pair<Day, Integer>> set = new TreeSet<Pair<Day, Integer>>();
-			int collisions = 0;
+			Lecture l1 = assign.getLecture();
+			Session s1 = assign.getSession();
+			Day d1 = s1.getDay();
 			
-			// And for every course that an instructor is registered to teach
-			for (Pair<Course, Lecture> pair : instructor.getCourses()) {
+			// Iterate over all the sessions also on the given day
+			for (Session s2 : d1.getSessions()) {
 				
-				// Search our list of assignments for the course/lecture pair
-				String name = pair.getValue().getName();
-				for (Assign assign : assignments) {
+				// Iterate over all the lectures scheduled on the given session
+				for (Lecture l2 : s2.getLectures()) {
 					
-					// When we find the assignment
-					if (assign.getName() == name) {
+					// Obviously we don't need to worry about a lecture conflicting with itself
+					if (l1.equals(l2))
+						continue;
+					
+					long t1 = s1.getTime();
+					long t2 = s2.getTime();
+					
+					// As per the specifications, we are only interested when t1 < t2
+					if (t1 <= t2) {
 						
-						Session session = assign.getSession();
-						Pair<Day, Integer> dayTimePair = new Pair<Day, Integer>(session.getDay(), (int)session.getLength());
+						// Now check if the lectures overlap
+						if (t1 + l1.getLength() > t2) {
+							
+							// Now we know we have a pair of lectures which overlap, check to see if there are students in both lectures
+							for (Student st1 : l1.getStudents()) {
+								
+								for (Student st2 : l2.getStudents()) {
+									
+									// If they are the same student, increase the penalty accordingly
+									if (st1.equals(st2))
+										cumulativePenalty += 100;
+								}
+							}
+							
+							// Also check if the both courses have the same instructor and the lectures are in different sessions
+							Instructor i1 = l1.getInstructor();
+							Instructor i2 = l2.getInstructor();
+							if (i1.equals(i2) && !s1.equals(s2))
+								cumulativePenalty += 20;
+						}
 						
-						// Attempt to add the pair to our set
-						// If we fail to add it, it was already in there, so we increment the collision counter
-						if (set.add(dayTimePair) == false)
-							collisions++;
+						// Now check if the lectures are back to back
+						else if (t1 + l1.getLength() == t2) {
+							
+							// Check to see if there are students in both lectures
+							for (Student st1 : l1.getStudents()) {
+								
+								for (Student st2 : l2.getStudents()) {
+									
+									// If they are the same student, increase the penalty accordingly
+									if (st1.equals(st2))
+										cumulativePenalty += 50;
+								}
+							}
+						}
 					}
 				}
 			}
 			
-			// Now we have the number of collisions for the student, so we increment the penalty accordingly
-			cumulativePenalty += (collisions * 20);
+			// Make sure every assignment is a tight fit
+			if (l1.getLength() < s1.getLength())
+				cumulativePenalty += 5;
 		}
 		
 		// Every lecture for the same course should have the same exam timeslot - 50
@@ -206,7 +216,9 @@ public class Solution implements SolutionInterface {
 			}
 			
 			// Now we have a set of day/time pairs for the lectures of this course, increment the penalty accordingly
-			cumulativePenalty += ((set.size() - 1) * 50);
+			int numTimeSlots = set.size();
+			if (numTimeSlots > 1)
+				cumulativePenalty += ((numTimeSlots - 1) * 50);
 			
 		}
 		
@@ -225,7 +237,8 @@ public class Solution implements SolutionInterface {
 					// Now look for the correct assignment
 					for (Assign assign : assignments) {
 						
-						if (assign.equals(lecture.getName()))
+						Session session = assign.getSession();
+						if (assign.equals(lecture.getName()) && session.getDay().equals(day))
 							totalExamTime += lecture.getLength();
 					}
 				}
@@ -236,85 +249,27 @@ public class Solution implements SolutionInterface {
 			}
 		}
 		
-		
-		// No student should write exams with no break between them - 50
-		// For every student
-		for (Student student : environment.getStudentList()) {
-			
-			TreeSet<Assign> set = new TreeSet<Assign>();
-			
-			// For every course/lecture pair they are enrolled in
-			for (Pair<Course, Lecture> pair : student.getCourses()) {
-				
-				Lecture lecture = pair.getValue();					
-				// Find the right assignment
-				for (Assign assign : assignments) {
-					
-					// And add it to the set
-					if (assign.equals(lecture.getName()))
-						set.add(assign);
-				}
-			}
-			
-			// At this point we have the assignments for all the course/lecture pairs
-			// Iterate over the set, making sure an exam doesn't start when another finishes
-			for (Assign a1 : set) {
-				
-				for (Assign a2 : set) {
-				
-					// We don't need to worry if its the same exam
-					if (a1.equals(a2))
-						continue;
-					
-					Lecture l1 = a1.getLecture();
-					Session s1 = a1.getSession();
-					Session s2 = a2.getSession(); 
-					
-					// If the 2 sessions are on the same day
-					if (s1.getDay().equals(s2.getDay()))
-						
-						// If s2 starts when l1 finishes, increase the penalty counter
-						if (s2.getTime() == (s1.getTime() + l1.getLength()))
-							cumulativePenalty += 50;
-				}
-			}
-		}
-		
 		// All the exams taking place in a particular session should have the same length - 20
-		// For every session
+		// Iterate over every session
 		for (Session session : environment.getSessionList()) {
 			
-			TreeSet<Pair<Session, Integer>> set = new TreeSet<Pair<Session, Integer>>();
+			TreeSet<Integer> lengths = new TreeSet<Integer>(); 
 			
-			for (Assign assign : assignments) {
+			// Iterate over every lecture assigned to the session
+			for (Lecture lecture : session.getLectures()) {
 				
-				// If this is the right assignment
-				if (assign.getSession().equals(session)) {
-					
-					int length = (int)assign.getLecture().getLength();
-					Pair<Session, Integer> pair = new Pair<Session, Integer>(session, length);
-					// Attempt to add the session/length pair to our set
-					// If we fail, it was already in there, no worries
-					set.add(pair);
-				}
+				// Add the length to our set of lengths
+				lengths.add((int)lecture.getLength());
 			}
 			
-			// Note - they should all be the same length, hence the -1
-			cumulativePenalty += ((set.size() - 1) * 20);
-		}
-		
-		// Every exam in a session should take up the full time of the session - 5
-		// For every assignment
-		for (Assign assign : assignments) {
-			
-			// If the exam is shorter than the session, increase the penalty by 5
-			if (assign.getLecture().getLength() < assign.getSession().getLength())
-				cumulativePenalty += 5;
+			int numLengths = lengths.size();
+			if (numLengths > 1)
+				cumulativePenalty += ((numLengths - 1) * 20);
 		}
 		
 		return cumulativePenalty;
 	}
-	
+		
 	
 	// Return the completeness of a solution
 	public boolean isComplete() {
