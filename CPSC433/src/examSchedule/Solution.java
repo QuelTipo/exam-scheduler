@@ -71,6 +71,18 @@ public class Solution implements SolutionInterface {
 	}
 	
 	
+	public void removeAssignment(Assign assign) {
+		
+		// We need to remove the link
+		Lecture lecture = assign.getLecture();
+		Session session = assign.getSession();
+		session.removeLecture(lecture);
+		
+		// Now we remove the assignment from our set of assignments
+		assignments.remove(assign);
+	}
+	
+	
 	// Ensure the solution is a valid solution, partial or complete
 	public boolean isValidSolution(TreeSet<Assign> proposedAssignments, boolean complete) {
 		

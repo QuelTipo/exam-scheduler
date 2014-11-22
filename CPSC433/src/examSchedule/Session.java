@@ -1,7 +1,7 @@
 package examSchedule;
 
 import examSchedule.parser.Entity;
-import java.util.Vector;
+import java.util.TreeSet;
 
 public class Session extends Entity {
 
@@ -10,7 +10,7 @@ public class Session extends Entity {
 	private long time;
 	private long length;
 	
-	private Vector<Lecture> lectures;
+	private TreeSet<Lecture> lectures;
 	
 	public Session(String s) {
 		super(s);
@@ -20,7 +20,7 @@ public class Session extends Entity {
 		this.time = 0;
 		this.length = 0;
 		
-		this.lectures = new Vector<Lecture>();
+		this.lectures = new TreeSet<Lecture>();
 	}
 
 	public Session(String s, Room r) {
@@ -94,6 +94,10 @@ public class Session extends Entity {
 		this.lectures.add(lec);
 	}
 	
+	public void removeLecture(Lecture lec) {
+		this.lectures.remove(lec);
+	}
+	
 	public Room getRoom() {
 		return this.room;
 	}
@@ -110,7 +114,7 @@ public class Session extends Entity {
 		return this.length;
 	}
 	
-	public Vector<Lecture> getLectures() {
+	public TreeSet<Lecture> getLectures() {
 		return lectures;
 	}
 	
