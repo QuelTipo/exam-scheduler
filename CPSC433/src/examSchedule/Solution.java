@@ -238,29 +238,35 @@ public class Solution implements SolutionInterface {
 		// For every day
 		for (Day day : environment.getDayList()) {
 			
-			// For every student
-			for (Student student : environment.getStudentList()) {
+			Map<Student, Integer> writingTimes = new HashMap<Student, Integer>();
+			
+			// And every session on that day
+			for (Session session : day.getSessions()) {
 				
-				int totalExamTime = 0;
-				// For every course/lecture pair that student is enrolled in
-				for (Pair<Course, Lecture> pair : student.getCourses()) {
+				// And every lecture in that session
+				for (Lecture lecture : session.getLectures()) {
 					
-					Lecture lecture = pair.getValue();					
-					// Now look for the correct assignment
-					for (Assign assign : assignments) {
+					int lectureLength = (int)lecture.getLength();
+					
+					// And every student in that lecture
+					for (Student student : lecture.getStudents()) {
 						
-						Session session = assign.getSession();
-						if (assign.equals(lecture.getName()) && session.getDay().equals(day))
-							totalExamTime += lecture.getLength();
+						// If the student is already in te map, then we need to get the current value
+						int value = writingTimes.containsKey(student) ? writingTimes.get(student) : 0;
+						// Now update the map
+						writingTimes.put(student, value + lectureLength);
 					}
 				}
-				
-				// Check the total exam time for that student on that day
-				if (totalExamTime > 5)
+			}
+			
+			// Now iterate over the map, looking for values greater than 5
+			Vector<Integer> times = (Vector<Integer>)writingTimes.values();
+			for (int time : times) {
+				if (time > 5)
 					cumulativePenalty += 50;
 			}
 		}
-		
+				
 		// All the exams taking place in a particular session should have the same length - 20
 		// Iterate over every session
 		for (Session session : environment.getSessionList()) {
@@ -282,7 +288,7 @@ public class Solution implements SolutionInterface {
 		return cumulativePenalty;
 	}
 		
-	
+		
 	// Return the completeness of a solution
 	public boolean isComplete() {
 		return complete;
