@@ -19,6 +19,7 @@ public class Solution implements SolutionInterface {
 	private TreeSet<Assign> assignments;
 	private long penalty;
 	private TreeSet<Lecture> unassignedLectures;
+	private Map<Assign, TreeSet<String>> conflictingAssignments;
 	
 	// Default constructor
 	public Solution(Environment env) {
@@ -131,6 +132,13 @@ public class Solution implements SolutionInterface {
 	
 	public long calculatePenalty() {
 		
+		// Our map of assignments to conflicting assignment names
+		Map<Assign, TreeSet<String>> conflictMap = new HashMap<Assign, TreeSet<String>>();
+		// Initialize it with default values
+		for (Assign assign : assignments) {
+			conflictMap.put(assign, new TreeSet<String>());
+		}
+		
 		long cumulativePenalty = 0;
 
 		// Iterate over every assignment
@@ -139,7 +147,7 @@ public class Solution implements SolutionInterface {
 		// No student should write exams with no break between them - 50 
 		// Every exam in a session should take up the full time of the session - 5
 		for (Assign assign : assignments) {
-			
+						
 			Lecture l1 = assign.getLecture();
 			Session s1 = assign.getSession();
 			Day d1 = s1.getDay();
@@ -168,17 +176,25 @@ public class Solution implements SolutionInterface {
 								
 								for (Student st2 : l2.getStudents()) {
 									
-									// If they are the same student, increase the penalty accordingly
-									if (st1.equals(st2))
+									// If they are the same student, increase the penalty accordingly, and update our conflict map
+									if (st1.equals(st2)) {
 										cumulativePenalty += 100;
+										TreeSet<String> conflicts = conflictMap.get(assign);
+										conflicts.add(l2.getName() + s2.getName());
+										conflictMap.put(assign, conflicts);
+									}
 								}
 							}
 							
 							// Also check if the both courses have the same instructor and the lectures are in different sessions
 							Instructor i1 = l1.getInstructor();
 							Instructor i2 = l2.getInstructor();
-							if (i1.equals(i2) && !s1.equals(s2))
+							if (i1.equals(i2) && !s1.equals(s2)) {
 								cumulativePenalty += 20;
+								TreeSet<String> conflicts = conflictMap.get(assign);
+								conflicts.add(l2.getName() + s2.getName());
+								conflictMap.put(assign, conflicts);
+							}
 						}
 						
 						// Now check if the lectures are back to back
@@ -190,8 +206,12 @@ public class Solution implements SolutionInterface {
 								for (Student st2 : l2.getStudents()) {
 									
 									// If they are the same student, increase the penalty accordingly
-									if (st1.equals(st2))
+									if (st1.equals(st2)) {
 										cumulativePenalty += 50;
+										TreeSet<String> conflicts = conflictMap.get(assign);
+										conflicts.add(l2.getName() + s2.getName());
+										conflictMap.put(assign, conflicts);
+									}
 								}
 							}
 						}
@@ -200,8 +220,13 @@ public class Solution implements SolutionInterface {
 			}
 			
 			// Make sure every assignment is a tight fit
-			if (l1.getLength() < s1.getLength())
+			if (l1.getLength() < s1.getLength()) {
 				cumulativePenalty += 5;
+				TreeSet<String> conflicts = conflictMap.get(assign);
+				conflicts.add(l1.getName() + s1.getName());
+				conflictMap.put(assign, conflicts);
+
+			}
 		}
 		
 		// Every lecture for the same course should have the same exam timeslot - 50
@@ -285,10 +310,13 @@ public class Solution implements SolutionInterface {
 				cumulativePenalty += ((numLengths - 1) * 20);
 		}
 		
+		// Update our conflicting assignments
+		conflictingAssignments = conflictMap;
+		
 		return cumulativePenalty;
 	}
 		
-		
+	
 	// Return the completeness of a solution
 	public boolean isComplete() {
 		return complete;
