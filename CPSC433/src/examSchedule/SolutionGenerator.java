@@ -51,7 +51,7 @@ public class SolutionGenerator {
 		//get list of lengths equal to or greater than session length
 		NavigableMap<Long,Session> lengthsToTry = sessionLengths.tailMap(tryLecture.getLength(), true);
 		
-		
+		return tempSolution;
 			
 
 	}
