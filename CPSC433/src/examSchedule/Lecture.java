@@ -13,8 +13,7 @@ public class Lecture extends Entity {
 	private Vector<Student> students;
 	
 	public Lecture(Course c, String lec) {
-		super(c.getName()+lec);
-				
+		super(c.getName()+ " " + lec);
 		this.course = c;
 		this.lecture = lec;
 		this.instructor = null;
@@ -24,7 +23,7 @@ public class Lecture extends Entity {
 	}
 
 	public Lecture(Course c, String lec, Instructor ins) {
-		super(c.getName()+lec);
+		super(c.getName()+ " " + lec);
 		this.course = c;
 		this.lecture = lec;
 		this.instructor = ins;
@@ -33,7 +32,7 @@ public class Lecture extends Entity {
 	}
 	
 	public Lecture(Course c, String lec, long l) {
-		super(c.getName()+lec);
+		super(c.getName()+ " " + lec);
 		this.course = c;
 		this.lecture = lec;
 		this.length = l;
@@ -43,7 +42,7 @@ public class Lecture extends Entity {
 
 	
 	public Lecture(Course c, String lec, Instructor ins, long l) {
-		super(c.getName()+lec);
+		super(c.getName()+ " " + lec);
 		this.course = c;
 		this.lecture = lec;
 		this.instructor = ins;
