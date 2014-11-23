@@ -25,6 +25,10 @@ public class Room extends Entity {
 		return capacity;
 	}
 	
+	public long getCurrentCapacity() {
+		return currentCapacity;
+	}
+	
 	public void addToCurrentCapacity(long numberOfStudents) {
 		currentCapacity += numberOfStudents;
 	}
