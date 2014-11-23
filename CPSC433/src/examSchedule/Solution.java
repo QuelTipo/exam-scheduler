@@ -19,7 +19,7 @@ public class Solution implements SolutionInterface {
 	private HashMap<String, Assign> assignmentMap;
 	private long penalty;
 	private TreeSet<Lecture> unassignedLectures;
-	private Map<Assign, TreeSet<Assign>> conflictingAssignments;
+	private HashMap<Assign, TreeSet<Assign>> conflictingAssignments;
 	
 	// Default constructor
 	public Solution(Environment env) {
@@ -182,7 +182,7 @@ public class Solution implements SolutionInterface {
 									if (st1.equals(st2)) {
 										cumulativePenalty += 100;
 										TreeSet<Assign> conflicts = conflictMap.get(assign);
-										Assign newConflict = assignmentMap.get(l2.getName() + s2.getName());
+										Assign newConflict = assignmentMap.get(l2.getName() + " " + s2.getName());
 										
 										// Sanity check
 										if (newConflict == null)
@@ -200,7 +200,7 @@ public class Solution implements SolutionInterface {
 							if (i1.equals(i2) && !s1.equals(s2)) {
 								cumulativePenalty += 20;
 								TreeSet<Assign> conflicts = conflictMap.get(assign);
-								Assign newConflict = assignmentMap.get(l2.getName() + s2.getName());
+								Assign newConflict = assignmentMap.get(l2.getName() + " " + s2.getName());
 								
 								// Sanity check
 								if (newConflict == null)
@@ -223,7 +223,7 @@ public class Solution implements SolutionInterface {
 									if (st1.equals(st2)) {
 										cumulativePenalty += 50;
 										TreeSet<Assign> conflicts = conflictMap.get(assign);
-										Assign newConflict = assignmentMap.get(l2.getName() + s2.getName());
+										Assign newConflict = assignmentMap.get(l2.getName() + " " + s2.getName());
 										
 										// Sanity check
 										if (newConflict == null)
@@ -243,7 +243,7 @@ public class Solution implements SolutionInterface {
 			if (l1.getLength() < s1.getLength()) {
 				cumulativePenalty += 5;
 				TreeSet<Assign> conflicts = conflictMap.get(assign);
-				Assign newConflict = assignmentMap.get(l1.getName() + s1.getName());
+				Assign newConflict = assignmentMap.get(l1.getName() + " " + s1.getName());
 				
 				// Sanity check
 				if (newConflict == null)
@@ -416,4 +416,7 @@ public class Solution implements SolutionInterface {
 		return unassignedLectures;
 	}
 	
+	public HashMap<Assign, TreeSet<Assign>> getConflictingAssignmentMap() {
+		return conflictingAssignments;
+	}
 }
