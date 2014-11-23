@@ -11,6 +11,7 @@ public class Lecture extends Entity {
 	private long length;
 	
 	private Vector<Student> students;
+	private long classSize = 0;
 	
 	public Lecture(Course c, String lec) {
 		super(c.getName()+lec);
@@ -67,6 +68,7 @@ public class Lecture extends Entity {
 
 	public void addStudent(Student student) {
 		this.students.add(student);
+		classSize += 1;
 	}
 	
 	public Course getCourse() {
@@ -83,6 +85,10 @@ public class Lecture extends Entity {
 	
 	public long getLength() {
 		return this.length;
+	}
+	
+	public long getClassSize() {
+		return this.classSize;
 	}
 	
 	public Vector<Student> getStudents() {
