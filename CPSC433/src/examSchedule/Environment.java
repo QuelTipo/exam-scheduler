@@ -2,9 +2,11 @@ package examSchedule;
 
 import java.util.TreeSet;
 import java.util.Vector;
+import java.util.HashMap;
 
 import examSchedule.parser.*;
 import examSchedule.parser.Predicate.ParamType;
+
 
 public class Environment extends PredicateReader implements ExamSchedulePredicates, EnvironmentInterface {
 
@@ -17,7 +19,8 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 	private TreeSet<Session> sessionList = new TreeSet<Session>();
 	private TreeSet<Day> dayList = new TreeSet<Day>();
 	private TreeSet<Room> roomList = new TreeSet<Room>();
-	private TreeSet<Assign> assignList = new TreeSet<Assign>();
+	
+	private HashMap<String, Assign> fixedAssignmentMap = new HashMap<String, Assign>();
 	
 	public Environment(String string) {
 		super(string);
@@ -56,8 +59,8 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		return roomList;
 	}
 	
-	public TreeSet<Assign> getFixedAssignments() {
-		return assignList;
+	public HashMap<String, Assign> getFixedAssignments() {
+		return fixedAssignmentMap;
 	}
 		
 	@Override
@@ -612,16 +615,13 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		Assign assign = f_assign(c, lec, s);
 		if (assign == null) {
 			assign = new Assign(lecture, session);
-			assignList.add(assign);
+			fixedAssignmentMap.put(c+lec+s, assign);
 		}
 	}
 
 	public Assign f_assign(String c, String lec, String s) {
-		for (Assign assign : assignList) {
-			if (assign.getName().equals(c+lec+s)) {
-				return assign;
-			}
-		}
+		if (fixedAssignmentMap.containsKey(c+lec+s))
+			return fixedAssignmentMap.get(c+lec+s);
 		return null;
 	}
 	

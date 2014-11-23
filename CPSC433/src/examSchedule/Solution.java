@@ -16,42 +16,43 @@ public class Solution implements SolutionInterface {
 	
 	private long numLectures;
 	private boolean complete;
-	private TreeSet<Assign> assignments;
+	private HashMap<String, Assign> assignmentMap;
 	private long penalty;
 	private TreeSet<Lecture> unassignedLectures;
-	private Map<Assign, TreeSet<String>> conflictingAssignments;
+	private HashMap<Assign, TreeSet<Assign>> conflictingAssignments;
 	
 	// Default constructor
 	public Solution(Environment env) {
-		assignments = new TreeSet<Assign>(environment.getFixedAssignments());
+		assignmentMap = new HashMap<String, Assign>(environment.getFixedAssignments());
 		
 		numLectures = environment.getLectureList().size();
 		
-		complete = numLectures == assignments.size() ? true : false;
+		complete = numLectures == assignmentMap.size() ? true : false;
 		
 		penalty = calculatePenalty();
 		
 		// Our inital list of unassigned lectures will contain every lecture
 		unassignedLectures = environment.getLectureList();
 		// Now we'll remove the lectures which are assigned
-		for (Assign assign : assignments) {
+		for (Assign assign : assignmentMap.values()) {
 			Lecture lecture = assign.getLecture();
 			if (unassignedLectures.contains(lecture))
 				unassignedLectures.remove(lecture);
 		}
-		
 	}
 		
 	
 	// Add an assignment to a solution
 	public boolean addAssignment(Assign assign) {
 		
-		// Create a new tree set of assignments
-		TreeSet<Assign> proposedAssignments = assignments;
-		proposedAssignments.add(assign);
+		// Create a new map of assignment names to assignments
+		HashMap<String, Assign> proposedAssignmentMap = new HashMap<String, Assign>(assignmentMap);
+		proposedAssignmentMap.put(assign.getName(), assign);
 				
+		TreeSet<Assign> proposedAssignments = (TreeSet<Assign>)proposedAssignmentMap.values();
+		
 		// If the proposed solution is a partial solution
-		if (proposedAssignments.size() < numLectures) {
+		if (proposedAssignmentMap.size() < numLectures) {
 			// Then return false if it is invalid
 			if (isValidSolution(proposedAssignments, false) == false)
 				return false;
@@ -65,8 +66,8 @@ public class Solution implements SolutionInterface {
 
 		// If we've gotten to here, we know we're dealing with at least a valid partial solution
 		// Update our tree set of assignments and return; 
-		assignments = proposedAssignments;
-		complete = assignments.size() == numLectures;
+		assignmentMap = proposedAssignmentMap;
+		complete = assignmentMap.size() == numLectures;
 		unassignedLectures.remove(assign.getLecture());
 		return true;
 	}
@@ -80,7 +81,7 @@ public class Solution implements SolutionInterface {
 		session.removeLecture(lecture);
 		
 		// Now we remove the assignment from our set of assignments
-		assignments.remove(assign);
+		assignmentMap.remove(assign.getName());
 	}
 	
 	
@@ -94,7 +95,7 @@ public class Solution implements SolutionInterface {
 					numAssigns++;
 			}
 			// In the case of a partial solution, ensure no lecture is assigned to more than one exam session
-			if (complete) {
+			if (!complete) {
 				if (numAssigns != 1)
 					return false;
 			}
@@ -132,12 +133,12 @@ public class Solution implements SolutionInterface {
 	
 	public long calculatePenalty() {
 		
-		// Our map of assignments to conflicting assignment names
-		Map<Assign, TreeSet<String>> conflictMap = new HashMap<Assign, TreeSet<String>>();
+		// Our map of assignments to conflicting assignments
+		HashMap<Assign, TreeSet<Assign>> conflictMap = new HashMap<Assign, TreeSet<Assign>>();
+		
 		// Initialize it with default values
-		for (Assign assign : assignments) {
-			conflictMap.put(assign, new TreeSet<String>());
-		}
+		for (Assign assign : assignmentMap.values())
+			conflictMap.put(assign, new TreeSet<Assign>());
 		
 		long cumulativePenalty = 0;
 
@@ -146,7 +147,7 @@ public class Solution implements SolutionInterface {
 		// No instructor invigulates in more than one room at the same time - 20
 		// No student should write exams with no break between them - 50 
 		// Every exam in a session should take up the full time of the session - 5
-		for (Assign assign : assignments) {
+		for (Assign assign : assignmentMap.values()) {
 						
 			Lecture l1 = assign.getLecture();
 			Session s1 = assign.getSession();
@@ -176,11 +177,18 @@ public class Solution implements SolutionInterface {
 								
 								for (Student st2 : l2.getStudents()) {
 									
-									// If they are the same student, increase the penalty accordingly, and update our conflict map
+									// If they are the same student, increase the penalty by 100 and update our conflict map
+
 									if (st1.equals(st2)) {
 										cumulativePenalty += 100;
-										TreeSet<String> conflicts = conflictMap.get(assign);
-										conflicts.add(l2.getName() + s2.getName());
+										TreeSet<Assign> conflicts = conflictMap.get(assign);
+										Assign newConflict = assignmentMap.get(l2.getName() + " " + s2.getName());
+										
+										// Sanity check
+										if (newConflict == null)
+											System.out.println(String.format("Failed to find assignment with name %s", l2.getName() + s2.getName()));
+										
+										conflicts.add(newConflict);
 										conflictMap.put(assign, conflicts);
 									}
 								}
@@ -191,8 +199,14 @@ public class Solution implements SolutionInterface {
 							Instructor i2 = l2.getInstructor();
 							if (i1.equals(i2) && !s1.equals(s2)) {
 								cumulativePenalty += 20;
-								TreeSet<String> conflicts = conflictMap.get(assign);
-								conflicts.add(l2.getName() + s2.getName());
+								TreeSet<Assign> conflicts = conflictMap.get(assign);
+								Assign newConflict = assignmentMap.get(l2.getName() + " " + s2.getName());
+								
+								// Sanity check
+								if (newConflict == null)
+									System.out.println(String.format("Failed to find assignment with name %s", l2.getName() + s2.getName()));
+								
+								conflicts.add(newConflict);
 								conflictMap.put(assign, conflicts);
 							}
 						}
@@ -208,8 +222,14 @@ public class Solution implements SolutionInterface {
 									// If they are the same student, increase the penalty accordingly
 									if (st1.equals(st2)) {
 										cumulativePenalty += 50;
-										TreeSet<String> conflicts = conflictMap.get(assign);
-										conflicts.add(l2.getName() + s2.getName());
+										TreeSet<Assign> conflicts = conflictMap.get(assign);
+										Assign newConflict = assignmentMap.get(l2.getName() + " " + s2.getName());
+										
+										// Sanity check
+										if (newConflict == null)
+											System.out.println(String.format("Failed to find assignment with name %s", l2.getName() + s2.getName()));
+										
+										conflicts.add(newConflict);
 										conflictMap.put(assign, conflicts);
 									}
 								}
@@ -222,10 +242,15 @@ public class Solution implements SolutionInterface {
 			// Make sure every assignment is a tight fit
 			if (l1.getLength() < s1.getLength()) {
 				cumulativePenalty += 5;
-				TreeSet<String> conflicts = conflictMap.get(assign);
-				conflicts.add(l1.getName() + s1.getName());
+				TreeSet<Assign> conflicts = conflictMap.get(assign);
+				Assign newConflict = assignmentMap.get(l1.getName() + " " + s1.getName());
+				
+				// Sanity check
+				if (newConflict == null)
+					System.out.println(String.format("Failed to find assignment with name %s", l1.getName() + s1.getName()));
+				
+				conflicts.add(newConflict);
 				conflictMap.put(assign, conflicts);
-
 			}
 		}
 		
@@ -233,30 +258,46 @@ public class Solution implements SolutionInterface {
 		// For every course
 		for (Course course : environment.getCourseList()) {
 			
-			TreeSet<Pair<Day, Integer>> set = new TreeSet<Pair<Day, Integer>>();
+			TreeSet<Assign> assigns = new TreeSet<Assign>();
+			TreeSet<Pair<Day, Integer>> examTimes = new TreeSet<Pair<Day, Integer>>();
 			
 			// And for every lecture that course has
-			for (Lecture lecture : course.getLectures()) {
+			for (Lecture l1 : course.getLectures()) {
 				
-				// Search the list of assignment for the matching one
-				for (Assign assign : assignments) {
+				// Search the list of assignment names
+				for (String name : assignmentMap.keySet()) {
 					
-					// When we find the assignment
-					if (assign.getName() == lecture.getName()) {
+					// When we find the name corresponding to the lecture
+					String[] components = name.split(" ");
+					if (components[1].equals(l1.getName())) {
 						
 						// Add the day/time pair for that session to our set
+						Assign assign = assignmentMap.get(name);
 						Session session = assign.getSession();
 						Pair<Day, Integer> dayTimePair = new Pair<Day, Integer>(session.getDay(), (int)session.getLength());
-						set.add(dayTimePair);
+						examTimes.add(dayTimePair);
+						
+						// Add the assignment to our set of assignments
+						assigns.add(assign);
 					}
 				}
 			}
 			
-			// Now we have a set of day/time pairs for the lectures of this course, increment the penalty accordingly
-			int numTimeSlots = set.size();
-			if (numTimeSlots > 1)
+			// If there our day/time set has more than 1 entry
+			int numTimeSlots = examTimes.size();
+			if (numTimeSlots > 1) {
+				// Increase the penalty by 50
 				cumulativePenalty += ((numTimeSlots - 1) * 50);
-			
+				
+				// Update our conflict map
+				for (Assign a1 : assigns) {				
+					TreeSet<Assign> conflicts = conflictMap.get(a1);					
+					for (Assign a2 : assigns) {
+						conflicts.add(a2);
+						conflictMap.put(a1, conflicts);
+					}
+				}
+			}			
 		}
 		
 		// No student writes for longer than 5 hours in a single day - 50
@@ -297,17 +338,40 @@ public class Solution implements SolutionInterface {
 		for (Session session : environment.getSessionList()) {
 			
 			TreeSet<Integer> lengths = new TreeSet<Integer>(); 
+			TreeSet<Lecture> lectures = new TreeSet<Lecture>();
 			
 			// Iterate over every lecture assigned to the session
 			for (Lecture lecture : session.getLectures()) {
 				
 				// Add the length to our set of lengths
 				lengths.add((int)lecture.getLength());
+				// Add the lecture to our set of lectures
+				lectures.add(lecture);
 			}
 			
+			// If there is more than one entry in our set
 			int numLengths = lengths.size();
-			if (numLengths > 1)
+			if (numLengths > 1) {
+				// Increase the penalty
 				cumulativePenalty += ((numLengths - 1) * 20);
+				// Update our conflict map
+				for (Lecture l1 : lectures) {
+					
+					Assign assign = assignmentMap.get(l1.getName() + " " + session.getName());
+					TreeSet<Assign> conflicts = conflictMap.get(assign);
+					for (Lecture l2 : lectures) {
+						
+						Assign newConflict = assignmentMap.get(l2.getName() + " " + session.getName());
+						
+						// Sanity check
+						if (newConflict == null)
+							System.out.println(String.format("Failed to find assignment with name %s", l2.getName() + session.getName()));
+						
+						conflicts.add(newConflict);
+						conflictMap.put(assign, conflicts);
+					}
+				}
+			}
 		}
 		
 		// Update our conflicting assignments
@@ -352,4 +416,7 @@ public class Solution implements SolutionInterface {
 		return unassignedLectures;
 	}
 	
+	public HashMap<Assign, TreeSet<Assign>> getConflictingAssignmentMap() {
+		return conflictingAssignments;
+	}
 }
