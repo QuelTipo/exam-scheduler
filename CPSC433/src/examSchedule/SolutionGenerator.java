@@ -30,7 +30,9 @@ public class SolutionGenerator {
 	public Vector<Solution> makeSolutionSet() {
 		
 		for (int i = 0; i < 40; i++) {
-			solutions.add(buildSolution());
+			Solution newSolution = buildSolution();
+			newSolution.calculatePenalty();
+			solutions.add(newSolution);		
 		}
 		
 		return solutions;

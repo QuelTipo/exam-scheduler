@@ -520,7 +520,6 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		// Ensure the lecture exists
 		Lecture lecture = f_lecture(c, l);
 		if (lecture == null) {
-			System.out.println("Why am I here?");
 			lecture = new Lecture(course, l);
 			lectureList.add(lecture);
 		}

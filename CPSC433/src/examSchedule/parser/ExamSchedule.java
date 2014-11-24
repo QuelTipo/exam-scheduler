@@ -117,7 +117,7 @@ public class ExamSchedule {
 		Vector<examSchedule.Solution> newSolutions = solutions.makeSolutionSet();
 		for (examSchedule.Solution solution : newSolutions) {
 			solution.printAssignments();
-			System.out.println(solution.calculatePenalty());
+			System.out.println(solution.getPenalty());
 		}
 		System.out.println(newSolutions.size());
 				
