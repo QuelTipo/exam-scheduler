@@ -71,8 +71,8 @@ public class Solution implements SolutionInterface {
 		// If we've gotten to here, we know we're dealing with at least a valid partial solution
 		// Update our tree set of assignments and return; 
 		assignmentMap = proposedAssignmentMap;
-		complete = assignmentMap.size() == numLectures;
 		unassignedLectures.remove(assign.getLecture());
+		complete = assignmentMap.size() == numLectures;
 		return true;
 	}
 	
@@ -80,8 +80,9 @@ public class Solution implements SolutionInterface {
 	
 	public void dumbAddAssign(Assign assign) {
 		
-		assignmentMap.put(assign.getName(), assign);	
+		assignmentMap.put(assign.getName(), assign);
 		unassignedLectures.remove(assign.getLecture());
+		complete = assignmentMap.size() == numLectures;
 	}
 	
 	
@@ -147,7 +148,7 @@ public class Solution implements SolutionInterface {
 	}
 		
 	
-	public long calculatePenalty() {
+	public void calculatePenalty() {
 		
 		// Our map of assignments to conflicting assignments
 		HashMap<Assign, TreeSet<Assign>> conflictMap = new HashMap<Assign, TreeSet<Assign>>();
@@ -397,10 +398,9 @@ public class Solution implements SolutionInterface {
 			}
 		}
 		
-		// Update our conflicting assignments
+		// Update our conflicting assignments and penalty
 		conflictingAssignments = conflictMap;
-		
-		return cumulativePenalty;
+		penalty = cumulativePenalty;
 	}
 		
 	
@@ -417,15 +417,13 @@ public class Solution implements SolutionInterface {
 
 	@Override
 	public boolean isSolved() {
-		// TODO Auto-generated method stub
-		return false;
+		return complete;
 	}
 
 
 	@Override
 	public boolean hasViolations() {
-		// TODO Auto-generated method stub
-		return false;
+		return penalty > 0 ? true : false;
 	}
 
 

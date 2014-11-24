@@ -1,17 +1,13 @@
-1. Generation of our initial set of solutions
-   -This will be done via a Or-Tree based search, which will attempt to generate valid, complete solutions without regard to the penalties of said solutions
-   -To ensure that we have a good variety of starting solutions, we should generate them randomly, that is begin with our fixed assignments, and then for each unassigned lecture, attempt to place it in a random session, until we have a complete solution
-
-2. Implement extension rules
+1. Implement extension rules
    -For mutation, we just choose the worst n assignments (determined by the conflicting assignment map), unassign them, and then do an or tree search to reassign them, guaranteeing that we get the best reassignment of those n lectures. This will be a method of the solution class
    -For combination, we obviously want more assignments from the better solution than the less good solution, so we determine a ratio based on the difference between the penalties of the 2 solutions, take the best n assignments from the better solution, and then complete the solution by adding in assignments from the less good solution one at a time. If we are unable to complete the solution like this, and this in’t hard to imagine, then we simply do an or tree search to complete the rest, random or intelligent depending on how many assignments we have left. Once again, this should be a method of Solution. 
 
-3. Implement kontrol
+2. Implement kontrol
    -Currently we should just shoot for what we discussed in our last meeting, combining the best and the worst solution, and mutating a random solution, and going with whatever produces the best result
    -Long term it would be cool to have some chaining going on here
 
-4. Test cases
+3. Test cases
    -We need test cases
 
-5. Optimizations
-   -Joel rightly pointed out that hard constraint checking could be made much more efficient by working off the assumption that the solution we are starting with is valid, and only checking if the new assignment violates any constraints
+4. Optimizations and code clean up
+   -We should make sure that everything we’ve written is thoroughly commented and formatted in an easy to read fashion

@@ -44,6 +44,9 @@ public class SolutionGenerator {
 		
 		newSolution = buildDown(newSolution, random);
 		
+		if (newSolution != null)
+			newSolution.calculatePenalty();
+		
 		return newSolution;
 
 	}
