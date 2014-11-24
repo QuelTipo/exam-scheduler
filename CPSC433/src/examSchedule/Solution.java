@@ -78,12 +78,15 @@ public class Solution implements SolutionInterface {
 	}
 	
 	// This method does none of the checking required in the above method
-	
-	public void dumbAddAssign(Assign assign) {
+	public boolean dumbAddAssign(Assign assign) {
+		
+		if (assignmentMap.containsKey(assign.getName()))
+			return false;
 		
 		assignmentMap.put(assign.getName(), assign);
 		unassignedLectures.remove(assign.getLecture());
 		complete = assignmentMap.size() == numLectures;
+		return true;
 	}
 	
 	
@@ -474,7 +477,27 @@ public class Solution implements SolutionInterface {
 		}
 	}
 	
+	public TreeSet<Assign> extractBest(int num) {
 		
+		TreeSet<Assign> fixedAssignments = (TreeSet<Assign>)environment.getFixedAssignments().values();
+
+		TreeSet<Assign> bestAssignments = new TreeSet<Assign>();
+		
+		int index = 0;
+		for (int count = 0; count < num; ++ count) {
+			
+			Assign best = rankedAssignments.get(index);
+			
+			// Make sure we're not grabbing a fixed assignment
+			while (fixedAssignments.contains(best))
+				best = rankedAssignments.get(++index);
+			
+			bestAssignments.add(best);
+		}
+		
+		return bestAssignments;
+	}
+	
 	
 	// Return the completeness of a solution
 	public boolean isComplete() {
