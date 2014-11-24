@@ -456,6 +456,26 @@ public class Solution implements SolutionInterface {
 	}
 
 
+	// This method is a component of the mutate operation, and will unassign the worst n assignments
+	public void unassignWorst() {
+		
+		TreeSet<Assign> fixedAssignments = (TreeSet<Assign>)environment.getFixedAssignments().values();
+		
+		int index = (int)numLectures - 1;
+		for (int count = 0; count < 5; ++count) {
+			
+			Assign worst = rankedAssignments.get(index);
+			
+			// Make sure we don't remove a fixed assignment
+			while (fixedAssignments.contains(worst))
+				worst = rankedAssignments.get(++index);
+			
+			removeAssignment(worst);
+		}
+	}
+	
+		
+	
 	// Return the completeness of a solution
 	public boolean isComplete() {
 		return complete;

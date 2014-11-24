@@ -1,6 +1,7 @@
 package examSchedule;
 
 import java.util.TreeSet;
+import java.util.Random;
 
 public class Search {
 
@@ -32,6 +33,17 @@ public class Search {
 		}
 	}
 	
-
+	
+	// This method will mutate a particular solution
+	public void dumbMutation(Solution solution) {
+		
+		// Unassign the worst n assignments in the solution
+		solution.unassignWorst();
+		
+		// Use our SolutionGenerator to complete the solution
+		generator.buildDown(solution, new Random());
+	}
+	
+	
 	
 }
