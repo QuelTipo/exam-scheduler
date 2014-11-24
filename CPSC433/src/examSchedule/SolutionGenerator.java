@@ -10,7 +10,6 @@ import java.util.Vector;
 public class SolutionGenerator {
 	
 	private Environment environment;
-	private Vector<Solution> solutions = new Vector<Solution>();
 	private TreeMap<Long,Session> sessionLengths = new TreeMap<Long,Session>();
 	private TreeMap<Session,Long> sessionCapacities = new TreeMap<Session,Long>();
 	
@@ -26,18 +25,7 @@ public class SolutionGenerator {
 		}
 		
 	}
-	
-	public Vector<Solution> makeSolutionSet() {
 		
-		for (int i = 0; i < 40; i++) {
-			Solution newSolution = buildSolution();
-			newSolution.calculatePenalty();
-			solutions.add(newSolution);		
-		}
-		
-		return solutions;
-	}
-	
 	public Solution buildSolution() {
 	
 		Solution newSolution = new Solution(environment);
