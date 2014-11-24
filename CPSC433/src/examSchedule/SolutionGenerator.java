@@ -53,7 +53,7 @@ public class SolutionGenerator {
 
 	}
 	
-	private Solution buildDown(Solution tempSolution, Random random) {
+	public Solution buildDown(Solution tempSolution, Random random) {
 		
 		//if there's no more lectures to add we have found a solution
 		Vector<Lecture> remainingLectures = new Vector<Lecture>(tempSolution.getUnassignedLectures());
