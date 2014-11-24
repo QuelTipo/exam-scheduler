@@ -3,6 +3,7 @@ package examSchedule.parser;
 import examSchedule.Assign;
 import examSchedule.Environment;
 import examSchedule.SolutionGenerator;
+import examSchedule.Search;
 
 import java.io.*;
 import java.util.TreeSet;
@@ -113,8 +114,9 @@ public class ExamSchedule {
 	 */
 	public static void doSearch(final Environment env, final String outFileName, final long timeLimit) {
 		
-		SolutionGenerator solutions = new SolutionGenerator(env);
-		Vector<examSchedule.Solution> newSolutions = solutions.makeSolutionSet();
+		Search search = new Search(env);
+		search.setup();
+		TreeSet<examSchedule.Solution> newSolutions = search.getCurrentSolutions();
 		for (examSchedule.Solution solution : newSolutions) {
 			solution.printAssignments();
 			System.out.println(solution.getPenalty());

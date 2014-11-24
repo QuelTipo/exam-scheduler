@@ -21,7 +21,7 @@ public class Search {
 	public void setup() {
 		
 		// Begin by populating our solution set with random, valid solutions
-		for (int i = 0; i < 5; ++i) {
+		for (int i = 0; i < 40; ++i) {
 			Solution solution = generator.buildSolution();
 			solutions.add(solution);
 		}
@@ -33,6 +33,10 @@ public class Search {
 		}
 	}
 	
+	
+	public TreeSet<Solution> getCurrentSolutions() {
+		return solutions;
+	}
 	
 	// This method will mutate a particular solution
 	public void dumbMutation(Solution solution) {
