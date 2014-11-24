@@ -67,8 +67,8 @@ public class Solution implements SolutionInterface {
 		// If we've gotten to here, we know we're dealing with at least a valid partial solution
 		// Update our tree set of assignments and return; 
 		assignmentMap = proposedAssignmentMap;
-		complete = assignmentMap.size() == numLectures;
 		unassignedLectures.remove(assign.getLecture());
+		complete = assignmentMap.size() == numLectures;
 		return true;
 	}
 	
@@ -76,8 +76,9 @@ public class Solution implements SolutionInterface {
 	
 	public void dumbAddAssign(Assign assign) {
 		
-		assignmentMap.put(assign.getName(), assign);	
+		assignmentMap.put(assign.getName(), assign);
 		unassignedLectures.remove(assign.getLecture());
+		complete = assignmentMap.size() == numLectures;
 	}
 	
 	
