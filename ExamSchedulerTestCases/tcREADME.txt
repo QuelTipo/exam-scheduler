@@ -14,3 +14,13 @@ M10-2-MS217
 T10-2-MS217
 W10-2-MS217
 W14-2-MS217
+
+
+***  tc02.txt  ***
+This tc is designed to violate hard constraint 1 i.e.
+H1:Every lecture is assigned an exam session.
+Expected output:  No Solution
+This test case has four lectures but only three available sessions, thus the program
+should detect a violation of H1.
+
+
