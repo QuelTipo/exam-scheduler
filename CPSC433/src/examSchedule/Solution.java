@@ -141,7 +141,7 @@ public class Solution implements SolutionInterface {
 	}
 		
 	
-	public long calculatePenalty() {
+	public void calculatePenalty() {
 		
 		// Our map of assignments to conflicting assignments
 		HashMap<Assign, TreeSet<Assign>> conflictMap = new HashMap<Assign, TreeSet<Assign>>();
@@ -384,10 +384,9 @@ public class Solution implements SolutionInterface {
 			}
 		}
 		
-		// Update our conflicting assignments
+		// Update our conflicting assignments and penalty
 		conflictingAssignments = conflictMap;
-		
-		return cumulativePenalty;
+		penalty = cumulativePenalty;
 	}
 		
 	
@@ -404,15 +403,13 @@ public class Solution implements SolutionInterface {
 
 	@Override
 	public boolean isSolved() {
-		// TODO Auto-generated method stub
-		return false;
+		return complete;
 	}
 
 
 	@Override
 	public boolean hasViolations() {
-		// TODO Auto-generated method stub
-		return false;
+		return penalty > 0 ? true : false;
 	}
 
 
