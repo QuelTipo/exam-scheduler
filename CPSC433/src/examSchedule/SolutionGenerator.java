@@ -29,29 +29,63 @@ public class SolutionGenerator {
 	public Solution buildSolution() {
 	
 		Solution newSolution = new Solution(environment);
-		Vector<Lecture> remainingLectures = new Vector<Lecture>(newSolution.getUnassignedLectures());
-		
+				
 		Random random = new Random();
 		
-		
+		newSolution = buildDown(newSolution, random);
 		
 		return newSolution;
 
 	}
 	
-	private Solution buildDown(Solution tempSolution, Vector<Lecture> remainingLectures, Random random) {
+	private Solution buildDown(Solution tempSolution, Random random) {
 		
+		//if there's no more lectures to add we have found a solution
+		Vector<Lecture> remainingLectures = new Vector<Lecture>(tempSolution.getUnassignedLectures());
 		if (remainingLectures.size() == 0) {
 			return tempSolution;
+		}		
+		
+		while(remainingLectures.size() > 0) {
+		
+		//otherwise pick a random lecture from the remaining ones
+		
+			int randIndex = random.nextInt(remainingLectures.size());
+			Lecture tryLecture = remainingLectures.remove(randIndex);
+		
+			//get list of lengths equal to or greater than session length
+			NavigableMap<Long,Session> validLengths = sessionLengths.tailMap(tryLecture.getLength(), true);
+			//throw them in a vector to ease randomized access
+			Vector<Session> sessionsToTry = (Vector<Session>) validLengths.values();
+		
+			while (sessionsToTry.size() > 0) {
+			
+				//get the session and remove it from the list
+				randIndex = random.nextInt(sessionsToTry.size());
+				Session tempSession = sessionsToTry.remove(randIndex);
+				//if the session can hold the class size
+				if (tempSession.getRoom().canHold(tryLecture.getClassSize())) {
+					Assign tryAssign = new Assign(tryLecture, tempSession);
+					tempSolution.dumbAddAssign(tryAssign);
+					
+					//recursively call to add another assignment
+					//if we get something back, we have a winner.
+					
+					if (buildDown(tempSolution, random) != null) {
+						return tempSolution;
+					}
+					
+					//if nothing was passed back up, then let's try a different session
+					
+					tempSolution.removeAssignment(tryAssign);
+				}
+			}
+			
 		}
+			
+		//We have no options left, let's go back and try another route.
 		
-		int randIndex = random.nextInt(remainingLectures.size());
-		Lecture tryLecture = remainingLectures.get(randIndex);
-		
-		//get list of lengths equal to or greater than session length
-		NavigableMap<Long,Session> lengthsToTry = sessionLengths.tailMap(tryLecture.getLength(), true);
-		
-		return tempSolution;
+		return null;
 			
 
 	}

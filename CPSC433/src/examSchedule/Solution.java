@@ -72,6 +72,14 @@ public class Solution implements SolutionInterface {
 		return true;
 	}
 	
+	// This method does none of the checking required in the above method
+	
+	public void dumbAddAssign(Assign assign) {
+		
+		assignmentMap.put(assign.getName(), assign);	
+		unassignedLectures.remove(assign.getLecture());
+	}
+	
 	
 	public void removeAssignment(Assign assign) {
 		
@@ -82,6 +90,7 @@ public class Solution implements SolutionInterface {
 		
 		// Now we remove the assignment from our set of assignments
 		assignmentMap.remove(assign.getName());
+		unassignedLectures.add(assign.getLecture());
 	}
 	
 	
