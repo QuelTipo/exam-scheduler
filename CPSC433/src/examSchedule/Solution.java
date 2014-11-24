@@ -204,8 +204,7 @@ public class Solution implements SolutionInterface {
 										Assign newConflict = assignmentMap.get(l2.getName() + " " + s2.getName());
 										
 										// Sanity check
-										if (newConflict == null)
-											System.out.println(String.format("Failed to find assignment with name %s", l2.getName() + s2.getName()));
+										assert newConflict != null : String.format("Failed to find assignment with name %s", l2.getName() + s2.getName());
 										
 										conflicts.add(newConflict);
 										conflictMap.put(assign, conflicts);
@@ -223,8 +222,8 @@ public class Solution implements SolutionInterface {
 								Assign newConflict = assignmentMap.get(l2.getName() + " " + s2.getName());
 								
 								// Sanity check
-								if (newConflict == null)
-									System.out.println(String.format("Failed to find assignment with name %s", l2.getName() + s2.getName()));
+								// Sanity check
+								assert newConflict != null : String.format("Failed to find assignment with name %s", l2.getName() + s2.getName());
 								
 								conflicts.add(newConflict);
 								conflictMap.put(assign, conflicts);
@@ -246,8 +245,7 @@ public class Solution implements SolutionInterface {
 										Assign newConflict = assignmentMap.get(l2.getName() + " " + s2.getName());
 										
 										// Sanity check
-										if (newConflict == null)
-											System.out.println(String.format("Failed to find assignment with name %s", l2.getName() + s2.getName()));
+										assert newConflict != null : String.format("Failed to find assignment with name %s", l2.getName() + s2.getName());
 										
 										conflicts.add(newConflict);
 										conflictMap.put(assign, conflicts);
@@ -269,8 +267,7 @@ public class Solution implements SolutionInterface {
 				Assign newConflict = assignmentMap.get(l1.getName() + " " + s1.getName());
 				
 				// Sanity check
-				if (newConflict == null)
-					System.out.println(String.format("Failed to find assignment with name %s", l1.getName() + s1.getName()));
+				assert newConflict != null : String.format("Failed to find assignment with name %s", l1.getName() + s1.getName());
 				
 				conflicts.add(newConflict);
 				conflictMap.put(assign, conflicts);
@@ -389,8 +386,7 @@ public class Solution implements SolutionInterface {
 						Assign newConflict = assignmentMap.get(l2.getName() + " " + session.getName());
 						
 						// Sanity check
-						if (newConflict == null)
-							System.out.println(String.format("Failed to find assignment with name %s", l2.getName() + session.getName()));
+						assert newConflict != null : String.format("Failed to find assignment with name %s", l1.getName() + session.getName());
 						
 						conflicts.add(newConflict);
 						conflictMap.put(assign, conflicts);
@@ -458,9 +454,8 @@ public class Solution implements SolutionInterface {
 		}
 		
 	}
-	
-	
-	
+
+
 	// Return the completeness of a solution
 	public boolean isComplete() {
 		return complete;
