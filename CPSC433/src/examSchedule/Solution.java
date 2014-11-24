@@ -22,6 +22,7 @@ public class Solution implements SolutionInterface {
 	private long penalty;
 	private TreeSet<Lecture> unassignedLectures;
 	private HashMap<Assign, TreeSet<Assign>> conflictingAssignments;
+	private Vector<Assign> rankedAssignments = new Vector<Assign>((int)numLectures);
 	
 	// Default constructor
 	public Solution(Environment env) {
@@ -403,6 +404,62 @@ public class Solution implements SolutionInterface {
 		penalty = cumulativePenalty;
 	}
 		
+	
+	// This method will use set rankedAssignments, ascending ordering by number of conflicts
+	public void rankAssignments() {
+		
+		// Our map to store how many other assignments a given assignment conflicts with
+		HashMap<Assign, Integer> numConflicts = new HashMap<Assign, Integer>();
+		for (Assign assign : assignmentMap.values()) {
+			numConflicts.put(assign, 0);
+		}
+		
+		// For every set of conflicting assignments...
+		for (TreeSet<Assign> set : conflictingAssignments.values()) {
+			
+			// Iterate over every member of that set
+			for (Assign assign : set) {
+			 
+				// Update our map
+				int conflicts = numConflicts.get(assign);
+				conflicts++;
+				numConflicts.put(assign, conflicts);
+			}
+		}
+		
+		// Sort our list of assignments by the number of assignments each one conflicts with
+		// Linear sort for the moment...
+		// Clone because we don't want to be removing variables
+		HashMap<String, Assign> clone = new HashMap<String, Assign>(assignmentMap);
+		TreeSet<Assign> remainingAssignments = (TreeSet<Assign>)clone.values();
+		for (int index = 0; index < numLectures; ++index) {
+			
+			// Initially we don't have an assignment selected
+			Assign selected = null;
+			
+			// Iterate over the list of remaining assignments
+			for (Assign assign : remainingAssignments) {
+				
+				// If we haven't selected on yet, do so
+				if (selected == null)
+					selected = assign;
+				// Otherwise, see if what we're looking at is better than what we have
+				else {
+					int oldConflicts = numConflicts.get(selected);
+					int newConflicts = numConflicts.get(assign);
+					if (newConflicts < oldConflicts)
+						selected = assign;
+				}
+			}
+			// Remove the assignment we're going to use
+			remainingAssignments.remove(selected);
+			// Place it in our vector
+			rankedAssignments.set(index, selected);
+		}
+		
+	}
+	
+	
 	
 	// Return the completeness of a solution
 	public boolean isComplete() {
