@@ -1,7 +1,12 @@
 package examSchedule.parser;
 
+import examSchedule.Assign;
 import examSchedule.Environment;
+import examSchedule.SolutionGenerator;
+
 import java.io.*;
+import java.util.TreeSet;
+import java.util.Vector;
 
 /**
  * This class can function as the main() for your assignment program.  Use it in conjunction
@@ -38,7 +43,7 @@ public class ExamSchedule {
 	 */
 	public static void main(String[] args) {
 
-		final EnvironmentInterface env = Environment.get();
+		final Environment env = Environment.get();
 
 		//long startTime = System.currentTimeMillis();
 
@@ -106,9 +111,18 @@ public class ExamSchedule {
 	 * @param outFileName The name of the file to output the solution to.
 	 * @param timeLimit The number of milliseconds to limit he search to.
 	 */
-	public static void doSearch(final EnvironmentInterface env, final String outFileName, final long timeLimit) {
-		//To be filled in as part of the assignment...
-		//env.printDetails();
+	public static void doSearch(final Environment env, final String outFileName, final long timeLimit) {
+		
+		SolutionGenerator solutions = new SolutionGenerator(env);
+		Vector<examSchedule.Solution> newSolutions = solutions.makeSolutionSet();
+		for (examSchedule.Solution solution : newSolutions) {
+			solution.printAssignments();
+			System.out.println(solution.calculatePenalty());
+		}
+		System.out.println(newSolutions.size());
+				
+	
+		
 	}
 	
 	/**

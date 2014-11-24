@@ -6,7 +6,7 @@ import java.util.Vector;
 
 public class Day extends Entity {
 
-	private Vector<Session> sessions;
+	private Vector<Session> sessions = new Vector<Session>();
 	
 	public Day(String name) {
 		super(name);

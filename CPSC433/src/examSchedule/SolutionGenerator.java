@@ -1,5 +1,6 @@
 package examSchedule;
 
+import java.util.Collection;
 import java.util.NavigableMap;
 import java.util.Random;
 import java.util.TreeMap;
@@ -9,7 +10,7 @@ import java.util.Vector;
 public class SolutionGenerator {
 	
 	private Environment environment;
-	private TreeSet<Solution> solutions = new TreeSet<Solution>();
+	private Vector<Solution> solutions = new Vector<Solution>();
 	private TreeMap<Long,Session> sessionLengths = new TreeMap<Long,Session>();
 	private TreeMap<Session,Long> sessionCapacities = new TreeMap<Session,Long>();
 	
@@ -24,6 +25,15 @@ public class SolutionGenerator {
 			sessionCapacities.put(session, new Long(session.getRoom().getCurrentCapacity()));
 		}
 		
+	}
+	
+	public Vector<Solution> makeSolutionSet() {
+		
+		for (int i = 0; i < 40; i++) {
+			solutions.add(buildSolution());
+		}
+		
+		return solutions;
 	}
 	
 	public Solution buildSolution() {
@@ -42,6 +52,7 @@ public class SolutionGenerator {
 		
 		//if there's no more lectures to add we have found a solution
 		Vector<Lecture> remainingLectures = new Vector<Lecture>(tempSolution.getUnassignedLectures());
+		
 		if (remainingLectures.size() == 0) {
 			return tempSolution;
 		}		
@@ -56,8 +67,9 @@ public class SolutionGenerator {
 			//get list of lengths equal to or greater than session length
 			NavigableMap<Long,Session> validLengths = sessionLengths.tailMap(tryLecture.getLength(), true);
 			//throw them in a vector to ease randomized access
-			Vector<Session> sessionsToTry = (Vector<Session>) validLengths.values();
-		
+			Collection<Session> toCollection = validLengths.values();
+			Vector<Session> sessionsToTry = new Vector<Session>(toCollection);
+			
 			while (sessionsToTry.size() > 0) {
 			
 				//get the session and remove it from the list
@@ -67,6 +79,8 @@ public class SolutionGenerator {
 				if (tempSession.getRoom().canHold(tryLecture.getClassSize())) {
 					Assign tryAssign = new Assign(tryLecture, tempSession);
 					tempSolution.dumbAddAssign(tryAssign);
+					//adjust our tree map to reflect reduction in capacity
+					sessionCapacities.put(tempSession, tempSession.getRoom().getCurrentCapacity());
 					
 					//recursively call to add another assignment
 					//if we get something back, we have a winner.
@@ -78,6 +92,9 @@ public class SolutionGenerator {
 					//if nothing was passed back up, then let's try a different session
 					
 					tempSolution.removeAssignment(tryAssign);
+					//adjust our tree to reflect increase in capacity
+					sessionCapacities.put(tempSession, tempSession.getRoom().getCurrentCapacity());
+					
 				}
 			}
 			

@@ -1,5 +1,7 @@
 package examSchedule;
 
+import java.util.Collection;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Vector;
 import java.util.Map;
@@ -16,23 +18,25 @@ public class Solution implements SolutionInterface {
 	
 	private long numLectures;
 	private boolean complete;
-	private HashMap<String, Assign> assignmentMap;
+	private TreeMap<String, Assign> assignmentMap;
 	private long penalty;
 	private TreeSet<Lecture> unassignedLectures;
 	private HashMap<Assign, TreeSet<Assign>> conflictingAssignments;
 	
 	// Default constructor
 	public Solution(Environment env) {
-		assignmentMap = new HashMap<String, Assign>(environment.getFixedAssignments());
+		
+		environment = env;
+		assignmentMap = new TreeMap<String, Assign>(environment.getFixedAssignments());
 		
 		numLectures = environment.getLectureList().size();
 		
 		complete = numLectures == assignmentMap.size() ? true : false;
 		
-		penalty = calculatePenalty();
+		// penalty = calculatePenalty();
 		
 		// Our inital list of unassigned lectures will contain every lecture
-		unassignedLectures = environment.getLectureList();
+		unassignedLectures = new TreeSet<Lecture>(environment.getLectureList());
 		// Now we'll remove the lectures which are assigned
 		for (Assign assign : assignmentMap.values()) {
 			Lecture lecture = assign.getLecture();
@@ -46,7 +50,7 @@ public class Solution implements SolutionInterface {
 	public boolean addAssignment(Assign assign) {
 		
 		// Create a new map of assignment names to assignments
-		HashMap<String, Assign> proposedAssignmentMap = new HashMap<String, Assign>(assignmentMap);
+		TreeMap<String, Assign> proposedAssignmentMap = new TreeMap<String, Assign>(assignmentMap);
 		proposedAssignmentMap.put(assign.getName(), assign);
 				
 		TreeSet<Assign> proposedAssignments = (TreeSet<Assign>)proposedAssignmentMap.values();
@@ -90,7 +94,10 @@ public class Solution implements SolutionInterface {
 		
 		// Now we remove the assignment from our set of assignments
 		assignmentMap.remove(assign.getName());
+		// Add the lecture back to unassigned lectures
 		unassignedLectures.add(assign.getLecture());
+		//increase the capacity available in the room again.
+		session.getRoom().addToCurrentCapacity(lecture.getClassSize());
 	}
 	
 	
@@ -190,6 +197,7 @@ public class Solution implements SolutionInterface {
 
 									if (st1.equals(st2)) {
 										cumulativePenalty += 100;
+										System.out.println("Student problem");
 										TreeSet<Assign> conflicts = conflictMap.get(assign);
 										Assign newConflict = assignmentMap.get(l2.getName() + " " + s2.getName());
 										
@@ -208,6 +216,7 @@ public class Solution implements SolutionInterface {
 							Instructor i2 = l2.getInstructor();
 							if (i1.equals(i2) && !s1.equals(s2)) {
 								cumulativePenalty += 20;
+								System.out.println("Instructor problem");
 								TreeSet<Assign> conflicts = conflictMap.get(assign);
 								Assign newConflict = assignmentMap.get(l2.getName() + " " + s2.getName());
 								
@@ -250,7 +259,10 @@ public class Solution implements SolutionInterface {
 			
 			// Make sure every assignment is a tight fit
 			if (l1.getLength() < s1.getLength()) {
+				System.out.println(l1.getLength());
+				System.out.println(s1.getLength());
 				cumulativePenalty += 5;
+				System.out.println("Tight fit problem");
 				TreeSet<Assign> conflicts = conflictMap.get(assign);
 				Assign newConflict = assignmentMap.get(l1.getName() + " " + s1.getName());
 				
@@ -297,7 +309,7 @@ public class Solution implements SolutionInterface {
 			if (numTimeSlots > 1) {
 				// Increase the penalty by 50
 				cumulativePenalty += ((numTimeSlots - 1) * 50);
-				
+				System.out.println("Time slot problem");
 				// Update our conflict map
 				for (Assign a1 : assigns) {				
 					TreeSet<Assign> conflicts = conflictMap.get(a1);					
@@ -335,10 +347,12 @@ public class Solution implements SolutionInterface {
 			}
 			
 			// Now iterate over the map, looking for values greater than 5
-			Vector<Integer> times = (Vector<Integer>)writingTimes.values();
+			Collection<Integer> toCollection = writingTimes.values();
+			Vector<Integer> times = new Vector<Integer>(toCollection);
 			for (int time : times) {
 				if (time > 5)
 					cumulativePenalty += 50;
+					System.out.println("5 hour problem");
 			}
 		}
 				
@@ -427,5 +441,15 @@ public class Solution implements SolutionInterface {
 	
 	public HashMap<Assign, TreeSet<Assign>> getConflictingAssignmentMap() {
 		return conflictingAssignments;
+	}
+	
+	public void printAssignments() {
+		for (Assign assign : assignmentMap.values()) {
+			System.out.println(assign.toString());
+		}
+	}
+	
+	public TreeMap<String,Assign> getAssignments() {
+		return assignmentMap;
 	}
 }

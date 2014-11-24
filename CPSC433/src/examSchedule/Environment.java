@@ -10,7 +10,7 @@ import examSchedule.parser.Predicate.ParamType;
 
 public class Environment extends PredicateReader implements ExamSchedulePredicates, EnvironmentInterface {
 
-	private static EnvironmentInterface singletonEnv;
+	private static Environment singletonEnv;
 	
 	private TreeSet<Student> studentList = new TreeSet<Student>();
 	private TreeSet<Instructor> instructorList = new TreeSet<Instructor>();
@@ -277,7 +277,7 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 
 	public Lecture f_lecture(String c, String lec) {
 		for (Lecture lecture : lectureList) {
-			if (lecture.getName().equals(c+lec)) {
+			if (lecture.getName().equals(c + " " + lec)) {
 				return lecture;
 			}
 		}
@@ -520,6 +520,7 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		// Ensure the lecture exists
 		Lecture lecture = f_lecture(c, l);
 		if (lecture == null) {
+			System.out.println("Why am I here?");
 			lecture = new Lecture(course, l);
 			lectureList.add(lecture);
 		}
@@ -635,7 +636,7 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		return super.fromFile(fromFile);
 	}
 	
-	public static EnvironmentInterface get(){
+	public static Environment get(){
 		if(singletonEnv==null){
 			singletonEnv = new Environment();
 		}

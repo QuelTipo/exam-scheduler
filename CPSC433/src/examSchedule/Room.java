@@ -30,7 +30,7 @@ public class Room extends Entity {
 	}
 	
 	public void addToCurrentCapacity(long numberOfStudents) {
-		currentCapacity += numberOfStudents;
+		currentCapacity -= numberOfStudents;
 	}
 	
 	public void subtractFromCurrentCapacity(long numberOfStudents) {

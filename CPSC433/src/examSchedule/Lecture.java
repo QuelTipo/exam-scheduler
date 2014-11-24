@@ -63,6 +63,7 @@ public class Lecture extends Entity {
 	public void update(Instructor ins, long l) {
 		this.instructor = ins;
 		this.length = l;
+		System.out.println("Nope");
 	}
 
 	public void addStudent(Student student) {

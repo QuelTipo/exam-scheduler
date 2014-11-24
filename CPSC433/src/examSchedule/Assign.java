@@ -15,7 +15,7 @@ public class Assign extends Entity {
 		
 		long studentsToAdd = this.lecture.getClassSize();
 		
-		this.session.getRoom().addToCurrentCapacity(studentsToAdd);
+		this.session.getRoom().subtractFromCurrentCapacity(studentsToAdd);
 	}
 	
 	public Lecture getLecture() {
