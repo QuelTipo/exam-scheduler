@@ -116,7 +116,7 @@ public class ExamSchedule {
 		
 		Search search = new Search(env);
 		search.setup();
-		TreeSet<examSchedule.Solution> newSolutions = search.getCurrentSolutions();
+		Vector<examSchedule.Solution> newSolutions = search.getCurrentSolutions();
 		for (examSchedule.Solution solution : newSolutions) {
 			solution.printAssignments();
 			System.out.println(solution.getPenalty());

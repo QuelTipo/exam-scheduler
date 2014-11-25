@@ -1,13 +1,15 @@
 package examSchedule;
 
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Random;
+import java.util.Vector;
 
 public class Search {
 
 	private Environment environment;
 	private SolutionGenerator generator;
-	private TreeSet<Solution> solutions;
+	private Vector<Solution> solutions;
 	private Solution bestSolution;
 	
 	// Default constructor
@@ -15,6 +17,7 @@ public class Search {
 		
 		this.environment = env;
 		this.generator = new SolutionGenerator(environment);
+		this.solutions = new Vector<Solution>();
 	}
 	
 	// This method will do the necessary setup for our set based search
@@ -34,7 +37,7 @@ public class Search {
 	}
 	
 	
-	public TreeSet<Solution> getCurrentSolutions() {
+	public Vector<Solution> getCurrentSolutions() {
 		return solutions;
 	}
 	
