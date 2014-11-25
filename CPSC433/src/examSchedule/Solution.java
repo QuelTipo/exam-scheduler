@@ -23,7 +23,7 @@ public class Solution implements SolutionInterface {
 	private TreeSet<Lecture> unassignedLectures;
 	private HashMap<Assign, TreeSet<Assign>> conflictingAssignments;
 	private Vector<Assign> rankedAssignments = new Vector<Assign>((int)numLectures);
-	private TreeMap<Session,Long> currentRoomCapacities = new TreeMap<Session,Long>();
+	public TreeMap<Session,Long> currentRoomCapacities = new TreeMap<Session,Long>();
 	private TreeMap<Session, TreeSet<Lecture>> lecturesInSession = new TreeMap<Session, TreeSet<Lecture>>();
 	
 	// Default constructor
@@ -37,6 +37,9 @@ public class Solution implements SolutionInterface {
 		TreeSet<Session> sessionList = environment.getSessionList();
 		for (Session session : sessionList) {
 			currentRoomCapacities.put(session, session.getRoom().getCapacity());
+			System.out.println(session);
+			System.out.println(session.getRoom().getCapacity());
+			lecturesInSession.put(session, new TreeSet<Lecture>());
 		}
 		
 		complete = numLectures == assignmentMap.size() ? true : false;
@@ -529,6 +532,29 @@ public class Solution implements SolutionInterface {
 		long capacity = currentRoomCapacities.get(session);
 		capacity += lecture.getClassSize();
 		currentRoomCapacities.put(session, capacity);
+	}
+	
+	public boolean canHold(Session session, Lecture lecture) {
+		long capacity = currentRoomCapacities.get(session);
+		capacity -= lecture.getClassSize();
+		if (capacity < 0) {
+			return false;
+		}
+		return true;
+	}
+	
+	public Vector<Session> weedOutByCapacity(TreeSet<Session> sessionList, long classSize) {
+		
+		Vector<Session> sessionVector = new Vector<Session>();
+		
+		for (Session session : sessionList) {
+			long capacity = currentRoomCapacities.get(session);
+			if (classSize <= capacity) {
+				sessionVector.add(session);
+			}
+		}
+		
+		return sessionVector;
 	}
 	
 	public void addLectureToSession(Session session, Lecture lecture) {

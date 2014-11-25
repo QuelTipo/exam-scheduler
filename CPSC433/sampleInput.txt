@@ -4655,5 +4655,3 @@ session(W8-3-EDU272)
 roomAssign(W8-3-EDU272,EDU272)
 at(W8-3-EDU272,W,8,3)
 
-enrolled(billy, [CPSC456,L01,FRED101,L34])
-

@@ -24,7 +24,7 @@ public class Search {
 	public void setup() {
 		
 		// Begin by populating our solution set with random, valid solutions
-		for (int i = 0; i < 40; ++i) {
+		for (int i = 0; i < 2; ++i) {
 			Solution solution = generator.buildSolution();
 			if (solution != null) {
 				solutions.add(solution);

@@ -127,7 +127,7 @@ public class ExamSchedule {
 		}
 		System.out.println(newSolutions.size());
 		System.out.println(env.getSessionList().size());
-		System.out.println(env.getSessionList().first().getRoom().getCurrentCapacity());
+		
 				
 	
 		
