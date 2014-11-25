@@ -49,7 +49,7 @@ public class SolutionGenerator {
 	}
 	
 	public Solution buildDown(Solution tempSolution, Random random) {
-		
+	
 		//if there's no more lectures to add we have found a solution
 		Vector<Lecture> remainingLectures = new Vector<Lecture>(tempSolution.getUnassignedLectures());
 		
@@ -63,15 +63,13 @@ public class SolutionGenerator {
 		
 			int randIndex = random.nextInt(remainingLectures.size());
 			Lecture tryLecture = remainingLectures.remove(randIndex);
+		
 			
 			//get list of lengths equal to or greater than session length
 			NavigableMap<Long,TreeSet<Session>> validLengths = sessionLengths.tailMap(tryLecture.getLength(), true);
 			//throw them in a vector to ease randomized access
-			Collection<TreeSet<Session>> toCollection = validLengths.values();
 			TreeSet<Session> goodSessions = new TreeSet<Session>();
-			for (TreeSet<Session> sessionList : toCollection) {
-				goodSessions.addAll(sessionList);				
-			}
+			goodSessions.addAll(validLengths.get(tryLecture.getLength()));
 			
 			Vector<Session> sessionsToTry = tempSolution.weedOutByCapacity(goodSessions, tryLecture.getClassSize());
 			
@@ -83,15 +81,18 @@ public class SolutionGenerator {
 				
 
 				Assign tryAssign = new Assign(tryLecture, tempSession);
-				tempSolution.dumbAddAssign(tryAssign);
-						
+				boolean ret = tempSolution.dumbAddAssign(tryAssign);
+				
+				System.out.println(tempSolution.getUnassignedLectures().size());
+				
 				//recursively call to add another assignment
 				//if we get something back, we have a winner.
 					
-				if (buildDown(tempSolution, random) != null) {
-					return tempSolution;
+				if (ret) {
+					if (buildDown(tempSolution, random) != null) {
+						return tempSolution;
+					}
 				}
-					
 				//if nothing was passed back up, then let's try a different session
 					
 				tempSolution.removeAssignment(tryAssign);

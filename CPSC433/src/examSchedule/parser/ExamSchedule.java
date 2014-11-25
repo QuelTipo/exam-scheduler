@@ -6,6 +6,7 @@ import examSchedule.SolutionGenerator;
 import examSchedule.Search;
 
 import java.io.*;
+import java.util.Collection;
 import java.util.TreeSet;
 import java.util.Vector;
 
@@ -119,8 +120,9 @@ public class ExamSchedule {
 		Vector<examSchedule.Solution> newSolutions = search.getCurrentSolutions();
 		if (newSolutions.size() != 0) {
 			for (examSchedule.Solution solution : newSolutions) {
-				solution.printAssignments();
-				System.out.println(solution.getPenalty());
+				Collection<Assign> solutions = solution.getAssignments().values();
+				System.out.println(solution.isValidSolution(new TreeSet<Assign>(solutions), true));
+				
 			}
 		} else {
 			System.out.println("No possible solutions.");

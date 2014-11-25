@@ -23,7 +23,7 @@ public class Solution implements SolutionInterface {
 	private TreeSet<Lecture> unassignedLectures;
 	private HashMap<Assign, TreeSet<Assign>> conflictingAssignments;
 	private Vector<Assign> rankedAssignments = new Vector<Assign>((int)numLectures);
-	public TreeMap<Session,Long> currentRoomCapacities = new TreeMap<Session,Long>();
+	private TreeMap<Session,Long> currentRoomCapacities = new TreeMap<Session,Long>();
 	private TreeMap<Session, TreeSet<Lecture>> lecturesInSession = new TreeMap<Session, TreeSet<Lecture>>();
 	
 	// Default constructor
@@ -36,9 +36,7 @@ public class Solution implements SolutionInterface {
 		
 		TreeSet<Session> sessionList = environment.getSessionList();
 		for (Session session : sessionList) {
-			currentRoomCapacities.put(session, session.getRoom().getCapacity());
-			System.out.println(session);
-			System.out.println(session.getRoom().getCapacity());
+			currentRoomCapacities.put(session, new Long(session.getRoom().getCapacity()));
 			lecturesInSession.put(session, new TreeSet<Lecture>());
 		}
 		
@@ -523,19 +521,19 @@ public class Solution implements SolutionInterface {
 	}
 	
 	public void decreaseSessionCapacity(Session session, Lecture lecture) {
-		long capacity = currentRoomCapacities.get(session);
+		long capacity = currentRoomCapacities.get(session).longValue();
 		capacity -= lecture.getClassSize();
 		currentRoomCapacities.put(session, capacity);
 	}
 	
 	public void increaseSessionCapacity(Session session, Lecture lecture) {
-		long capacity = currentRoomCapacities.get(session);
+		long capacity = currentRoomCapacities.get(session).longValue();
 		capacity += lecture.getClassSize();
 		currentRoomCapacities.put(session, capacity);
 	}
 	
 	public boolean canHold(Session session, Lecture lecture) {
-		long capacity = currentRoomCapacities.get(session);
+		long capacity = currentRoomCapacities.get(session).longValue();
 		capacity -= lecture.getClassSize();
 		if (capacity < 0) {
 			return false;
@@ -548,7 +546,7 @@ public class Solution implements SolutionInterface {
 		Vector<Session> sessionVector = new Vector<Session>();
 		
 		for (Session session : sessionList) {
-			long capacity = currentRoomCapacities.get(session);
+			long capacity = currentRoomCapacities.get(session).longValue();
 			if (classSize <= capacity) {
 				sessionVector.add(session);
 			}
