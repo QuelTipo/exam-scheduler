@@ -117,11 +117,17 @@ public class ExamSchedule {
 		Search search = new Search(env);
 		search.setup();
 		Vector<examSchedule.Solution> newSolutions = search.getCurrentSolutions();
-		for (examSchedule.Solution solution : newSolutions) {
-			solution.printAssignments();
-			System.out.println(solution.getPenalty());
+		if (newSolutions.size() != 0) {
+			for (examSchedule.Solution solution : newSolutions) {
+				solution.printAssignments();
+				System.out.println(solution.getPenalty());
+			}
+		} else {
+			System.out.println("No possible solutions.");
 		}
 		System.out.println(newSolutions.size());
+		System.out.println(env.getSessionList().size());
+		System.out.println(env.getSessionList().first().getRoom().getCurrentCapacity());
 				
 	
 		

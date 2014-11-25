@@ -608,9 +608,6 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 			sessionList.add(session);
 		}
 		
-		// Add the a pointer to the lecture to the session
-		session.addLecture(lecture);
-		
 		// Ensure the assignment exists
 		Assign assign = f_assign(c, lec, s);
 		if (assign == null) {

@@ -23,6 +23,8 @@ public class Solution implements SolutionInterface {
 	private TreeSet<Lecture> unassignedLectures;
 	private HashMap<Assign, TreeSet<Assign>> conflictingAssignments;
 	private Vector<Assign> rankedAssignments = new Vector<Assign>((int)numLectures);
+	private TreeMap<Session,Long> currentRoomCapacities = new TreeMap<Session,Long>();
+	private TreeMap<Session, TreeSet<Lecture>> lecturesInSession = new TreeMap<Session, TreeSet<Lecture>>();
 	
 	// Default constructor
 	public Solution(Environment env) {
@@ -32,6 +34,11 @@ public class Solution implements SolutionInterface {
 		
 		numLectures = environment.getLectureList().size();
 		
+		TreeSet<Session> sessionList = environment.getSessionList();
+		for (Session session : sessionList) {
+			currentRoomCapacities.put(session, session.getRoom().getCapacity());
+		}
+		
 		complete = numLectures == assignmentMap.size() ? true : false;
 		
 		// penalty = calculatePenalty();
@@ -40,9 +47,13 @@ public class Solution implements SolutionInterface {
 		unassignedLectures = new TreeSet<Lecture>(environment.getLectureList());
 		// Now we'll remove the lectures which are assigned
 		for (Assign assign : assignmentMap.values()) {
+			
 			Lecture lecture = assign.getLecture();
 			if (unassignedLectures.contains(lecture))
 				unassignedLectures.remove(lecture);
+			Session session = assign.getSession();
+			addLectureToSession(session,lecture);
+			decreaseSessionCapacity(session,lecture);
 		}
 	}
 		
@@ -73,6 +84,8 @@ public class Solution implements SolutionInterface {
 		// Update our tree set of assignments and return; 
 		assignmentMap = proposedAssignmentMap;
 		unassignedLectures.remove(assign.getLecture());
+		addLectureToSession(assign.getSession(),assign.getLecture());
+		decreaseSessionCapacity(assign.getSession(),assign.getLecture());
 		complete = assignmentMap.size() == numLectures;
 		return true;
 	}
@@ -86,23 +99,25 @@ public class Solution implements SolutionInterface {
 		assignmentMap.put(assign.getName(), assign);
 		unassignedLectures.remove(assign.getLecture());
 		complete = assignmentMap.size() == numLectures;
+		decreaseSessionCapacity(assign.getSession(),assign.getLecture());
+		addLectureToSession(assign.getSession(),assign.getLecture());
 		return true;
 	}
 	
 	
 	public void removeAssignment(Assign assign) {
 		
-		// We need to remove the link
 		Lecture lecture = assign.getLecture();
 		Session session = assign.getSession();
-		session.removeLecture(lecture);
 		
 		// Now we remove the assignment from our set of assignments
 		assignmentMap.remove(assign.getName());
 		// Add the lecture back to unassigned lectures
 		unassignedLectures.add(assign.getLecture());
 		//increase the capacity available in the room again.
-		session.getRoom().addToCurrentCapacity(lecture.getClassSize());
+		increaseSessionCapacity(session, lecture);
+		//we need to remove the link
+		removeLectureFromSession(session,lecture);
 	}
 	
 	
@@ -128,16 +143,19 @@ public class Solution implements SolutionInterface {
 		}
 		
 		// Ensure that the number of students writing an exam in any room is less than or equal to the capacity of that room
-		for (Room room : environment.getRoomList()) {
-			long numStudents = 0;
-			for (Assign assign : proposedAssignments) {
-				if (assign.getSession().getRoom() == room) {
-					numStudents += assign.getLecture().getStudents().size();
-				}
+		for (Assign assign : proposedAssignments) {
+			Session session = assign.getSession();
+			TreeSet<Lecture> sessionLectures = lecturesInSession.get(session);
+			long numberOfStudents = 0;
+			for (Lecture lecture : sessionLectures) {
+				numberOfStudents += lecture.getClassSize();
 			}
-			if (!room.canHold(numStudents))
+			if (numberOfStudents > session.getRoom().getCapacity()) {
 				return false;
+			}
+			
 		}
+
 		
 		// Ensure that every lecture's required time is less than or equal to the length of the session it is assigned to
 		for (Assign assign : proposedAssignments) {
@@ -178,7 +196,8 @@ public class Solution implements SolutionInterface {
 			for (Session s2 : d1.getSessions()) {
 				
 				// Iterate over all the lectures scheduled on the given session
-				for (Lecture l2 : s2.getLectures()) {
+				TreeSet<Lecture> s2lectures = lecturesInSession.get(s2);
+				for (Lecture l2 : s2lectures) {
 					
 					// Obviously we don't need to worry about a lecture conflicting with itself
 					if (l1.equals(l2))
@@ -333,7 +352,8 @@ public class Solution implements SolutionInterface {
 			for (Session session : day.getSessions()) {
 				
 				// And every lecture in that session
-				for (Lecture lecture : session.getLectures()) {
+				TreeSet<Lecture> sessionLectures = lecturesInSession.get(session);
+				for (Lecture lecture : sessionLectures) {
 					
 					int lectureLength = (int)lecture.getLength();
 					
@@ -366,7 +386,8 @@ public class Solution implements SolutionInterface {
 			TreeSet<Lecture> lectures = new TreeSet<Lecture>();
 			
 			// Iterate over every lecture assigned to the session
-			for (Lecture lecture : session.getLectures()) {
+			TreeSet<Lecture> sessionLectures = lecturesInSession.get(session);
+			for (Lecture lecture : sessionLectures) {
 				
 				// Add the length to our set of lengths
 				lengths.add((int)lecture.getLength());
@@ -496,6 +517,30 @@ public class Solution implements SolutionInterface {
 		}
 		
 		return bestAssignments;
+	}
+	
+	public void decreaseSessionCapacity(Session session, Lecture lecture) {
+		long capacity = currentRoomCapacities.get(session);
+		capacity -= lecture.getClassSize();
+		currentRoomCapacities.put(session, capacity);
+	}
+	
+	public void increaseSessionCapacity(Session session, Lecture lecture) {
+		long capacity = currentRoomCapacities.get(session);
+		capacity += lecture.getClassSize();
+		currentRoomCapacities.put(session, capacity);
+	}
+	
+	public void addLectureToSession(Session session, Lecture lecture) {
+		TreeSet<Lecture> lectures = lecturesInSession.get(session);
+		lectures.add(lecture);
+		lecturesInSession.put(session,lectures);
+	}
+	
+	public void removeLectureFromSession(Session session, Lecture lecture) {
+		TreeSet<Lecture> lectures = lecturesInSession.get(session);
+		lectures.remove(lecture);
+		lecturesInSession.put(session,lectures);
 	}
 	
 	

@@ -21,7 +21,7 @@ public class SolutionGenerator {
 		
 		for (Session session : sessions) {
 			sessionLengths.put(new Long(session.getLength()), session);
-			sessionCapacities.put(session, new Long(session.getRoom().getCurrentCapacity()));
+			sessionCapacities.put(session, new Long(session.getRoom().getCapacity()));
 		}
 		
 	}
@@ -73,7 +73,7 @@ public class SolutionGenerator {
 					Assign tryAssign = new Assign(tryLecture, tempSession);
 					tempSolution.dumbAddAssign(tryAssign);
 					//adjust our tree map to reflect reduction in capacity
-					sessionCapacities.put(tempSession, tempSession.getRoom().getCurrentCapacity());
+					sessionCapacities.put(tempSession, tempSession.getRoom().getNumberBooked());
 					
 					//recursively call to add another assignment
 					//if we get something back, we have a winner.
@@ -86,7 +86,7 @@ public class SolutionGenerator {
 					
 					tempSolution.removeAssignment(tryAssign);
 					//adjust our tree to reflect increase in capacity
-					sessionCapacities.put(tempSession, tempSession.getRoom().getCurrentCapacity());
+					sessionCapacities.put(tempSession, tempSession.getRoom().getNumberBooked());
 					
 				}
 			}

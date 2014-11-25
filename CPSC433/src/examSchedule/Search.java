@@ -26,7 +26,9 @@ public class Search {
 		// Begin by populating our solution set with random, valid solutions
 		for (int i = 0; i < 40; ++i) {
 			Solution solution = generator.buildSolution();
-			solutions.add(solution);
+			if (solution != null) {
+				solutions.add(solution);
+			}
 		}
 		
 		// Now set our initial best solution
