@@ -1,0 +1,50 @@
+
+// INSTRUCTORS
+instructor(I00000001)
+
+// COURSES
+course(MATH211)
+lecture(MATH211,L01)
+instructs(I00000001,MATH211,L01)
+examLength(MATH211,L01,2)
+
+course(MATH265)
+lecture(MATH265,L01)
+instructs(I00000001,MATH265,L01)
+examLength(MATH265,L01,2)
+
+course(CPSC231)
+lecture(CPSC231,L01)
+instructs(I00000001,CPSC231,L01)
+examLength(CPSC231,L01,2)
+
+course(PHIL279)
+lecture(PHIL279,L01)
+instructs(I00000001,PHIL279,L01)
+examLength(PHIL279,L01,2)
+
+// STUDENTS
+
+// DAYS
+day(M)
+
+// ROOMS
+room(MS217)
+room(MS218)
+room(MS219)
+capacity(MS217,50)
+capacity(MS218,50)
+capacity(MS219,50)
+
+// SESSIONS
+session(M10-3-MS217)
+roomAssign(M10-3-MS217,MS217)
+at(M10-3-MS217,M,10,2)
+
+session(M10-3-MS218)
+roomAssign(M10-3-MS218,MS218)
+at(M10-3-MS218,M,10,2)
+
+session(M10-3-MS219)
+roomAssign(M10-3-MS219,MS219)
+at(M10-3-MS219,M,10,2)

@@ -39,3 +39,6 @@ is set at 3, but the session length is 2 for each of the four available sessions
 
 ***  tc05.txt  ***
 This case should give a solution, but will have at least one violation of soft constraint 3
+
+***  tc06.txt  ***
+This case should give a solution, but will have at least one violation of soft constraint 2
