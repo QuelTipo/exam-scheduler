@@ -6,7 +6,6 @@ import java.util.TreeSet;
 import java.util.Vector;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 import examSchedule.Environment;
 import examSchedule.parser.Pair;
@@ -225,7 +224,7 @@ public class Solution implements SolutionInterface {
 									
 									// If they are the same student
 									if (st1.equals(st2)) {
-										System.out.println("Soft constraint 1 violation for student " + st1.getName() + " between " + l1.getName() + " and " + l2.getName());
+//										System.out.println("Soft constraint 1 violation for student " + st1.getName() + " between " + l1.getName() + " and " + l2.getName());
 										
 										// Update our conflict map
 										TreeSet<Assign> conflicts = conflictMap.get(assign);
@@ -253,7 +252,7 @@ public class Solution implements SolutionInterface {
 							Instructor i1 = l1.getInstructor();
 							Instructor i2 = l2.getInstructor();
 							if (i1.equals(i2) && !s1.equals(s2)) {
-								System.out.println("Soft constraint 2 violation for instructor " + i1.getName() + " between " + l1.getName() + " and " + l2.getName());
+//								System.out.println("Soft constraint 2 violation for instructor " + i1.getName() + " between " + l1.getName() + " and " + l2.getName());
 								
 								// Update our conflict map
 								TreeSet<Assign> conflicts = conflictMap.get(assign);
@@ -286,7 +285,7 @@ public class Solution implements SolutionInterface {
 										
 										// Since we only enter this block is l2 begins when l1 ends, we don't need to worry about the penalty being applied twice
 										cumulativePenalty += 50;
-										System.out.println("Soft constraint 5 violation for student " + st1.getName() + " between " + l1.getName() + " and " + l2.getName());
+//										System.out.println("Soft constraint 5 violation for student " + st1.getName() + " between " + l1.getName() + " and " + l2.getName());
 										TreeSet<Assign> conflicts = conflictMap.get(assign);
 										Assign newConflict = assignmentMap.get(l2.getName());
 										
@@ -306,7 +305,7 @@ public class Solution implements SolutionInterface {
 			// Make sure every assignment is a tight fit
 			if (l1.getLength() < s1.getLength()) {
 				cumulativePenalty += 5;
-				System.out.println("Soft constraint 7 violation on " + l1.getName());
+//				System.out.println("Soft constraint 7 violation on " + l1.getName());
 				TreeSet<Assign> conflicts = conflictMap.get(assign);
 				Assign newConflict = assignmentMap.get(l1.getName());
 				
@@ -355,7 +354,7 @@ public class Solution implements SolutionInterface {
 			if (numTimeSlots > 1) {
 				// Increase the penalty by 50
 				cumulativePenalty += ((numTimeSlots - 1) * 50);
-				System.out.println("Soft constraint 3 violation for course " + course.getName());
+//				System.out.println("Soft constraint 3 violation for course " + course.getName());
 				// Update our conflict map
 				for (Assign a1 : assigns) {				
 					TreeSet<Assign> conflicts = conflictMap.get(a1);					
@@ -399,7 +398,7 @@ public class Solution implements SolutionInterface {
 			for (int time : times) {
 				if (time > 5) {
 					cumulativePenalty += 50;
-					System.out.println("Soft constraint 4 violation");
+//					System.out.println("Soft constraint 4 violation");
 				}
 			}
 		}
@@ -428,7 +427,7 @@ public class Solution implements SolutionInterface {
 				// Increase the penalty
 				cumulativePenalty += ((numLengths - 1) * 20);
 				
-				System.out.println("Soft constraint 6 violation for session " + session.getName());
+//				System.out.println("Soft constraint 6 violation for session " + session.getName());
 				
 				// Update our conflict map
 				for (Lecture l1 : lectures) {
@@ -547,7 +546,7 @@ public class Solution implements SolutionInterface {
 		
 		// Sanity check
 		assert num <= numLectures : "Attempting to extract more assignments than possible";
-		
+				
 		HashMap<String, Assign> fixedAssignments = (HashMap<String, Assign>)environment.getFixedAssignments();
 		TreeSet<Assign> bestAssignments = new TreeSet<Assign>();
 		
@@ -561,7 +560,7 @@ public class Solution implements SolutionInterface {
 			while (fixedAssignments.values().contains(best))
 				best = rankedAssignments.get(++index);
 			
-			System.out.println("Adding " + best.getName());
+//			System.out.println("Adding " + best.getName() + "," + best.getSession().getName());
 			
 			// Add the assignment to our set
 			bestAssignments.add(best);
