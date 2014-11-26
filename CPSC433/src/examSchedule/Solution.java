@@ -519,6 +519,9 @@ public class Solution implements SolutionInterface {
 	// This method is a component of the mutate operation, and will unassign the worst n assignments
 	public void unassignWorst(int n) {
 		
+		// Sanity check
+		assert n <= numLectures : "Attempting to unassign more assignments than possible";
+		
 		HashMap<String, Assign> fixedAssignments = (HashMap<String, Assign>)environment.getFixedAssignments();
 				
 		// We want to start with the last index, but we'll be decrementing it when we access
