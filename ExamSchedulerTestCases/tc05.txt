@@ -1,0 +1,57 @@
+
+// INSTRUCTORS
+instructor(I00000001)
+instructor(I00000002)
+instructor(I00000003)
+instructor(I00000004)
+
+// COURSES
+course(MATH211)
+lecture(MATH211,L01)
+lecture(MATH211,L02)
+lecture(MATH211,L03)
+lecture(MATH211,L04)
+instructs(I00000001,MATH211,L01)
+instructs(I00000002,MATH211,L02)
+instructs(I00000003,MATH211,L03)
+instructs(I00000004,MATH211,L04)
+examLength(MATH211,L01,2)
+examLength(MATH211,L02,2)
+examLength(MATH211,L03,2)
+examLength(MATH211,L04,2)
+
+// STUDENTS
+student(S00000001)
+student(S00000002)
+student(S00000003)
+student(S00000004)
+enrolled(S00000001,MATH211,L01)
+enrolled(S00000002,MATH211,L02)
+enrolled(S00000003,MATH211,L03)
+enrolled(S00000004,MATH211,L04)
+
+// DAYS
+day(M)
+day(T)
+day(W)
+
+// ROOMS
+room(MS217)
+capacity(MS217,50)
+
+// SESSIONS
+session(M10-2-MS217)
+roomAssign(M10-2-MS217,MS217)
+at(M10-2-MS217,M,10,2)
+
+session(T10-2-MS217)
+roomAssign(T10-2-MS217,MS217)
+at(T10-2-MS217,T,10,2)
+
+session(W10-2-MS217)
+roomAssign(W10-2-MS217,MS217)
+at(W10-2-MS217,W,10,2)
+
+session(W14-2-MS217)
+roomAssign(W14-2-MS217,MS217)
+at(W14-2-MS217,W,14,2)

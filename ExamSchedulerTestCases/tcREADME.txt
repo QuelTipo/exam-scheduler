@@ -36,3 +36,6 @@ Expected o/p is no solution.
 Tests H1 and H4.
 26 students all taking the same four courses.  The examLength for the course MATH265
 is set at 3, but the session length is 2 for each of the four available sessions.
+
+***  tc05.txt  ***
+This case should give a solution, but will have at least one violation of soft constraint 3
