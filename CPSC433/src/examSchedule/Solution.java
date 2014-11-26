@@ -545,8 +545,10 @@ public class Solution implements SolutionInterface {
 	
 	public TreeSet<Assign> extractBest(int num) {
 		
+		// Sanity check
+		assert num <= numLectures : "Attempting to extract more assignments than possible";
+		
 		TreeSet<Assign> fixedAssignments = (TreeSet<Assign>)environment.getFixedAssignments().values();
-
 		TreeSet<Assign> bestAssignments = new TreeSet<Assign>();
 		
 		int index = 0;
