@@ -277,7 +277,7 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 
 	public Lecture f_lecture(String c, String lec) {
 		for (Lecture lecture : lectureList) {
-			if (lecture.getName().equals(c + " " + lec)) {
+			if (lecture.getName().equals(c + lec)) {
 				return lecture;
 			}
 		}

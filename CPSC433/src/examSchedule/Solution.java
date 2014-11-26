@@ -182,6 +182,10 @@ public class Solution implements SolutionInterface {
 		
 		long cumulativePenalty = 0;
 
+		// Soft constraint one requires a set of pairs of assignments to avoid double penalties
+		TreeSet<Pair<Student, Pair<Assign, Assign>>> s1Set = new TreeSet<Pair<Student, Pair<Assign, Assign>>>();
+		TreeSet<Pair<Assign, Assign>> s2Set = new TreeSet<Pair<Assign, Assign>>();
+		
 		// Iterate over every assignment
 		// No student writes more than one exam in a timeslot - 100
 		// No instructor invigulates in more than one room at the same time - 20
@@ -218,19 +222,28 @@ public class Solution implements SolutionInterface {
 								
 								for (Student st2 : l2.getStudents()) {
 									
-									// If they are the same student, increase the penalty by 100 and update our conflict map
-
+									// If they are the same student
 									if (st1.equals(st2)) {
-										cumulativePenalty += 100;
-										System.out.println("Student problem");
+										System.out.println("Soft constraint 1 violation for student " + st1.getName() + " between " + l1.getName() + " and " + l2.getName());
+										
+										// Update our conflict map
 										TreeSet<Assign> conflicts = conflictMap.get(assign);
-										Assign newConflict = assignmentMap.get(l2.getName() + " " + s2.getName());
+										Assign newConflict = assignmentMap.get(l2.getName());
 										
 										// Sanity check
-										assert newConflict != null : String.format("Failed to find assignment with name %s", l2.getName() + s2.getName());
+										assert newConflict != null : String.format("Failed to find assignment with name %s", l2.getName());
 										
 										conflicts.add(newConflict);
 										conflictMap.put(assign, conflicts);
+										
+										// We cannot simply increase the cumulative penalty by 100, as this does not account for lectures starting at the same time
+										// Add the pair of conflicting assignments to our s1Set, also checking that the reverse is not already in there
+										Pair<Assign, Assign> forward = new Pair<Assign, Assign>(assign, newConflict);
+										Pair<Assign, Assign> reverse = new Pair<Assign, Assign>(newConflict, assign);
+										Pair<Student, Pair<Assign, Assign>> forwardStudent = new Pair<Student, Pair<Assign, Assign>>(st1, forward);
+										Pair<Student, Pair<Assign, Assign>> reverseStudent = new Pair<Student, Pair<Assign, Assign>>(st1, reverse);
+										if (!s1Set.contains(forwardStudent) && !s1Set.contains(reverseStudent))
+											s1Set.add(forwardStudent);
 									}
 								}
 							}
@@ -239,17 +252,23 @@ public class Solution implements SolutionInterface {
 							Instructor i1 = l1.getInstructor();
 							Instructor i2 = l2.getInstructor();
 							if (i1.equals(i2) && !s1.equals(s2)) {
-								cumulativePenalty += 20;
-								System.out.println("Instructor problem");
+								System.out.println("Soft constraint 2 violation for instructor " + i1.getName() + " between " + l1.getName() + " and " + l2.getName());
+								
+								// Update our conflict map
 								TreeSet<Assign> conflicts = conflictMap.get(assign);
-								Assign newConflict = assignmentMap.get(l2.getName() + " " + s2.getName());
+								Assign newConflict = assignmentMap.get(l2.getName());
 								
 								// Sanity check
-								// Sanity check
-								assert newConflict != null : String.format("Failed to find assignment with name %s", l2.getName() + s2.getName());
+								assert newConflict != null : String.format("Failed to find assignment with name %s", l2.getName());
 								
 								conflicts.add(newConflict);
 								conflictMap.put(assign, conflicts);
+								
+								// Similar to soft constraint 1, we don't want to add the penalty twice
+								Pair<Assign, Assign> newPair = new Pair<Assign, Assign>(assign, newConflict);
+								Pair<Assign, Assign> reverse = new Pair<Assign, Assign>(newConflict, assign);
+								if (!s1Set.contains(newPair) && !s1Set.contains(reverse))
+									s2Set.add(newPair);
 							}
 						}
 						
@@ -261,14 +280,17 @@ public class Solution implements SolutionInterface {
 								
 								for (Student st2 : l2.getStudents()) {
 									
-									// If they are the same student, increase the penalty accordingly
+									// If they are the same student
 									if (st1.equals(st2)) {
+										
+										// Since we only enter this block is l2 begins when l1 ends, we don't need to worry about the penalty being applied twice
 										cumulativePenalty += 50;
+										System.out.println("Soft constraint 5 violation for student " + st1.getName() + " between " + l1.getName() + " and " + l2.getName());
 										TreeSet<Assign> conflicts = conflictMap.get(assign);
-										Assign newConflict = assignmentMap.get(l2.getName() + " " + s2.getName());
+										Assign newConflict = assignmentMap.get(l2.getName());
 										
 										// Sanity check
-										assert newConflict != null : String.format("Failed to find assignment with name %s", l2.getName() + s2.getName());
+										assert newConflict != null : String.format("Failed to find assignment with name %s", l2.getName());
 										
 										conflicts.add(newConflict);
 										conflictMap.put(assign, conflicts);
@@ -282,20 +304,27 @@ public class Solution implements SolutionInterface {
 			
 			// Make sure every assignment is a tight fit
 			if (l1.getLength() < s1.getLength()) {
-				System.out.println(l1.getLength());
-				System.out.println(s1.getLength());
 				cumulativePenalty += 5;
-				System.out.println("Tight fit problem");
+				System.out.println("Soft constraint 7 violation on " + l1.getName());
 				TreeSet<Assign> conflicts = conflictMap.get(assign);
-				Assign newConflict = assignmentMap.get(l1.getName() + " " + s1.getName());
+				Assign newConflict = assignmentMap.get(l1.getName());
 				
 				// Sanity check
-				assert newConflict != null : String.format("Failed to find assignment with name %s", l1.getName() + s1.getName());
+				assert newConflict != null : String.format("Failed to find assignment with name %s", l1.getName());
 				
 				conflicts.add(newConflict);
 				conflictMap.put(assign, conflicts);
 			}
 		}
+		
+		// Iincrease our cumulative penalty by 100 per entry in our s1Set
+		cumulativePenalty += 100 * s1Set.size();
+		
+		// Increase our cumulative penalty by 20 per entry in our s2Set
+		cumulativePenalty += 20 * s2Set.size();
+		
+		
+		System.out.println(assignmentMap.size());
 		
 		// Every lecture for the same course should have the same exam timeslot - 50
 		// For every course
@@ -305,28 +334,25 @@ public class Solution implements SolutionInterface {
 			TreeSet<Pair<Day, Integer>> examTimes = new TreeSet<Pair<Day, Integer>>();
 			
 			// And for every lecture that course has
-			for (Lecture l1 : course.getLectures()) {
+			for (Lecture lecture : course.getLectures()) {
 				
-				// Search the list of assignment names
-				for (String name : assignmentMap.keySet()) {
+				
+				Assign assign = assignmentMap.get(lecture.getName());
+								
+				// If there is one for that course lecture pair
+				if (assign != null) {
 					
-					// When we find the name corresponding to the lecture
-					String[] components = name.split(" ");
-					if (components[1].equals(l1.getName())) {
-						
-						// Add the day/time pair for that session to our set
-						Assign assign = assignmentMap.get(name);
-						Session session = assign.getSession();
-						Pair<Day, Integer> dayTimePair = new Pair<Day, Integer>(session.getDay(), (int)session.getLength());
-						examTimes.add(dayTimePair);
-						
-						// Add the assignment to our set of assignments
-						assigns.add(assign);
-					}
+					// Add the day/time pair for that session to our set
+					Session session = assign.getSession();
+					Pair<Day, Integer> dayTimePair = new Pair<Day, Integer>(session.getDay(), (int)session.getLength());
+					examTimes.add(dayTimePair);
+					
+					// Add the assignment to our set of assignments
+					assigns.add(assign);
 				}
 			}
 			
-			// If there our day/time set has more than 1 entry
+			// If our day/time set has more than 1 entry
 			int numTimeSlots = examTimes.size();
 			if (numTimeSlots > 1) {
 				// Increase the penalty by 50
@@ -373,9 +399,10 @@ public class Solution implements SolutionInterface {
 			Collection<Integer> toCollection = writingTimes.values();
 			Vector<Integer> times = new Vector<Integer>(toCollection);
 			for (int time : times) {
-				if (time > 5)
+				if (time > 5) {
 					cumulativePenalty += 50;
-					System.out.println("5 hour problem");
+					System.out.println("Soft constraint 4 violation");
+				}
 			}
 		}
 				
@@ -404,14 +431,14 @@ public class Solution implements SolutionInterface {
 				// Update our conflict map
 				for (Lecture l1 : lectures) {
 					
-					Assign assign = assignmentMap.get(l1.getName() + " " + session.getName());
+					Assign assign = assignmentMap.get(l1.getName());
 					TreeSet<Assign> conflicts = conflictMap.get(assign);
 					for (Lecture l2 : lectures) {
 						
-						Assign newConflict = assignmentMap.get(l2.getName() + " " + session.getName());
+						Assign newConflict = assignmentMap.get(l2.getName());
 						
 						// Sanity check
-						assert newConflict != null : String.format("Failed to find assignment with name %s", l1.getName() + session.getName());
+						assert newConflict != null : String.format("Failed to find assignment with name %s", l1.getName());
 						
 						conflicts.add(newConflict);
 						conflictMap.put(assign, conflicts);
@@ -419,7 +446,7 @@ public class Solution implements SolutionInterface {
 				}
 			}
 		}
-		
+				
 		// Update our conflicting assignments and penalty
 		conflictingAssignments = conflictMap;
 		penalty = cumulativePenalty;
@@ -614,4 +641,14 @@ public class Solution implements SolutionInterface {
 	public TreeMap<String,Assign> getAssignments() {
 		return assignmentMap;
 	}
+	
+	public String toString() {
+		String result = "Solution = \n";
+		for (Assign assign : assignmentMap.values()) {
+			result = result + assign.toString() + "\n";
+		}
+		result = result + "Weight is " + getPenalty(); 
+		return result;
+	}
+
 }

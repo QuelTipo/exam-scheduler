@@ -8,7 +8,7 @@ public class Assign extends Entity {
 	private Session session;
 	
 	public Assign(Lecture l, Session s) {
-		super(l.getName() + " " + s.getName());
+		super(l.getName());
 		
 		this.lecture = l;
 		this.session = s;
