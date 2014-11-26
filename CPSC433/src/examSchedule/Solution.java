@@ -322,10 +322,7 @@ public class Solution implements SolutionInterface {
 		
 		// Increase our cumulative penalty by 20 per entry in our s2Set
 		cumulativePenalty += 20 * s2Set.size();
-		
-		
-		System.out.println(assignmentMap.size());
-		
+				
 		// Every lecture for the same course should have the same exam timeslot - 50
 		// For every course
 		for (Course course : environment.getCourseList()) {
@@ -357,7 +354,7 @@ public class Solution implements SolutionInterface {
 			if (numTimeSlots > 1) {
 				// Increase the penalty by 50
 				cumulativePenalty += ((numTimeSlots - 1) * 50);
-				System.out.println("Time slot problem");
+				System.out.println("Soft constraint 3 violation for course " + course.getName());
 				// Update our conflict map
 				for (Assign a1 : assigns) {				
 					TreeSet<Assign> conflicts = conflictMap.get(a1);					
@@ -426,13 +423,18 @@ public class Solution implements SolutionInterface {
 			// If there is more than one entry in our set
 			int numLengths = lengths.size();
 			if (numLengths > 1) {
+				
 				// Increase the penalty
 				cumulativePenalty += ((numLengths - 1) * 20);
+				
+				System.out.println("Soft constraint 6 violation for session " + session.getName());
+				
 				// Update our conflict map
 				for (Lecture l1 : lectures) {
 					
 					Assign assign = assignmentMap.get(l1.getName());
 					TreeSet<Assign> conflicts = conflictMap.get(assign);
+					
 					for (Lecture l2 : lectures) {
 						
 						Assign newConflict = assignmentMap.get(l2.getName());
