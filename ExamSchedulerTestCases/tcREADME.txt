@@ -67,3 +67,17 @@ one session and either CPSC or PHIL to the other.
 Solution expected with Penalty of 40.
 Changed tc10 so now only 1 instructor for all four courses.
 There are 2 pairs of overlapping sessions.
+
+
+***  tc12.txt  ***
+Solution expected without penalty.
+Re. S4 - Students are writing for 5 hours in two W sessions.
+
+***  tc13.txt  ***
+Solution expected with penalty of 1000.
+Test case for S4.  20 students writing for 6 hours on a single day.
+
+***  tc14.txt  ***
+Solution expected with penalty of 2000. (Modified tc13)
+Test case for S4 and S5.  20 students writing for 6 hours on a 
+single day without a break between the two exams.
