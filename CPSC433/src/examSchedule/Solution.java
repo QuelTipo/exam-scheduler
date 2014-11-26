@@ -6,6 +6,7 @@ import java.util.TreeSet;
 import java.util.Vector;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 import examSchedule.Environment;
 import examSchedule.parser.Pair;
@@ -645,11 +646,25 @@ public class Solution implements SolutionInterface {
 	}
 	
 	public String toString() {
-		String result = "Solution = \n";
+		String result = "Solution = {\n";
 		for (Assign assign : assignmentMap.values()) {
 			result = result + assign.toString() + "\n";
 		}
 		result = result + "Weight is " + getPenalty(); 
+		return result;
+	}
+	
+	public String conflictMapToString() {
+		
+		String result = "Conflict map = {\n";
+		for (Map.Entry<Assign, TreeSet<Assign>> entry : conflictingAssignments.entrySet()) {
+			result = result + entry.getKey().toString() + " -> ";
+			for (Assign assign : entry.getValue()) {
+				result = result + assign.toString() + " ";
+			}
+			result  = result + "\n";
+		}
+		result = result + "}";
 		return result;
 	}
 
