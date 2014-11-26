@@ -121,19 +121,14 @@ public class ExamSchedule {
 		if (newSolutions.size() != 0) {
 			for (examSchedule.Solution solution : newSolutions) {
 				Collection<Assign> solutions = solution.getAssignments().values();
-				System.out.println(solution.isValidSolution(new TreeSet<Assign>(solutions), true));
-				System.out.println(solution.getPenalty());
-				
 			}
 		} else {
 			System.out.println("No possible solutions.");
 		}
-		System.out.println(newSolutions.size());
-		System.out.println(env.getSessionList().size());
-		
-				
-	
-		
+
+		System.out.println(search.getBestSolution().toString());
+		System.out.println(search.getBestSolution().conflictMapToString());
+
 	}
 	
 	/**
