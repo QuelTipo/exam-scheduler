@@ -57,3 +57,13 @@ tc01 was modified by adding a 5th course that is only taken by 3 of 20 students.
 The expectation is that course ASTR207 taken by three students will be assigned
 to one of the two overlapping sessions W14-2-MS217 and W14-2-MS205 to generate a
 minimal penalty.
+
+***  tc10.txt  ***
+Solution expected without penalty.  2 pairs of overlapping sessions.
+For each overlapping session, a MATH course should be in assigned to
+one session and either CPSC or PHIL to the other.
+
+***  tc11.txt  ***
+Solution expected with Penalty of 40.
+Changed tc10 so now only 1 instructor for all four courses.
+There are 2 pairs of overlapping sessions.
