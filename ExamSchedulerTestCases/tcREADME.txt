@@ -43,5 +43,8 @@ This case should give a solution, but will have at least one violation of soft c
 ***  tc06.txt  ***
 This case should give a solution, but will have at least one violation of soft constraint 2
 
-***  tc06.txt  ***
+***  tc07.txt  ***
 This case should give a solution, but will have at least one violation of soft constraint 5
+
+***  tc08.txt  ***
+This case should give a solution, but will have at least one violation of soft constraint 6 and 7
