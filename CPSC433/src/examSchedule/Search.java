@@ -92,5 +92,11 @@ public class Search {
 		
 		return true;
 	}
+
+	
+	public Solution getBestSolution() {
+		
+		return bestSolution;
+	}
 	
 }
