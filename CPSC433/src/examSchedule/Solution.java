@@ -458,7 +458,7 @@ public class Solution implements SolutionInterface {
 	
 	// This method will use set rankedAssignments, ascending ordering by number of conflicts
 	public void rankAssignments() {
-		
+				
 		// Our map to store how many other assignments a given assignment conflicts with
 		HashMap<Assign, Integer> numConflicts = new HashMap<Assign, Integer>();
 		for (Assign assign : assignmentMap.values()) {
@@ -477,52 +477,57 @@ public class Solution implements SolutionInterface {
 				numConflicts.put(assign, conflicts);
 			}
 		}
-		
+						
 		// Sort our list of assignments by the number of assignments each one conflicts with
-		// Linear sort for the moment...
-		// Clone because we don't want to be removing variables
-		HashMap<String, Assign> clone = new HashMap<String, Assign>(assignmentMap);
-		TreeSet<Assign> remainingAssignments = (TreeSet<Assign>)clone.values();
-		for (int index = 0; index < numLectures; ++index) {
-			
-			// Initially we don't have an assignment selected
-			Assign selected = null;
+		Vector<Assign> assignments = new Vector<Assign>(assignmentMap.values());
+		rankedAssignments = sortAssignments(assignments, numConflicts);
+	}
+
+	
+	// This method will sort a given list of assignments based on the number of conflicts they have
+	// Linear search at the moment...
+	public Vector<Assign> sortAssignments(Vector<Assign> assignments, HashMap<Assign, Integer> numConflicts) {
+		
+		TreeSet<Assign> remainingAssignments = new TreeSet<Assign>(assignments);
+		Vector<Assign> orderedAssignments = new Vector<Assign>();
+		
+		for (int i = 0; i < numLectures; ++i) {
+		
+			// Grab the first remaining assignment
+			Assign best = remainingAssignments.first();
 			
 			// Iterate over the list of remaining assignments
 			for (Assign assign : remainingAssignments) {
 				
-				// If we haven't selected on yet, do so
-				if (selected == null)
-					selected = assign;
-				// Otherwise, see if what we're looking at is better than what we have
-				else {
-					int oldConflicts = numConflicts.get(selected);
-					int newConflicts = numConflicts.get(assign);
-					if (newConflicts < oldConflicts)
-						selected = assign;
-				}
+				// Check if the assignment we're looking at is better than the current best
+				int bestConflicts = numConflicts.get(best);
+				int newConflicts = numConflicts.get(assign);
+				if (newConflicts < bestConflicts)
+					best = assign;
 			}
-			// Remove the assignment we're going to use
-			remainingAssignments.remove(selected);
-			// Place it in our vector
-			rankedAssignments.set(index, selected);
+			
+			// Append this assignment to our vector of orderedAssignments
+			orderedAssignments.add(best);
+			// Remove the best from the remaining solutions
+			remainingAssignments.remove(best);
 		}
 		
+		return orderedAssignments;
 	}
-
+	
 
 	// This method is a component of the mutate operation, and will unassign the worst n assignments
-	public void unassignWorst() {
+	public void unassignWorst(int n) {
 		
-		TreeSet<Assign> fixedAssignments = (TreeSet<Assign>)environment.getFixedAssignments().values();
+		HashMap<String, Assign> fixedAssignments = (HashMap<String, Assign>)environment.getFixedAssignments();
 		
 		int index = (int)numLectures - 1;
-		for (int count = 0; count < 5; ++count) {
+		for (int count = 0; count < n; ++count) {
 			
 			Assign worst = rankedAssignments.get(index);
 			
 			// Make sure we don't remove a fixed assignment
-			while (fixedAssignments.contains(worst))
+			while (fixedAssignments.values().contains(worst))
 				worst = rankedAssignments.get(++index);
 			
 			removeAssignment(worst);
@@ -645,6 +650,10 @@ public class Solution implements SolutionInterface {
 		return assignmentMap;
 	}
 	
+	public Vector<Assign> getRankedAssignments() {
+		return rankedAssignments;
+	}
+	
 	public String toString() {
 		String result = "Solution = {\n";
 		for (Assign assign : assignmentMap.values()) {
@@ -666,6 +675,5 @@ public class Solution implements SolutionInterface {
 		}
 		result = result + "}";
 		return result;
-	}
-
+	}	
 }
