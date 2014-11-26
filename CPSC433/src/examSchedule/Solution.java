@@ -650,7 +650,7 @@ public class Solution implements SolutionInterface {
 		for (Assign assign : assignmentMap.values()) {
 			result = result + assign.toString() + "\n";
 		}
-		result = result + "Weight is " + getPenalty(); 
+		result = result + "}\n" + "Weight is " + getPenalty(); 
 		return result;
 	}
 	
