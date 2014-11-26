@@ -48,3 +48,12 @@ This case should give a solution, but will have at least one violation of soft c
 
 ***  tc08.txt  ***
 This case should give a solution, but will have at least one violation of soft constraint 6 and 7
+
+***  tc09.txt  ***
+Expected o/p is an assignment that generates a total penalty of 300.
+Test designed to violate soft constraint 1 i.e. no student writes more than
+one exam in a timeslot.
+tc01 was modified by adding a 5th course that is only taken by 3 of 20 students.
+The expectation is that course ASTR207 taken by three students will be assigned
+to one of the two overlapping sessions W14-2-MS217 and W14-2-MS205 to generate a
+minimal penalty.
