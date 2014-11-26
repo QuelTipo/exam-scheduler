@@ -548,18 +548,22 @@ public class Solution implements SolutionInterface {
 		// Sanity check
 		assert num <= numLectures : "Attempting to extract more assignments than possible";
 		
-		TreeSet<Assign> fixedAssignments = (TreeSet<Assign>)environment.getFixedAssignments().values();
+		HashMap<String, Assign> fixedAssignments = (HashMap<String, Assign>)environment.getFixedAssignments();
 		TreeSet<Assign> bestAssignments = new TreeSet<Assign>();
 		
-		int index = 0;
+		// We want to start with the first index, but we'll be incrementing it when we access
+		int index = -1;
 		for (int count = 0; count < num; ++ count) {
 			
-			Assign best = rankedAssignments.get(index);
+			Assign best = rankedAssignments.get(++index);
 			
 			// Make sure we're not grabbing a fixed assignment
-			while (fixedAssignments.contains(best))
+			while (fixedAssignments.values().contains(best))
 				best = rankedAssignments.get(++index);
 			
+			System.out.println("Adding " + best.getName());
+			
+			// Add the assignment to our set
 			bestAssignments.add(best);
 		}
 		
