@@ -520,16 +520,22 @@ public class Solution implements SolutionInterface {
 	public void unassignWorst(int n) {
 		
 		HashMap<String, Assign> fixedAssignments = (HashMap<String, Assign>)environment.getFixedAssignments();
-		
-		int index = (int)numLectures - 1;
+				
+		// We want to start with the last index, but we'll be decrementing it when we access
+		int index = (int)numLectures;
 		for (int count = 0; count < n; ++count) {
 			
-			Assign worst = rankedAssignments.get(index);
+			// Get the next worse assignment (the worst in case this is the first time through the loop)
+			Assign worst = rankedAssignments.get(--index);
 			
 			// Make sure we don't remove a fixed assignment
-			while (fixedAssignments.values().contains(worst))
-				worst = rankedAssignments.get(++index);
+			while (fixedAssignments.values().contains(worst)) {
+				worst = rankedAssignments.get(--index);
+			}
 			
+			System.out.println("Unassigning " + worst.getName());
+			
+			// Remove the assignment
 			removeAssignment(worst);
 		}
 	}
