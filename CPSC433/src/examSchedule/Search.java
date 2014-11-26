@@ -38,6 +38,33 @@ public class Search {
 		}
 	}
 	
+	public void Kontrol() {
+		//Determine which extension rule to do: Crossover or Mutation
+		
+		/*Define currentFact, bestFact and worstFact initialized to the first entry of the fact set*/
+		Solution currentFact = solutions.firstElement();
+		Solution worstFact = currentFact;
+		
+		int ratio = 2; //The worst fact must be more than ratio times worse than the best fact in order to crossover.
+						//Change this if the ratio must be lowered. 
+		
+		for (int i = 1; i <= solutions.size(); i++) { 
+			if (bestSolution.getPenalty() > currentFact.getPenalty()) { //If this fact is better than the old one: 
+				bestSolution = currentFact; //Update bestSolution since we have a better one. 
+			}
+			if (worstFact.getPenalty() < currentFact.getPenalty()) {
+				worstFact = currentFact;
+			}
+			currentFact = solutions.get(i);
+		}
+		
+		if (ratio * bestSolution.getPenalty() < worstFact.getPenalty()) { //if the worst fact is at least ratio times worse than the best
+			dumbCrossover(bestSolution, worstFact); 
+		} else {
+			Random rnd = new Random();
+			dumbMutation(solutions.get(rnd.nextInt(solutions.size()))); //Else, dumb mutate a random entry of solutions. 
+		}
+	}
 	
 	public Vector<Solution> getCurrentSolutions() {
 		return solutions;
