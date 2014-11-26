@@ -122,6 +122,7 @@ public class ExamSchedule {
 			for (examSchedule.Solution solution : newSolutions) {
 				Collection<Assign> solutions = solution.getAssignments().values();
 				System.out.println(solution.isValidSolution(new TreeSet<Assign>(solutions), true));
+				System.out.println(solution.getPenalty());
 				
 			}
 		} else {

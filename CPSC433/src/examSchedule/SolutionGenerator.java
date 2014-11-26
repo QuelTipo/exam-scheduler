@@ -23,6 +23,7 @@ public class SolutionGenerator {
 		for (Session session : sessions) {
 			sessionLengths.put(new Long(session.getLength()), new TreeSet<Session>());
 		}
+
 		
 		// put the sessions into the initialized TreeSets
 		
@@ -66,41 +67,38 @@ public class SolutionGenerator {
 		
 			
 			//get list of lengths equal to or greater than session length
-			NavigableMap<Long,TreeSet<Session>> validLengths = sessionLengths.tailMap(tryLecture.getLength(), true);
-			//throw them in a vector to ease randomized access
-			TreeSet<Session> goodSessions = new TreeSet<Session>();
-			goodSessions.addAll(validLengths.get(tryLecture.getLength()));
+			TreeMap<Long,TreeSet<Session>> validLengths = new TreeMap<Long, TreeSet<Session>>(sessionLengths.tailMap(tryLecture.getLength(), true));
 			
-			Vector<Session> sessionsToTry = tempSolution.weedOutByCapacity(goodSessions, tryLecture.getClassSize());
+			while (validLengths.size() > 0) {
 			
-			while (sessionsToTry.size() > 0) {
+				TreeSet<Session> goodSessions = validLengths.pollFirstEntry().getValue();
 			
-				//get the session and remove it from the list
-				randIndex = random.nextInt(sessionsToTry.size());
-				Session tempSession = sessionsToTry.remove(randIndex);
+				Vector<Session> sessionsToTry = tempSolution.weedOutByCapacity(goodSessions, tryLecture.getClassSize());
+			
+				while (sessionsToTry.size() > 0) {
+			
+					//get the session and remove it from the list
+					randIndex = random.nextInt(sessionsToTry.size());
+					Session tempSession = sessionsToTry.remove(randIndex);
 				
 
-				Assign tryAssign = new Assign(tryLecture, tempSession);
-				boolean ret = tempSolution.dumbAddAssign(tryAssign);
+					Assign tryAssign = new Assign(tryLecture, tempSession);
+					boolean ret = tempSolution.dumbAddAssign(tryAssign);
 				
-				System.out.println(tempSolution.getUnassignedLectures().size());
-				
-				//recursively call to add another assignment
-				//if we get something back, we have a winner.
+					//recursively call to add another assignment
+					//if we get something back, we have a winner.
 					
-				if (ret) {
-					if (buildDown(tempSolution, random) != null) {
-						return tempSolution;
+					if (ret) {
+						if (buildDown(tempSolution, random) != null) {
+							return tempSolution;
+						}
 					}
-				}
-				//if nothing was passed back up, then let's try a different session
+					//if nothing was passed back up, then let's try a different session
 					
-				tempSolution.removeAssignment(tryAssign);
-					
-					
+					tempSolution.removeAssignment(tryAssign);
+										
+				}			
 			}
-			
-			
 		}
 			
 		//We have no options left, let's go back and try another route.
