@@ -1,4 +1,4 @@
-package examSchedule.parser;
+package examSchedule;
 
 public interface SolutionInterface {
 	

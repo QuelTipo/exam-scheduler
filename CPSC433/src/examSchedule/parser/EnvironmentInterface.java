@@ -1,5 +1,7 @@
 package examSchedule.parser;
 
+import examSchedule.SolutionInterface;
+
 
 public interface EnvironmentInterface extends PredicateReaderInterface {
 

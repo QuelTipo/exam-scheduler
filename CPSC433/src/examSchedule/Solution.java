@@ -9,7 +9,6 @@ import java.util.HashMap;
 
 import examSchedule.Environment;
 import examSchedule.parser.Pair;
-import examSchedule.parser.SolutionInterface;
 
 public class Solution implements SolutionInterface {
 	

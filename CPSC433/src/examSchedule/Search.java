@@ -28,6 +28,7 @@ public class Search {
 			Solution solution = generator.buildSolution();
 			if (solution != null) {
 				solutions.add(solution);
+				solution.rankAssignments();
 			}
 		}
 		

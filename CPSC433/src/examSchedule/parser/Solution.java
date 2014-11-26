@@ -1,5 +1,7 @@
 package examSchedule.parser;
 
+import examSchedule.SolutionInterface;
+
 public abstract class Solution extends Entity implements SolutionInterface {
 
 	public Solution(String filename) {

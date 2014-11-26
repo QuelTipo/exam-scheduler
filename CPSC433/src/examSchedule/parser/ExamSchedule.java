@@ -127,7 +127,7 @@ public class ExamSchedule {
 		}
 
 		System.out.println(search.getBestSolution().toString());
-		System.out.println(search.getBestSolution().conflictMapToString());
+		examSchedule.Solution superSolution = search.getBestSolution();
 
 	}
 	
