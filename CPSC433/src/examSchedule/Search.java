@@ -74,7 +74,7 @@ public class Search {
 	public void dumbMutation(Solution solution) {
 		
 		// Unassign the worst n assignments in the solution
-		solution.unassignWorst();
+		solution.unassignWorst(2);
 		
 		// Use our SolutionGenerator to complete the solution
 		generator.buildDown(solution, new Random());
@@ -82,42 +82,61 @@ public class Search {
 	
 	
 	// This method will combine 2 solutions
-	public boolean dumbCrossover(Solution better, Solution worse) {
+	public Solution dumbCrossover(Solution s1, Solution s2) {
 		
 		int numLectures = environment.getLectureList().size();
+		int numFixed = environment.getFixedAssignments().size();
+		
+		// Determine which solution is better
+		Solution better, worse;
+		if (s1.getPenalty() < s2.getPenalty()) {
+			better = s1;
+			worse = s2;
+		}
+		else {
+			better = s2;
+			worse = s1;
+		}
 		
 		// Create a new solution 
 		Solution combination = new Solution(environment);
-		
+				
+		long total = worse.getPenalty() + better.getPenalty();
+		int numWorse = (int)(((float)better.getPenalty() / (float)total) * (numLectures - numFixed));
+		int numBetter = (numLectures - numFixed) - numWorse;
+	
 		// Get the best n from the better solution that aren't fixed assignments
-		TreeSet<Assign> bestAssignments = better.extractBest(numLectures / 2);
-
+		TreeSet<Assign> bestAssignments = better.extractBest(numBetter);
+		
 		// Add them to our new solution
 		// Every member of this set should be added without problems
 		for (Assign assign : bestAssignments) {
-			assert combination.dumbAddAssign(assign) : "Error - Failed to add assignment during crossover";
+			if  (combination.dumbAddAssign(assign) == false) {
+				assert false : "Error - Failed to add " + assign.toString() + " during crossever";
+			}
 		}
 		
-		// Now get the best n from the worse solution that aren't fixed solutions
-		bestAssignments = worse.extractBest(numLectures / 2);
+		// Now get the best m from the worse solution that aren't fixed assignments
+		bestAssignments = worse.extractBest(numWorse);
 		
 		// Attempt to add them to our new solution
 		for (Assign assign : bestAssignments) {
-			if (!combination.dumbAddAssign(assign))
-				System.out.println("Failed to add assignment during crossever");
+			if (combination.dumbAddAssign(assign) == false) {
+				System.out.println("Failed to add " + assign.toString() + " during crossever");
+			}
 		}
 		
 		// Attempt to complete any incomplete solutions, return false if we are unable to do so
 		if (!combination.isComplete()) {
 			combination = generator.buildDown(combination, new Random());
 			if (combination == null)
-				return false;
+				return null;
 		}
 		
-		// Replace the less good solution with the new one
-		worse = combination;
+		// Calculate the new solution's penalty
+		combination.calculatePenalty();
 		
-		return true;
+		return combination;
 	}
 
 	
