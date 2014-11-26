@@ -1,7 +1,6 @@
 package examSchedule;
 
 import examSchedule.parser.Entity;
-import java.util.TreeSet;
 
 public class Session extends Entity {
 
