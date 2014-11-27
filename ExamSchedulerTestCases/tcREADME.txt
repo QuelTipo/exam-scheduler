@@ -81,3 +81,23 @@ Test case for S4.  20 students writing for 6 hours on a single day.
 Solution expected with penalty of 2000. (Modified tc13)
 Test case for S4 and S5.  20 students writing for 6 hours on a 
 single day without a break between the two exams.
+
+***  tc15.txt  ***
+Solution expected without penalties.
+4 courses, 4 sessions.
+One fixed assignment.   assign(MATH211,L01,T10-2-ST057)
+
+***  tc16.txt  ***
+Solution expected without penalties.
+4 courses, 4 sessions.  Two fixed assignments.  
+assign(MATH211,L01,T10-2-ST057)    assign(PHIL279,L01,W10-2-MS205)
+
+***  tc17.txt  ***
+Solution expected without penalties.
+4 courses, 4 sessions.  3 of 4 courses are fixed assignments.
+
+***  tc18.txt  ***
+Solution expected without penalties.
+4 courses, 4 sessions.  Fixed assignments specified for all four courses.
+assign(MATH211,L01,T10-2-ST057)     assign(CPSC231,L01,T10-2-MS205)
+assign(MATH265,L01,W10-2-ST057)     assign(PHIL279,L01,W10-2-MS205)
