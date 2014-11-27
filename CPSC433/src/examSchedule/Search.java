@@ -67,6 +67,34 @@ public class Search {
 		}
 	}
 	
+	//This version of Kontrol is very lazy and will just randomly do things. Once things are working
+	//with lazy Kontrol we will switch to George's smarter Kontrol 
+	private void lazyKontrol() {
+		
+		Random random = new Random();
+		float trigger = random.nextFloat();
+		
+		if (trigger < 0.7) {
+			Solution sol1 = solutions.get(random.nextInt(solutions.size()));
+			
+			Solution combination = dumbCrossover(getBestSolution(),sol1);
+			solutions.add(combination);
+		
+		} else {
+			dumbMutation(solutions.get(random.nextInt(solutions.size())));
+		}
+	}
+	
+	//This braindead method just keeps calling lazyKontrol over and over again. Obviously this
+	//will be improved in the future to search over a remaining period of time.
+	public void letsSearching() {
+		
+		for (int i = 0; i < 1000; i++) {
+			System.out.println("Assuming direct kontrol! Time #" + i);
+			lazyKontrol();
+		}
+	}
+	
 	public Vector<Solution> getCurrentSolutions() {
 		return solutions;
 	}
@@ -79,6 +107,12 @@ public class Search {
 		
 		// Use our SolutionGenerator to complete the solution
 		generator.buildDown(solution, new Random());
+		solution.calculatePenalty();
+		solution.rankAssignments();
+		
+		if (solution.getPenalty() < bestSolution.getPenalty()) {
+			bestSolution = solution;
+		}
 	}
 	
 	
@@ -113,7 +147,7 @@ public class Search {
 		// Every member of this set should be added without problems
 		for (Assign assign : bestAssignments) {
 			if  (combination.dumbAddAssign(assign) == false) {
-				assert false : "Error - Failed to add " + assign.toString() + " during crossever";
+				//assert false : "Error - Failed to add " + assign.toString() + " during crossever";
 			}
 		}
 		
@@ -123,7 +157,7 @@ public class Search {
 		// Attempt to add them to our new solution
 		for (Assign assign : bestAssignments) {
 			if (combination.dumbAddAssign(assign) == false) {
-				System.out.println("Failed to add " + assign.toString() + " during crossever");
+				//System.out.println("Failed to add " + assign.toString() + " during crossever");
 			}
 		}
 		
@@ -136,6 +170,11 @@ public class Search {
 		
 		// Calculate the new solution's penalty
 		combination.calculatePenalty();
+		combination.rankAssignments();
+		
+		if (combination.getPenalty() < bestSolution.getPenalty()) {
+			bestSolution = combination;
+		}
 		
 		return combination;
 	}

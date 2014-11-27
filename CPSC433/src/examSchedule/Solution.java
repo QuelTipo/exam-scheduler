@@ -534,7 +534,7 @@ public class Solution implements SolutionInterface {
 				worst = rankedAssignments.get(--index);
 			}
 			
-			System.out.println("Unassigning " + worst.getName());
+			//System.out.println("Unassigning " + worst.getName());
 			
 			// Remove the assignment
 			removeAssignment(worst);
@@ -618,6 +618,7 @@ public class Solution implements SolutionInterface {
 	
 	// Return the completeness of a solution
 	public boolean isComplete() {
+		complete = assignmentMap.size() == numLectures;
 		return complete;
 	}
 	

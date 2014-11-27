@@ -7,6 +7,7 @@ import examSchedule.Search;
 
 import java.io.*;
 import java.util.Collection;
+import java.util.Random;
 import java.util.TreeSet;
 import java.util.Vector;
 
@@ -117,18 +118,11 @@ public class ExamSchedule {
 		
 		Search search = new Search(env);
 		search.setup();
-		Vector<examSchedule.Solution> newSolutions = search.getCurrentSolutions();
-		if (newSolutions.size() != 0) {
-			for (examSchedule.Solution solution : newSolutions) {
-				Collection<Assign> solutions = solution.getAssignments().values();
-			}
-		} else {
-			System.out.println("No possible solutions.");
-		}
+		
+		search.letsSearching();
 
 		System.out.println(search.getBestSolution().toString());
-		examSchedule.Solution superSolution = search.getBestSolution();
-
+		
 	}
 	
 	/**
