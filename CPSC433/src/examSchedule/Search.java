@@ -1,6 +1,5 @@
 package examSchedule;
 
-import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.Random;
 import java.util.Vector;
@@ -81,7 +80,8 @@ public class Search {
 			solutions.add(combination);
 		
 		} else {
-			dumbMutation(solutions.get(random.nextInt(solutions.size())));
+			Solution mutation = dumbMutation(solutions.get(random.nextInt(solutions.size())));
+			solutions.add(mutation);
 		}
 	}
 	
@@ -100,19 +100,31 @@ public class Search {
 	}
 	
 	// This method will mutate a particular solution
-	public void dumbMutation(Solution solution) {
+	public Solution dumbMutation(Solution solution) {
 		
-		// Unassign the worst n assignments in the solution
-		solution.unassignWorst(2);
+		// Create a new solution
+		Solution mutation = new Solution(environment);
+
+		// Extract the best (total - n) assignments from the solution
+		TreeSet<Assign> best = solution.extractBest(environment.getFixedAssignments().size() - 2);
+		
+		// Add the assignments we want to keep to our mutation
+		for (Assign assign : best) {
+			if (mutation.dumbAddAssign(assign) == false) {
+				//System.out.println("Failed to add " + assign.toString() + " during crossever");
+			}
+		}
 		
 		// Use our SolutionGenerator to complete the solution
-		generator.buildDown(solution, new Random());
-		solution.calculatePenalty();
-		solution.rankAssignments();
+		generator.buildDown(mutation, new Random());
+		mutation.calculatePenalty();
+		mutation.rankAssignments();
 		
-		if (solution.getPenalty() < bestSolution.getPenalty()) {
-			bestSolution = solution;
+		if (mutation.getPenalty() < bestSolution.getPenalty()) {
+			bestSolution = mutation;
 		}
+		
+		return mutation;
 	}
 	
 	
