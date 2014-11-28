@@ -241,6 +241,7 @@ public class Solution implements SolutionInterface {
 										Pair<Assign, Assign> reverse = new Pair<Assign, Assign>(newConflict, assign);
 										Pair<Student, Pair<Assign, Assign>> forwardStudent = new Pair<Student, Pair<Assign, Assign>>(st1, forward);
 										Pair<Student, Pair<Assign, Assign>> reverseStudent = new Pair<Student, Pair<Assign, Assign>>(st1, reverse);
+																				
 										if (!s1Set.contains(forwardStudent) && !s1Set.contains(reverseStudent))
 											s1Set.add(forwardStudent);
 									}
@@ -548,21 +549,25 @@ public class Solution implements SolutionInterface {
 				
 		HashMap<String, Assign> fixedAssignments = (HashMap<String, Assign>)environment.getFixedAssignments();
 		TreeSet<Assign> bestAssignments = new TreeSet<Assign>();
-		
-		// We want to start with the first index, but we'll be incrementing it when we access
-		int index = -1;
-		for (int count = 0; count < num; ++ count) {
+				
+		// We want to start with the first assignment, i.e. the best one
+		for (int count = 0, index = 0; count < num && index < numLectures; ++ count) {
 			
-			Assign best = rankedAssignments.get(++index);
+			Assign best = rankedAssignments.get(index);
 			
-			// Make sure we're not grabbing a fixed assignment
-			while (fixedAssignments.values().contains(best))
-				best = rankedAssignments.get(++index);
+			// Make sure we're not grabbing a fixed assignment, also that we don't go out of bounds
+			while (fixedAssignments.values().contains(best) && index < numLectures) {
+				best = rankedAssignments.get(index);
+				++index;
+			}
 			
 //			System.out.println("Adding " + best.getName() + "," + best.getSession().getName());
 			
 			// Add the assignment to our set
 			bestAssignments.add(best);
+			
+			// Increment our index
+			++index;
 		}
 		
 		return bestAssignments;
