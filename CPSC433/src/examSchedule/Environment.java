@@ -612,13 +612,13 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		Assign assign = f_assign(c, lec, s);
 		if (assign == null) {
 			assign = new Assign(lecture, session);
-			fixedAssignmentMap.put(c+lec+s, assign);
+			fixedAssignmentMap.put(c+lec, assign);
 		}
 	}
 
 	public Assign f_assign(String c, String lec, String s) {
-		if (fixedAssignmentMap.containsKey(c+lec+s))
-			return fixedAssignmentMap.get(c+lec+s);
+		if (fixedAssignmentMap.containsKey(c+lec))
+			return fixedAssignmentMap.get(c+lec);
 		return null;
 	}
 	
