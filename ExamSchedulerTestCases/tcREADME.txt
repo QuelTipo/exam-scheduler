@@ -101,3 +101,16 @@ Solution expected without penalties.
 4 courses, 4 sessions.  Fixed assignments specified for all four courses.
 assign(MATH211,L01,T10-2-ST057)     assign(CPSC231,L01,T10-2-MS205)
 assign(MATH265,L01,W10-2-ST057)     assign(PHIL279,L01,W10-2-MS205)
+
+***  tc19.txt  ***
+Solution expected without penalty.
+40 students taking the same four courses.  20 students in L01 and the other 20
+in L02 for each course.  Test is to ensure that different lectures are
+assigned to the same exam session (a single room with adequate space is used for
+each of the four available sessions).
+
+***  tc20.txt  ***
+Solution expected without penalty.
+Similar to tc19 except some sessions with smaller rooms are available, but
+they should not be selected.  Rooms ST057 and MS205 should not appear in
+any of the four assignments.
