@@ -83,7 +83,7 @@ public class ExamSchedule {
 			// let's assume it's a time in milliseconds: we'll do a search on it.
 			try {
 				long timeLimit = new Long(args[1]).longValue();
-        doSearch(env, fromFile+".out", timeLimit);
+				doSearch(env, fromFile+".out", timeLimit);
 			}
 			// not a time, so it must be a filename to read a solution to evaluate from...
 			catch (NumberFormatException ex) {
@@ -116,12 +116,26 @@ public class ExamSchedule {
 	 */
 	public static void doSearch(final Environment env, final String outFileName, final long timeLimit) {
 		
-		Search search = new Search(env);
-		search.setup();
+		// Figure out when we need to end
+		long endTime = System.currentTimeMillis() + timeLimit;
 		
-		search.letsSearching();
-
-		System.out.println(search.getBestSolution().toString());
+		// Create a new search and attempt to do our setup
+		Search search = new Search(env);
+		search.setup(endTime);
+		
+		// If we haven't already exceeded the time limit...
+		if (System.currentTimeMillis() < endTime) {
+			
+			// Begin the hunt!
+			search.letsSearching(endTime);
+		}
+		
+		// Either way, we need to report what we've got now
+		examSchedule.Solution bestSolution = search.getBestSolution();
+		if (bestSolution != null)
+			System.out.println(search.getBestSolution().toString());
+		else
+			System.out.println("Failed to find anything");
 		
 	}
 	

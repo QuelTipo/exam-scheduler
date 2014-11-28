@@ -20,21 +20,28 @@ public class Search {
 	}
 	
 	// This method will do the necessary setup for our set based search
-	public void setup() {
+	public void setup(long endTime) {
 		
-		// Begin by populating our solution set with random, valid solutions
-		for (int i = 0; i < 40; ++i) {
-			Solution solution = generator.buildSolution();
-			if (solution != null) {
-				solutions.add(solution);
-				solution.rankAssignments();
+		// We want to continue searching for starting solutions as long as we don't have any solutions and there is time left on the clock
+		while (System.currentTimeMillis() < endTime && solutions.size() == 0) {
+			
+			// Begin by populating our solution set with random, valid solutions
+			for (int i = 0; i < 40; ++i) {
+				Solution solution = generator.buildSolution();
+				if (solution != null) {
+					solutions.add(solution);
+					solution.rankAssignments();
+				}
 			}
+	
 		}
-		
-		// Now set our initial best solution
-		for (Solution solution : solutions) {
-			if (bestSolution == null || solution.getPenalty() < bestSolution.getPenalty())
-				bestSolution = solution;
+			
+		// If we got at least one solution, set bestSolution
+		if (solutions.size() > 0) {
+			for (Solution solution : solutions) {
+				if (bestSolution == null || solution.getPenalty() < bestSolution.getPenalty())
+					bestSolution = solution;
+			}
 		}
 	}
 	
@@ -103,13 +110,14 @@ public class Search {
 		}
 	}
 	
-	//This braindead method just keeps calling lazyKontrol over and over again. Obviously this
-	//will be improved in the future to search over a remaining period of time.
-	public void letsSearching() {
+	// This method will continually call kontrol while there is still time left on the clock
+	public void letsSearching(long endTime) {
 		
-		for (int i = 0; i < 1000; i++) {
-			System.out.println("Assuming direct kontrol! Time #" + i);
+		int counter = 1;
+		while (System.currentTimeMillis() < endTime) {
+			System.out.println("Assuming direct kontrol! Time #" + counter);
 			lazyKontrol();
+			++counter;
 		}
 	}
 	
