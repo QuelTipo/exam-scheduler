@@ -63,6 +63,10 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		return fixedAssignmentMap;
 	}
 		
+	public void wipeFixedAssignments() {
+		fixedAssignmentMap = new HashMap<String, Assign>();
+	}
+	
 	@Override
 	public void a_search(String search, String control, Long maxTime) {
 		// TODO Auto-generated method stub
