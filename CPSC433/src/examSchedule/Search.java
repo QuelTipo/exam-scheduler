@@ -38,8 +38,27 @@ public class Search {
 		}
 	}
 	
-	public void Kontrol() {
+	public void KontrolCaller(long timeLimit) {
+		//calls Kontrol repeatedly until the time runs out. 
+		//Compare with letsSearching. 
+		
+		long currentTime = System.currentTimeMillis();
+		long endTime = currentTime + timeLimit;
+		for (; currentTime < endTime; currentTime = System.currentTimeMillis()) {
+			System.out.println("<Dial Up Noises>: Time #" + (timeLimit-(endTime-currentTime)));
+			Kontrol();
+		}
+	}
+	
+	private void Kontrol() {
 		//Determine which extension rule to do: Crossover or Mutation
+		
+		/*
+		 * CURRENT PROBLEMS: 
+		 * 
+		 * tc02.txt causes index out of bounds error because solutions is empty. 
+		 * 
+		 * */
 		
 		/*Define currentFact, bestFact and worstFact initialized to the first entry of the fact set*/
 		Solution currentFact = solutions.firstElement();
@@ -48,10 +67,7 @@ public class Search {
 		int ratio = 2; //The worst fact must be more than ratio times worse than the best fact in order to crossover.
 						//Change this if the ratio must be lowered. 
 		
-		for (int i = 1; i <= solutions.size(); i++) { 
-			if (bestSolution.getPenalty() > currentFact.getPenalty()) { //If this fact is better than the old one: 
-				bestSolution = currentFact; //Update bestSolution since we have a better one. 
-			}
+		for (int i = 1; i <= solutions.size()-1; i++) { //i is 1 because we already got the first element when we got currentFact.
 			if (worstFact.getPenalty() < currentFact.getPenalty()) {
 				worstFact = currentFact;
 			}
@@ -59,10 +75,12 @@ public class Search {
 		}
 		
 		if (ratio * bestSolution.getPenalty() < worstFact.getPenalty()) { //if the worst fact is at least ratio times worse than the best
-			dumbCrossover(bestSolution, worstFact); 
+			Solution crossover = dumbCrossover(bestSolution, worstFact);
+			solutions.add(crossover);
 		} else {
 			Random rnd = new Random();
-			dumbMutation(solutions.get(rnd.nextInt(solutions.size()))); //Else, dumb mutate a random entry of solutions. 
+			Solution mutation = dumbMutation(solutions.get(rnd.nextInt(solutions.size()))); //Else, dumb mutate a random entry of solutions.
+			solutions.add(mutation);
 		}
 	}
 	
