@@ -266,7 +266,7 @@ public class Solution implements SolutionInterface {
 								// Similar to soft constraint 1, we don't want to add the penalty twice
 								Pair<Assign, Assign> newPair = new Pair<Assign, Assign>(assign, newConflict);
 								Pair<Assign, Assign> reverse = new Pair<Assign, Assign>(newConflict, assign);
-								if (!s1Set.contains(newPair) && !s1Set.contains(reverse))
+								if (!s2Set.contains(newPair) && !s2Set.contains(reverse))
 									s2Set.add(newPair);
 							}
 						}
