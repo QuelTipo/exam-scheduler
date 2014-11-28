@@ -111,6 +111,15 @@ each of the four available sessions).
 
 ***  tc20.txt  ***
 Solution expected without penalty.
-Similar to tc19 except some sessions with smaller rooms are available, but
-they should not be selected.  Rooms ST057 and MS205 should not appear in
-any of the four assignments.
+Similar to tc19 except some sessions with smaller rooms are available.  The
+expectation is that different lectures of the same course have the same time
+slot (but not necessarily the same room).
+
+***  tc21.txt  ***
+Solution expected with penalty of 50.
+tc is for soft constraints 6 and 7.
+Two sessions.  One of two 3 hr MATH exams expected in each session.  One of CPSC and PHIL
+also assigned to each of the two sessions.  S6 penalty of 20 for each session
+expected because all exams are not the same duration.  S7 penalty of 5 expected
+for each session because there's an exam that does not take up the full time of the
+session.
