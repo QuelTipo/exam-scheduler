@@ -120,14 +120,14 @@ public class ExamSchedule {
 		long endTime = System.currentTimeMillis() + timeLimit;
 		
 		// Create a new search and attempt to do our setup
-		Search search = new Search(env);
-		search.setup(endTime);
+		Search search = new Search(env, endTime);
+		search.setup();
 		
 		// If we haven't already exceeded the time limit...
 		if (System.currentTimeMillis() < endTime) {
 			
 			// Begin the hunt!
-			search.letsSearching(endTime);
+			search.letsSearching();
 		}
 		
 		// Either way, we need to report what we've got now

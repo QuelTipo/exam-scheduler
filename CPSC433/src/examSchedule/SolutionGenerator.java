@@ -11,10 +11,12 @@ public class SolutionGenerator {
 	
 	private Environment environment;
 	private TreeMap<Long,TreeSet<Session>> sessionLengths = new TreeMap<Long,TreeSet<Session>>();
+	private long endTime = 0;
 	
-	public SolutionGenerator(Environment environment) {
+	public SolutionGenerator(Environment environment, Long endTime) {
 		
 		this.environment = environment;
+		this.endTime = endTime;
 		
 		TreeSet<Session> sessions = new TreeSet<Session>(environment.getSessionList());
 		
@@ -58,7 +60,7 @@ public class SolutionGenerator {
 			return tempSolution;
 		}		
 		
-		while(remainingLectures.size() > 0) {
+		while(remainingLectures.size() > 0 && System.currentTimeMillis() < endTime) {
 		
 		//otherwise pick a random lecture from the remaining ones
 		
@@ -102,7 +104,6 @@ public class SolutionGenerator {
 		}
 			
 		//We have no options left, let's go back and try another route.
-		
 		return null;
 			
 

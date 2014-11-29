@@ -10,25 +10,29 @@ public class Search {
 	private SolutionGenerator generator;
 	private Vector<Solution> solutions;
 	private Solution bestSolution;
+	private long endTime;
 	
 	// Default constructor
-	public Search(Environment env) {
+	public Search(Environment env, long endTime) {
 		
 		this.environment = env;
-		this.generator = new SolutionGenerator(environment);
+		this.generator = new SolutionGenerator(environment, endTime);
 		this.solutions = new Vector<Solution>();
+		this.endTime = endTime;
 	}
 	
 	// This method will do the necessary setup for our set based search
-	public void setup(long endTime) {
+	public void setup() {
 		
 		// We want to continue searching for starting solutions as long as we don't have any solutions and there is time left on the clock
 		while (System.currentTimeMillis() < endTime && solutions.size() == 0) {
 			
 			// Begin by populating our solution set with random, valid solutions
 			for (int i = 0; i < 40; ++i) {
+				
 				Solution solution = generator.buildSolution();
 				if (solution != null) {
+					
 					solutions.add(solution);
 					solution.rankAssignments();
 				}
@@ -101,7 +105,7 @@ public class Search {
 		if (trigger < 0.7) {
 			Solution sol1 = solutions.get(random.nextInt(solutions.size()));
 			
-			Solution combination = dumbCrossover(getBestSolution(),sol1);
+			Solution combination = dumbCrossover(getBestSolution(), sol1);
 			solutions.add(combination);
 		
 		} else {
@@ -111,7 +115,7 @@ public class Search {
 	}
 	
 	// This method will continually call kontrol while there is still time left on the clock
-	public void letsSearching(long endTime) {
+	public void letsSearching() {
 		
 		int counter = 1;
 		while (System.currentTimeMillis() < endTime) {
@@ -130,9 +134,10 @@ public class Search {
 		
 		// Create a new solution
 		Solution mutation = new Solution(environment);
-
+		int numAssignments = solution.getAssignments().size();
+		
 		// Extract the best (total - n) assignments from the solution
-		TreeSet<Assign> best = solution.extractBest(environment.getFixedAssignments().size() - 2);
+		TreeSet<Assign> best = solution.extractBest(numAssignments / 3);
 		
 		// Add the assignments we want to keep to our mutation
 		for (Assign assign : best) {
