@@ -1,3 +1,13 @@
+/*	
+ * This class represents a partial or complete solution to the exam scheduling problem
+ * Assignments composing the solution are stored in a dictionary, mapping assignment names to pointers to assignments
+ * The complete flag is set when the solution has as many assignments as there are lectures
+ * Assignments are added one at a time, and we assume that the (partial) solution to which we are adding an assignment to is valid
+ * A solution also calculates its penalty, during which it builds a conflicting assignment dictionary
+ * This dictionary maps assignments to sets of conflicting assignments, and is used to rank the component assignments based upon how many other assignments an assignment conflicts with
+ * 
+ */
+
 package examSchedule;
 
 import java.util.Collection;
@@ -20,7 +30,7 @@ public class Solution implements SolutionInterface {
 	private TreeMap<String, Assign> assignmentMap;
 	private long penalty;
 	private TreeSet<Lecture> unassignedLectures;
-	private HashMap<Assign, TreeSet<Assign>> conflictingAssignments;
+	private HashMap<Assign, TreeSet<Pair<Assign, Integer>>> conflictingAssignments;
 	private Vector<Assign> rankedAssignments = new Vector<Assign>((int)numLectures);
 	private TreeMap<Session,Long> currentRoomCapacities = new TreeMap<Session,Long>();
 	private TreeMap<Session, TreeSet<Lecture>> lecturesInSession = new TreeMap<Session, TreeSet<Lecture>>();
@@ -173,11 +183,11 @@ public class Solution implements SolutionInterface {
 	public void calculatePenalty() {
 		
 		// Our map of assignments to conflicting assignments
-		HashMap<Assign, TreeSet<Assign>> conflictMap = new HashMap<Assign, TreeSet<Assign>>();
+		HashMap<Assign, TreeSet<Pair<Assign, Integer>>> conflictMap = new HashMap<Assign, TreeSet<Pair<Assign, Integer>>>();
 		
 		// Initialize it with default values
 		for (Assign assign : assignmentMap.values())
-			conflictMap.put(assign, new TreeSet<Assign>());
+			conflictMap.put(assign, new TreeSet<Pair<Assign, Integer>>());
 		
 		long cumulativePenalty = 0;
 
@@ -226,8 +236,8 @@ public class Solution implements SolutionInterface {
 //										System.out.println("Soft constraint 1 violation for student " + st1.getName() + " between " + l1.getName() + " and " + l2.getName());
 										
 										// Update our conflict map
-										TreeSet<Assign> conflicts = conflictMap.get(assign);
-										Assign newConflict = assignmentMap.get(l2.getName());
+										TreeSet<Pair<Assign, Integer>> conflicts = conflictMap.get(assign);
+										Pair<Assign, Integer> newConflict = new Pair<Assign, Integer>(assignmentMap.get(l2.getName()), 1);
 										
 										// Sanity check
 										assert newConflict != null : String.format("Failed to find assignment with name %s", l2.getName());
@@ -237,8 +247,8 @@ public class Solution implements SolutionInterface {
 										
 										// We cannot simply increase the cumulative penalty by 100, as this does not account for lectures starting at the same time
 										// Add the pair of conflicting assignments to our s1Set, also checking that the reverse is not already in there
-										Pair<Assign, Assign> forward = new Pair<Assign, Assign>(assign, newConflict);
-										Pair<Assign, Assign> reverse = new Pair<Assign, Assign>(newConflict, assign);
+										Pair<Assign, Assign> forward = new Pair<Assign, Assign>(assign, newConflict.getKey());
+										Pair<Assign, Assign> reverse = new Pair<Assign, Assign>(newConflict.getKey(), assign);
 										Pair<Student, Pair<Assign, Assign>> forwardStudent = new Pair<Student, Pair<Assign, Assign>>(st1, forward);
 										Pair<Student, Pair<Assign, Assign>> reverseStudent = new Pair<Student, Pair<Assign, Assign>>(st1, reverse);
 																				
@@ -255,8 +265,8 @@ public class Solution implements SolutionInterface {
 //								System.out.println("Soft constraint 2 violation for instructor " + i1.getName() + " between " + l1.getName() + " and " + l2.getName());
 								
 								// Update our conflict map
-								TreeSet<Assign> conflicts = conflictMap.get(assign);
-								Assign newConflict = assignmentMap.get(l2.getName());
+								TreeSet<Pair<Assign, Integer>> conflicts = conflictMap.get(assign);
+								Pair<Assign, Integer> newConflict = new Pair<Assign, Integer>(assignmentMap.get(l2.getName()), 2);
 								
 								// Sanity check
 								assert newConflict != null : String.format("Failed to find assignment with name %s", l2.getName());
@@ -265,8 +275,8 @@ public class Solution implements SolutionInterface {
 								conflictMap.put(assign, conflicts);
 								
 								// Similar to soft constraint 1, we don't want to add the penalty twice
-								Pair<Assign, Assign> newPair = new Pair<Assign, Assign>(assign, newConflict);
-								Pair<Assign, Assign> reverse = new Pair<Assign, Assign>(newConflict, assign);
+								Pair<Assign, Assign> newPair = new Pair<Assign, Assign>(assign, newConflict.getKey());
+								Pair<Assign, Assign> reverse = new Pair<Assign, Assign>(newConflict.getKey(), assign);
 								if (!s2Set.contains(newPair) && !s2Set.contains(reverse))
 									s2Set.add(newPair);
 							}
@@ -286,8 +296,8 @@ public class Solution implements SolutionInterface {
 										// Since we only enter this block is l2 begins when l1 ends, we don't need to worry about the penalty being applied twice
 										cumulativePenalty += 50;
 //										System.out.println("Soft constraint 5 violation for student " + st1.getName() + " between " + l1.getName() + " and " + l2.getName());
-										TreeSet<Assign> conflicts = conflictMap.get(assign);
-										Assign newConflict = assignmentMap.get(l2.getName());
+										TreeSet<Pair<Assign, Integer>> conflicts = conflictMap.get(assign);
+										Pair<Assign, Integer> newConflict = new Pair<Assign, Integer>(assignmentMap.get(l2.getName()), 5);
 										
 										// Sanity check
 										assert newConflict != null : String.format("Failed to find assignment with name %s", l2.getName());
@@ -306,8 +316,8 @@ public class Solution implements SolutionInterface {
 			if (l1.getLength() < s1.getLength()) {
 				cumulativePenalty += 5;
 //				System.out.println("Soft constraint 7 violation on " + l1.getName());
-				TreeSet<Assign> conflicts = conflictMap.get(assign);
-				Assign newConflict = assignmentMap.get(l1.getName());
+				TreeSet<Pair<Assign, Integer>> conflicts = conflictMap.get(assign);
+				Pair<Assign, Integer> newConflict = new Pair<Assign, Integer>(assignmentMap.get(l1.getName()), 7);
 				
 				// Sanity check
 				assert newConflict != null : String.format("Failed to find assignment with name %s", l1.getName());
@@ -357,9 +367,9 @@ public class Solution implements SolutionInterface {
 //				System.out.println("Soft constraint 3 violation for course " + course.getName());
 				// Update our conflict map
 				for (Assign a1 : assigns) {				
-					TreeSet<Assign> conflicts = conflictMap.get(a1);					
+					TreeSet<Pair<Assign, Integer>> conflicts = conflictMap.get(a1);					
 					for (Assign a2 : assigns) {
-						conflicts.add(a2);
+						conflicts.add(new Pair<Assign, Integer>(a2, 3));
 						conflictMap.put(a1, conflicts);
 					}
 				}
@@ -433,11 +443,11 @@ public class Solution implements SolutionInterface {
 				for (Lecture l1 : lectures) {
 					
 					Assign assign = assignmentMap.get(l1.getName());
-					TreeSet<Assign> conflicts = conflictMap.get(assign);
+					TreeSet<Pair<Assign, Integer>> conflicts = conflictMap.get(assign);
 					
 					for (Lecture l2 : lectures) {
 						
-						Assign newConflict = assignmentMap.get(l2.getName());
+						Pair<Assign, Integer> newConflict = new Pair<Assign, Integer>(assignmentMap.get(l2.getName()), 6);
 						
 						// Sanity check
 						assert newConflict != null : String.format("Failed to find assignment with name %s", l1.getName());
@@ -459,27 +469,55 @@ public class Solution implements SolutionInterface {
 	public void rankAssignments() {
 				
 		// Our map to store how many other assignments a given assignment conflicts with
-		HashMap<Assign, Integer> numConflicts = new HashMap<Assign, Integer>();
+		HashMap<Assign, Integer> penaltyMap = new HashMap<Assign, Integer>();
 		for (Assign assign : assignmentMap.values()) {
-			numConflicts.put(assign, 0);
+			penaltyMap.put(assign, 0);
 		}
 		
 		// For every set of conflicting assignments...
-		for (TreeSet<Assign> set : conflictingAssignments.values()) {
+		for (TreeSet<Pair<Assign, Integer>> set : conflictingAssignments.values()) {
 			
 			// Iterate over every member of that set
-			for (Assign assign : set) {
+			for (Pair<Assign, Integer> pair : set) {
 			 
-				// Update our map
-				int conflicts = numConflicts.get(assign);
-				conflicts++;
-				numConflicts.put(assign, conflicts);
+				Assign assign = pair.getKey();
+				int constraint = pair.getValue();
+				
+				// Get the old penalty
+				int penalty = penaltyMap.get(assign);
+				
+				// Increment it accordingly
+				switch (constraint) {
+				case 1 : 
+					penalty += 100;
+					break;
+				case 2 : 
+					penalty += 20;
+					break;
+				case 3 : 
+					penalty += 50;
+					break;
+				case 4 : 
+					penalty += 50;
+					break;
+				case 5 : 
+					penalty += 50;
+					break;
+				case 6 : 
+					penalty += 20;
+					break;
+				case 7 : 
+					penalty += 5;
+					break;
+				}
+				// Put the new penalty in the map
+				penaltyMap.put(assign, penalty);
 			}
 		}
 						
-		// Sort our list of assignments by the number of assignments each one conflicts with
+		// Sort our list of assignments by the total weight of the conflicts they are involved in
 		Vector<Assign> assignments = new Vector<Assign>(assignmentMap.values());
-		rankedAssignments = sortAssignments(assignments, numConflicts);
+		rankedAssignments = sortAssignments(assignments, penaltyMap);
 	}
 
 	
@@ -514,33 +552,6 @@ public class Solution implements SolutionInterface {
 		return orderedAssignments;
 	}
 	
-
-	// This method is a component of the mutate operation, and will unassign the worst n assignments
-	public void unassignWorst(int n) {
-		
-		// Sanity check
-		assert n <= numLectures : "Attempting to unassign more assignments than possible";
-		
-		HashMap<String, Assign> fixedAssignments = (HashMap<String, Assign>)environment.getFixedAssignments();
-				
-		// We want to start with the last index, but we'll be decrementing it when we access
-		int index = (int)numLectures;
-		for (int count = 0; count < n; ++count) {
-			
-			// Get the next worse assignment (the worst in case this is the first time through the loop)
-			Assign worst = rankedAssignments.get(--index);
-			
-			// Make sure we don't remove a fixed assignment
-			while (fixedAssignments.values().contains(worst)) {
-				worst = rankedAssignments.get(--index);
-			}
-			
-			//System.out.println("Unassigning " + worst.getName());
-			
-			// Remove the assignment
-			removeAssignment(worst);
-		}
-	}
 	
 	public TreeSet<Assign> extractBest(int num) {
 		
@@ -655,7 +666,7 @@ public class Solution implements SolutionInterface {
 		return unassignedLectures;
 	}
 	
-	public HashMap<Assign, TreeSet<Assign>> getConflictingAssignmentMap() {
+	public HashMap<Assign, TreeSet<Pair<Assign, Integer>>> getConflictingAssignmentMap() {
 		return conflictingAssignments;
 	}
 	
@@ -674,21 +685,20 @@ public class Solution implements SolutionInterface {
 	}
 	
 	public String toString() {
-		String result = "Solution = {\n";
+		String result = "";
 		for (Assign assign : assignmentMap.values()) {
 			result = result + assign.toString() + "\n";
 		}
-		result = result + "}\n" + "Weight is " + getPenalty(); 
 		return result;
 	}
 	
 	public String conflictMapToString() {
 		
 		String result = "Conflict map = {\n";
-		for (Map.Entry<Assign, TreeSet<Assign>> entry : conflictingAssignments.entrySet()) {
+		for (Map.Entry<Assign, TreeSet<Pair<Assign, Integer>>> entry : conflictingAssignments.entrySet()) {
 			result = result + entry.getKey().toString() + " -> ";
-			for (Assign assign : entry.getValue()) {
-				result = result + assign.toString() + " ";
+			for (Pair<Assign, Integer> pair : entry.getValue()) {
+				result = result + pair.getKey().toString() + " ";
 			}
 			result  = result + "\n";
 		}
