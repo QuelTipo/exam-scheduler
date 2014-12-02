@@ -62,7 +62,7 @@ public class SolutionGenerator {
 		
 		if (remainingLectures.size() == 0) {
 			return tempSolution;
-		}		
+		}
 		
 		while(remainingLectures.size() > 0 && System.currentTimeMillis() < endTime) {
 		
@@ -71,6 +71,22 @@ public class SolutionGenerator {
 			int randIndex = random.nextInt(remainingLectures.size());
 			Lecture tryLecture = remainingLectures.remove(randIndex);
 		
+			//first session to try is the session already assigned to a particular course.
+			//if it doesn't succeed, continue business as usual.
+			
+			Session hailMarySession = tempSolution.getSessionOfCourse(tryLecture.getCourse());
+			if (hailMarySession != null) {
+				Assign hailMaryAssign = new Assign(tryLecture, hailMarySession);
+				boolean ret = tempSolution.dumbAddAssign(hailMaryAssign);
+				if (ret) {
+					if (buildDown(tempSolution, random) != null) {
+						return tempSolution;
+					}
+				}
+				tempSolution.removeAssignment(hailMaryAssign);
+				
+			}
+			
 			
 			//get list of lengths equal to or greater than session length
 			TreeMap<Long,TreeSet<Session>> validLengths = new TreeMap<Long, TreeSet<Session>>(sessionLengths.tailMap(tryLecture.getLength(), true));
