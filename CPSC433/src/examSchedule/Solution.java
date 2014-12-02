@@ -51,7 +51,9 @@ public class Solution implements SolutionInterface {
 		}
 		
 		for (Course course : environment.getCourseList()) {
+
 			sessionsOfCourses.put(course, null);
+
 		}
 		
 		complete = numLectures == assignmentMap.size() ? true : false;
@@ -116,10 +118,10 @@ public class Solution implements SolutionInterface {
 		
 		assignmentMap.put(assign.getName(), assign);
 		unassignedLectures.remove(assign.getLecture());
+		complete = assignmentMap.size() == numLectures;
 		if (sessionsOfCourses.get(assign.getLecture().getCourse()) == null) {
 			sessionsOfCourses.put(assign.getLecture().getCourse(),assign.getSession());
 		}
-		complete = assignmentMap.size() == numLectures;
 		decreaseSessionCapacity(assign.getSession(),assign.getLecture());
 		addLectureToSession(assign.getSession(),assign.getLecture());
 		return true;

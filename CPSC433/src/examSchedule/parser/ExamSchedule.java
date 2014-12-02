@@ -117,10 +117,10 @@ public class ExamSchedule {
 		      System.err.println("Failed to write output");
 		      return;
 		    }			
-		}
-		else {
+		} else {
 			System.out.println("Failed to find anything");
 		}
+	}
 	
 	
 	/**
