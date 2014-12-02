@@ -33,6 +33,7 @@ public class Solution implements SolutionInterface {
 	private HashMap<Assign, TreeSet<Pair<Assign, Integer>>> conflictingAssignments;
 	private Vector<Assign> rankedAssignments = new Vector<Assign>((int)numLectures);
 	private TreeMap<Session,Long> currentRoomCapacities = new TreeMap<Session,Long>();
+	private TreeMap<Course,Session> sessionsOfCourses = new TreeMap<Course,Session>();
 	private TreeMap<Session, TreeSet<Lecture>> lecturesInSession = new TreeMap<Session, TreeSet<Lecture>>();
 	
 	// Default constructor
@@ -629,6 +630,10 @@ public class Solution implements SolutionInterface {
 		TreeSet<Lecture> lectures = lecturesInSession.get(session);
 		lectures.remove(lecture);
 		lecturesInSession.put(session,lectures);
+	}
+	
+	public Session getSessionOfCourse(Course course) {
+		return sessionsOfCourses.get(course);
 	}
 	
 	
