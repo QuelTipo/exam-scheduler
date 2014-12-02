@@ -38,10 +38,10 @@ Tests H1 and H4.
 is set at 3, but the session length is 2 for each of the four available sessions.
 
 ***  tc05.txt  ***
-This case should give a solution, but will have at least one violation of soft constraint 3
+This case should give a solution [penalty of 0 per Jeff]
 
 ***  tc06.txt  ***
-This case should give a solution, but will have at least one violation of soft constraint 2
+This case should give a solution [penalty of 0 per Jeff]
 
 ***  tc07.txt  ***
 This case should give a solution, but will have at least one violation of soft constraint 5
@@ -123,3 +123,28 @@ also assigned to each of the two sessions.  S6 penalty of 20 for each session
 expected because all exams are not the same duration.  S7 penalty of 5 expected
 for each session because there's an exam that does not take up the full time of the
 session.
+
+***  tc22bigV1.txt  *** 
+20 courses, 20 rooms, 20 sessions, 1050 students.  Each student is enrolled in a single course.
+The one and only solution needs to match:
+20 lectures with 5, 10, 15, ..., 95, 100 students and
+20 sessions with 5, 10, 15, ..., 95, 100 seats available capacity in the session.
+Sessions designed so that result has the following form:
+200, 300, 400, 500 level courses have exam times of 8, 11, 14, 17, respectively.
+ART, CPSC, ENGL, LAW, MATH exam days are M, T, W, Th, F, respectively.
+
+***  tc23bigV2.txt  *** 
+Solution should be possible without penalty.
+There seems to be an issue generating a solution for the previous test case,
+tc22bigV1.txt.  This new version uses only a single room with a capacity of
+100 for all 20 sessions.
+
+***  tc24bigV3.txt   ***
+add description later
+
+
+***  tc25.txt  ***
+Solution without penalty expected.
+This test case is the same as tc01.txt, except that the test is to ensure the
+program can handle a missing instructor predicate, instructor(I00000002), and
+a missing course predicate, course(MATH211).
