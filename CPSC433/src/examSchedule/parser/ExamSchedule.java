@@ -91,35 +91,38 @@ public class ExamSchedule {
 		// Create a new search and attempt to do our setup
 		Search search = new Search(env, endTime);
 		search.setup();
-		
-		// If we haven't already exceeded the time limit...
-		if (System.currentTimeMillis() < endTime) {
+		if (search.getSolveable()) {
+			// If we haven't already exceeded the time limit...
+			if (System.currentTimeMillis() < endTime) {
 			
-			// Begin the hunt!
-			search.letsSearching();
-		}
+				// Begin the hunt!
+				search.letsSearching();
+			}
 		
-		// Either way, we need to report what we've got now
-		examSchedule.Solution bestSolution = search.getBestSolution();
-		if (bestSolution != null) {
+			// Either way, we need to report what we've got now
+			examSchedule.Solution bestSolution = search.getBestSolution();
+			if (bestSolution != null) {
 			
-			String output = bestSolution.toString();
+				String output = bestSolution.toString();
 
-			System.out.println(search.getBestSolution().toString());
-			System.out.println(search.getBestSolution().getPenalty());
+				System.out.println(search.getBestSolution().toString());
+				System.out.println(search.getBestSolution().getPenalty());
 
-		    BufferedWriter writer;
-		    try {
-		      writer = new BufferedWriter(new FileWriter(outFileName));
-		      writer.write(output);
-		      writer.close();
-		    }
-		    catch (IOException e) {
-		      System.err.println("Failed to write output");
-		      return;
-		    }			
+				BufferedWriter writer;
+				try {
+					writer = new BufferedWriter(new FileWriter(outFileName));
+					writer.write(output);
+					writer.close();
+				}
+				catch (IOException e) {
+					System.err.println("Failed to write output");
+					return;
+				}			
+			} else {
+				System.out.println("Failed to find anything");
+			}
 		} else {
-			System.out.println("Failed to find anything");
+			System.out.println("Problem set is unsolveable");
 		}
 	}
 	

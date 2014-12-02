@@ -17,6 +17,7 @@ public class Search {
 	private SolutionGenerator generator;
 	private Vector<Solution> solutions;
 	private Solution bestSolution;
+	private boolean solveable = true;
 	private long endTime;
 	
 	// Default constructor
@@ -44,6 +45,9 @@ public class Search {
 					// If we succeed, rank the assignments and add it to our list of solutions
 					solution.rankAssignments();
 					solutions.add(solution);
+				} else {
+					solveable = false;
+					break;
 				}
 			}
 	
@@ -199,6 +203,10 @@ public class Search {
 	public Solution getBestSolution() {
 		
 		return bestSolution;
+	}
+	
+	public boolean getSolveable() {
+		return solveable;
 	}
 	
 }
