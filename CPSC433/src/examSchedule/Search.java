@@ -37,11 +37,13 @@ public class Search {
 			// Begin by populating our solution set with random, valid solutions
 			for (int i = 0; i < 40; ++i) {
 				
+				// Generate a new solution
 				Solution solution = generator.buildSolution();
 				if (solution != null) {
 					
-					solutions.add(solution);
+					// If we succeed, rank the assignments and add it to our list of solutions
 					solution.rankAssignments();
+					solutions.add(solution);
 				}
 			}
 	
@@ -56,54 +58,8 @@ public class Search {
 		}
 	}
 	
-	public void KontrolCaller(long timeLimit) {
-		//calls Kontrol repeatedly until the time runs out. 
-		//Compare with letsSearching. 
-		
-		long currentTime = System.currentTimeMillis();
-		long endTime = currentTime + timeLimit;
-		for (; currentTime < endTime; currentTime = System.currentTimeMillis()) {
-			System.out.println("<Dial Up Noises>: Time #" + (timeLimit-(endTime-currentTime)));
-			Kontrol();
-		}
-	}
 	
-	private void Kontrol() {
-		//Determine which extension rule to do: Crossover or Mutation
-		
-		/*
-		 * CURRENT PROBLEMS: 
-		 * 
-		 * tc02.txt causes index out of bounds error because solutions is empty. 
-		 * 
-		 * */
-		
-		/*Define currentFact, bestFact and worstFact initialized to the first entry of the fact set*/
-		Solution currentFact = solutions.firstElement();
-		Solution worstFact = currentFact;
-		
-		int ratio = 2; //The worst fact must be more than ratio times worse than the best fact in order to crossover.
-						//Change this if the ratio must be lowered. 
-		
-		for (int i = 1; i <= solutions.size()-1; i++) { //i is 1 because we already got the first element when we got currentFact.
-			if (worstFact.getPenalty() < currentFact.getPenalty()) {
-				worstFact = currentFact;
-			}
-			currentFact = solutions.get(i);
-		}
-		
-		if (ratio * bestSolution.getPenalty() < worstFact.getPenalty()) { //if the worst fact is at least ratio times worse than the best
-			Solution crossover = dumbCrossover(bestSolution, worstFact);
-			solutions.add(crossover);
-		} else {
-			Random rnd = new Random();
-			Solution mutation = dumbMutation(solutions.get(rnd.nextInt(solutions.size()))); //Else, dumb mutate a random entry of solutions.
-			solutions.add(mutation);
-		}
-	}
-	
-	//This version of Kontrol is very lazy and will just randomly do things. Once things are working
-	//with lazy Kontrol we will switch to George's smarter Kontrol 
+	// This version of Kontrol is very lazy and will just randomly do things 
 	private void lazyKontrol() {
 		
 		Random random = new Random();
@@ -111,13 +67,13 @@ public class Search {
 		
 		if (trigger < 0.7) {
 			Solution sol1 = solutions.get(random.nextInt(solutions.size()));
-			
 			Solution combination = dumbCrossover(getBestSolution(), sol1);
-			solutions.add(combination);
-		
-		} else {
-			Solution mutation = dumbMutation(solutions.get(random.nextInt(solutions.size())));
-			solutions.add(mutation);
+			sol1 = combination;
+		} 
+		else {
+			Solution solution = solutions.get(random.nextInt(solutions.size()));
+			Solution mutation = dumbMutation(solution);
+			solution = mutation;
 		}
 	}
 	
