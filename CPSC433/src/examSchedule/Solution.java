@@ -566,7 +566,7 @@ public class Solution implements SolutionInterface {
 	}
 	
 	
-	public TreeSet<Assign> extractBest(int num) {
+	public TreeSet<Assign> extractBest(int num, TreeSet<Assign> used) {
 		
 		// Sanity check
 		assert num <= numLectures : "Attempting to extract more assignments than possible";
@@ -579,12 +579,12 @@ public class Solution implements SolutionInterface {
 			
 			Assign best = rankedAssignments.get(index);
 			
-			// Make sure we're not grabbing a fixed assignment, also that we don't go out of bounds
-			while (fixedAssignments.values().contains(best) && index < numLectures) {
+			// Make sure we're not grabbing a fixed assignment or an assignment for a lecture which has already been assigned, and also that we don't go out of bounds
+			while (fixedAssignments.values().contains(best) && used.contains(best) && index < numLectures) {
 				best = rankedAssignments.get(index);
 				++index;
 			}
-			
+						
 //			System.out.println("Adding " + best.getName() + "," + best.getSession().getName());
 			
 			// Add the assignment to our set

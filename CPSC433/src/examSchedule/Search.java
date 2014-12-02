@@ -107,8 +107,8 @@ public class Search {
 		Solution mutation = new Solution(environment);
 		int numAssignments = solution.getAssignments().size();
 		
-		// Extract the best (total - n) assignments from the solution
-		TreeSet<Assign> best = solution.extractBest(numAssignments / 3);
+		// Extract the best 2/3 assignments from the solution
+		TreeSet<Assign> best = solution.extractBest((2 * numAssignments) / 3, new TreeSet<Assign>());
 		
 		// Add the assignments we want to keep to our mutation
 		for (Assign assign : best) {
@@ -155,7 +155,7 @@ public class Search {
 		int numBetter = (numLectures - numFixed) - numWorse;
 	
 		// Get the best n from the better solution that aren't fixed assignments
-		TreeSet<Assign> bestAssignments = better.extractBest(numBetter);
+		TreeSet<Assign> bestAssignments = better.extractBest(numBetter, new TreeSet<Assign>());
 		
 		// Add them to our new solution
 		// Every member of this set should be added without problems
@@ -166,7 +166,7 @@ public class Search {
 		}
 		
 		// Now get the best m from the worse solution that aren't fixed assignments
-		bestAssignments = worse.extractBest(numWorse);
+		bestAssignments = worse.extractBest(numWorse, bestAssignments);
 		
 		// Attempt to add them to our new solution
 		for (Assign assign : bestAssignments) {
