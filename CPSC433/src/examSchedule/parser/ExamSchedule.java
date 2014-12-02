@@ -103,8 +103,10 @@ public class ExamSchedule {
 		examSchedule.Solution bestSolution = search.getBestSolution();
 		if (bestSolution != null) {
 			
-		    String output = bestSolution.toString();
-		    
+			System.out.println(search.getBestSolution().toString());
+			System.out.println(search.getBestSolution().getPenalty());
+
+			String output = bestSolution.toString();
 		    BufferedWriter writer;
 		    try {
 		      writer = new BufferedWriter(new FileWriter(outFileName));
@@ -116,7 +118,7 @@ public class ExamSchedule {
 		      return;
 		    }			
 		}
-		else
+		else {
 			System.out.println("Failed to find anything");
 		}
 	}

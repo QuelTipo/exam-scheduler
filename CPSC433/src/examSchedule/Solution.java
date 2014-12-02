@@ -33,6 +33,7 @@ public class Solution implements SolutionInterface {
 	private HashMap<Assign, TreeSet<Pair<Assign, Integer>>> conflictingAssignments;
 	private Vector<Assign> rankedAssignments = new Vector<Assign>((int)numLectures);
 	private TreeMap<Session,Long> currentRoomCapacities = new TreeMap<Session,Long>();
+	private TreeMap<Course,Session> sessionsOfCourses = new TreeMap<Course,Session>();
 	private TreeMap<Session, TreeSet<Lecture>> lecturesInSession = new TreeMap<Session, TreeSet<Lecture>>();
 	
 	// Default constructor
@@ -47,6 +48,10 @@ public class Solution implements SolutionInterface {
 		for (Session session : sessionList) {
 			currentRoomCapacities.put(session, new Long(session.getRoom().getCapacity()));
 			lecturesInSession.put(session, new TreeSet<Lecture>());
+		}
+		
+		for (Course course : environment.getCourseList()) {
+			sessionsOfCourses.put(course, null);
 		}
 		
 		complete = numLectures == assignmentMap.size() ? true : false;
@@ -95,6 +100,9 @@ public class Solution implements SolutionInterface {
 		assignmentMap = proposedAssignmentMap;
 		unassignedLectures.remove(assign.getLecture());
 		addLectureToSession(assign.getSession(),assign.getLecture());
+		if (sessionsOfCourses.get(assign.getLecture().getCourse()) == null) {
+			sessionsOfCourses.put(assign.getLecture().getCourse(),assign.getSession());
+		}
 		decreaseSessionCapacity(assign.getSession(),assign.getLecture());
 		complete = assignmentMap.size() == numLectures;
 		return true;
@@ -108,6 +116,9 @@ public class Solution implements SolutionInterface {
 		
 		assignmentMap.put(assign.getName(), assign);
 		unassignedLectures.remove(assign.getLecture());
+		if (sessionsOfCourses.get(assign.getLecture().getCourse()) == null) {
+			sessionsOfCourses.put(assign.getLecture().getCourse(),assign.getSession());
+		}
 		complete = assignmentMap.size() == numLectures;
 		decreaseSessionCapacity(assign.getSession(),assign.getLecture());
 		addLectureToSession(assign.getSession(),assign.getLecture());
