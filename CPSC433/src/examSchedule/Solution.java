@@ -696,7 +696,7 @@ public class Solution implements SolutionInterface {
 	}
 	
 	public String toString() {
-		String result = "";
+		String result = "// Solution penalty is " + getPenalty() + "\n";
 		for (Assign assign : assignmentMap.values()) {
 			result = result + assign.toString() + "\n";
 		}
