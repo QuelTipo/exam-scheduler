@@ -118,7 +118,7 @@ public class ExamSchedule {
 		}
 		else
 			System.out.println("Failed to find anything");
-		
+		}
 	}
 	
 	/**
