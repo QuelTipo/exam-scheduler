@@ -42,35 +42,24 @@ public class ExamSchedule {
 
 		final Environment env = Environment.get();
 
-		//long startTime = System.currentTimeMillis();
-
+		
 		String fromFile = null;
 
-		//intialize the the environment from the filename in the first argument on the command line if it's there
-		if (args.length>0) {
+		//  If we have exactly 2 paramters...
+		if (args.length == 2) {
+			
+			// intialize the the environment from the filename in the first argument on the command line if it's there
 			fromFile = args[0];
-			env.fromFile(fromFile);			
+			env.fromFile(fromFile);		
+			
+			// Determine the end time, leaving ourselves some time to write to file
+			long endTime = System.currentTimeMillis() + new Long(args[1]).longValue() - 25;
+
+			// let's assume it's a time in milliseconds: we'll do a search on it.
+			doSearch(env, fromFile+".out", endTime);
 		}
 		else {
 			System.out.println("Synopsis: ExamSchedule <env-file> [<solution-file>|<time-in-ms>]");
-		}
-
-
-		// if there's a second argument on the command line, it's either a solution file name or a time in milliseconds to limit our run to...
-		if (args.length>1) {
-			// let's assume it's a time in milliseconds: we'll do a search on it.
-			try {
-				long timeLimit = new Long(args[1]).longValue();
-				doSearch(env, fromFile+".out", timeLimit);
-			}
-			// not a time, so it must be a filename to read a solution to evaluate from...
-			catch (NumberFormatException ex) {
-				env.setCurrentSolution(new TempSolution(args[1]));
-			}
-		}
-		// The command line had either no arguments or just a input data file (from which we've already initialized (or attempted), so we'll enter command mode...
-		else {
-			commandMode(env);
 		}
 	}
 
@@ -83,11 +72,8 @@ public class ExamSchedule {
 	 * @param outFileName The name of the file to output the solution to.
 	 * @param timeLimit The number of milliseconds to limit he search to.
 	 */
-	public static void doSearch(final Environment env, final String outFileName, final long timeLimit) {
-		
-		// Figure out when we need to end
-		long endTime = System.currentTimeMillis() + timeLimit;
-		
+	public static void doSearch(final Environment env, final String outFileName, final long endTime) {
+				
 		// Create a new search and attempt to do our setup
 		Search search = new Search(env, endTime);
 		search.setup();
