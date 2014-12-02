@@ -132,11 +132,12 @@ public class ExamSchedule {
 		
 		// Either way, we need to report what we've got now
 		examSchedule.Solution bestSolution = search.getBestSolution();
-		if (bestSolution != null)
+		if (bestSolution != null) {
 			System.out.println(search.getBestSolution().toString());
-		else
+			System.out.println(search.getBestSolution().getPenalty());
+		} else {
 			System.out.println("Failed to find anything");
-		
+		}
 	}
 	
 	/**
