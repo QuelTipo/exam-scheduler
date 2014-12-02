@@ -1,15 +1,9 @@
 package examSchedule.parser;
 
-import examSchedule.Assign;
 import examSchedule.Environment;
-import examSchedule.SolutionGenerator;
 import examSchedule.Search;
 
 import java.io.*;
-import java.util.Collection;
-import java.util.Random;
-import java.util.TreeSet;
-import java.util.Vector;
 
 /**
  * This class can function as the main() for your assignment program.  Use it in conjunction
@@ -55,30 +49,14 @@ public class ExamSchedule {
 		//intialize the the environment from the filename in the first argument on the command line if it's there
 		if (args.length>0) {
 			fromFile = args[0];
-			env.fromFile(fromFile);
-			
-		    
-		    String output = env.getDetails();
-		    
-		    BufferedWriter writer;
-		    try {
-		      writer = new BufferedWriter(new FileWriter(fromFile+".out"));
-		      writer.write(output);
-		      writer.close();
-		    }
-		    catch (IOException e) {
-		      System.err.println("Failed to write output");
-		      return;
-		    }			
-			
+			env.fromFile(fromFile);			
 		}
 		else {
 			System.out.println("Synopsis: ExamSchedule <env-file> [<solution-file>|<time-in-ms>]");
 		}
 
 
-    // if there's a second argument on the command line, it's either 
-		// a solution file name or a time in milliseconds to limit our run to...
+		// if there's a second argument on the command line, it's either a solution file name or a time in milliseconds to limit our run to...
 		if (args.length>1) {
 			// let's assume it's a time in milliseconds: we'll do a search on it.
 			try {
@@ -89,17 +67,8 @@ public class ExamSchedule {
 			catch (NumberFormatException ex) {
 				env.setCurrentSolution(new TempSolution(args[1]));
 			}
-
-			// if we did something usefull above, print the results...
-			if (env.getCurrentSolution()!=null) {
-				//System.out.println(currentSolution.toString());
-				System.out.println(((Solution)env.getCurrentSolution()).getName()+": isSolved()    -> "+env.getCurrentSolution().isSolved());
-				System.out.println(((Solution)env.getCurrentSolution()).getName()+": getGoodness() -> "+env.getCurrentSolution().getGoodness());
-			}
-
 		}
-		// The command line had either no arguments or just a input data file (from which we've
-		// already initialized (or attempted), so we'll enter command mode...
+		// The command line had either no arguments or just a input data file (from which we've already initialized (or attempted), so we'll enter command mode...
 		else {
 			commandMode(env);
 		}
@@ -132,8 +101,21 @@ public class ExamSchedule {
 		
 		// Either way, we need to report what we've got now
 		examSchedule.Solution bestSolution = search.getBestSolution();
-		if (bestSolution != null)
-			System.out.println(search.getBestSolution().toString());
+		if (bestSolution != null) {
+			
+		    String output = bestSolution.toString();
+		    
+		    BufferedWriter writer;
+		    try {
+		      writer = new BufferedWriter(new FileWriter(outFileName));
+		      writer.write(output);
+		      writer.close();
+		    }
+		    catch (IOException e) {
+		      System.err.println("Failed to write output");
+		      return;
+		    }			
+		}
 		else
 			System.out.println("Failed to find anything");
 		
