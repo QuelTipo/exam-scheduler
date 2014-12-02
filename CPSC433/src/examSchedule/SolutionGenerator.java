@@ -1,7 +1,11 @@
+/*
+ * This class is used to generate random solutions
+ * The main functionality is a recursive method, buildDown, which assigns one random lecture to one random, valid session, and recurses, returning the complete solution or null
+ * 
+ */
+
 package examSchedule;
 
-import java.util.Collection;
-import java.util.NavigableMap;
 import java.util.Random;
 import java.util.TreeMap;
 import java.util.TreeSet;

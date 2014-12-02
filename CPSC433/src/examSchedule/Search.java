@@ -1,3 +1,10 @@
+/*
+ * This class implements the the actual search functionality in the project
+ * Search setup is done by generating 40 random solutions from which to start
+ * While there is remaining time, we repeatedly call kontrol, and either mutate a solution, or combine 2 solutions
+ * 
+ */
+
 package examSchedule;
 
 import java.util.TreeSet;
@@ -78,7 +85,6 @@ public class Search {
 		int ratio = 2; //The worst fact must be more than ratio times worse than the best fact in order to crossover.
 						//Change this if the ratio must be lowered. 
 		
-
 		for (int i = 1; i <= solutions.size()-1; i++) { //i is 1 because we already got the first element when we got currentFact.
 			if (worstFact.getPenalty() < currentFact.getPenalty()) {
 				worstFact = currentFact;
@@ -118,7 +124,6 @@ public class Search {
 	// This method will continually call kontrol while there is still time left on the clock
 	public void letsSearching() {
 		
-
 		int counter = 1;
 		while (System.currentTimeMillis() < endTime) {
 			System.out.println("Assuming direct kontrol! Time #" + counter);
