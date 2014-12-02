@@ -121,7 +121,7 @@ public class ExamSchedule {
 		else {
 			System.out.println("Failed to find anything");
 		}
-	}
+	
 	
 	/**
 	 * Run in "command mode" -- continuously reading predicates from the command line.  If a predicate

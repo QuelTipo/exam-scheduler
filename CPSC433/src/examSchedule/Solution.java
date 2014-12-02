@@ -642,6 +642,10 @@ public class Solution implements SolutionInterface {
 		lecturesInSession.put(session,lectures);
 	}
 	
+	public Session getSessionOfCourse(Course course) {
+		return sessionsOfCourses.get(course);
+	}
+	
 	
 	// Return the completeness of a solution
 	public boolean isComplete() {
