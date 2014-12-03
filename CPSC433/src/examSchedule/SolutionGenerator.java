@@ -71,24 +71,25 @@ public class SolutionGenerator {
 			int randIndex = random.nextInt(remainingLectures.size());
 			Lecture tryLecture = remainingLectures.remove(randIndex);
 		
-			//first session to try is the session already assigned to a particular course.
-			//if it doesn't succeed, continue business as usual.
-			
-			Session hailMarySession = tempSolution.getSessionOfCourse(tryLecture.getCourse());
-			if (hailMarySession != null) {
-				if (tryLecture.getClassSize() <= tempSolution.getCapacityOfSession(hailMarySession)) {
-					Assign hailMaryAssign = new Assign(tryLecture, hailMarySession);
-				
-					boolean ret = tempSolution.dumbAddAssign(hailMaryAssign);
-					if (ret) {
-						if (buildDown(tempSolution, random) != null) {
-							return tempSolution;
-						}
-						tempSolution.removeAssignment(hailMaryAssign);
-					}
-					
-				}				
-			}
+//			//first session to try is the session already assigned to a particular course.
+//			//if it doesn't succeed, continue business as usual.
+//			
+//			Session hailMarySession = tempSolution.getSessionOfCourse(tryLecture.getCourse());
+//			if (hailMarySession != null) {
+//				
+//				if (tryLecture.getClassSize() <= tempSolution.getCapacityOfSession(hailMarySession)) {
+//					Assign hailMaryAssign = new Assign(tryLecture, hailMarySession);
+//				
+//					boolean ret = tempSolution.dumbAddAssign(hailMaryAssign);
+//					if (ret) {
+//						if (buildDown(tempSolution, random) != null) {
+//							return tempSolution;
+//						}
+//						tempSolution.removeAssignment(hailMaryAssign);
+//					}
+//					
+//				}				
+//			}
 			
 			
 			//get list of lengths equal to or greater than session length
