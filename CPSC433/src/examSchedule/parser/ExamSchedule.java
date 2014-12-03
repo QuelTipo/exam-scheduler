@@ -92,7 +92,6 @@ public class ExamSchedule {
 				String output = bestSolution.toString();
 
 				System.out.println(search.getBestSolution().toString());
-				System.out.println(search.getBestSolution().getPenalty());
 
 				BufferedWriter writer;
 				try {
