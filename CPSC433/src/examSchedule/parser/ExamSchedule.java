@@ -107,7 +107,7 @@ public class ExamSchedule {
 				System.out.println("Failed to find anything");
 			}
 		} else {
-			System.out.println("Problem set is unsolveable");
+			System.out.println("Failed to find anything");
 		}
 	}
 	
