@@ -76,15 +76,18 @@ public class SolutionGenerator {
 			
 			Session hailMarySession = tempSolution.getSessionOfCourse(tryLecture.getCourse());
 			if (hailMarySession != null) {
-				Assign hailMaryAssign = new Assign(tryLecture, hailMarySession);
-				boolean ret = tempSolution.dumbAddAssign(hailMaryAssign);
-				if (ret) {
-					if (buildDown(tempSolution, random) != null) {
-						return tempSolution;
-					}
-				}
-				tempSolution.removeAssignment(hailMaryAssign);
+				if (tryLecture.getClassSize() <= tempSolution.getCapacityOfSession(hailMarySession)) {
+					Assign hailMaryAssign = new Assign(tryLecture, hailMarySession);
 				
+					boolean ret = tempSolution.dumbAddAssign(hailMaryAssign);
+					if (ret) {
+						if (buildDown(tempSolution, random) != null) {
+							return tempSolution;
+						}
+						tempSolution.removeAssignment(hailMaryAssign);
+					}
+					
+				}				
 			}
 			
 			
@@ -103,7 +106,6 @@ public class SolutionGenerator {
 					randIndex = random.nextInt(sessionsToTry.size());
 					Session tempSession = sessionsToTry.remove(randIndex);
 				
-
 					Assign tryAssign = new Assign(tryLecture, tempSession);
 					boolean ret = tempSolution.dumbAddAssign(tryAssign);
 				
@@ -114,11 +116,9 @@ public class SolutionGenerator {
 						if (buildDown(tempSolution, random) != null) {
 							return tempSolution;
 						}
+						tempSolution.removeAssignment(tryAssign);
 					}
-					//if nothing was passed back up, then let's try a different session
-					
-					tempSolution.removeAssignment(tryAssign);
-										
+					//if nothing was passed back up, then let's try a different session						
 				}			
 			}
 		}

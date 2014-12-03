@@ -194,7 +194,9 @@ public class Search {
 			bestSolution = combination;
 		}
 		
-		solutions.remove(worse);
+		if (worse != bestSolution) {
+			solutions.remove(worse);
+		}
 		
 		return combination;
 	}

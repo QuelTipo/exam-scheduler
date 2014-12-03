@@ -632,6 +632,10 @@ public class Solution implements SolutionInterface {
 		return sessionVector;
 	}
 	
+	public long getCapacityOfSession(Session session) {
+		return currentRoomCapacities.get(session);
+	}
+	
 	public void addLectureToSession(Session session, Lecture lecture) {
 		TreeSet<Lecture> lectures = lecturesInSession.get(session);
 		lectures.add(lecture);
