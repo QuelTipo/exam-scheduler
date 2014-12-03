@@ -73,17 +73,17 @@ public class Search {
 		if (trigger < 0.1) { //mutate a solution
 			Solution solution = solutions.get(random.nextInt(solutions.size()));
 			Solution mutation = dumbMutation(solution);
-			solutions.add(mutation);
+			solution = mutation;
 		} else if (trigger < 0.55) { //crossover the best solution and random solution
 			Solution sol1 = solutions.get(random.nextInt(solutions.size()));
 			Solution combination = dumbCrossover(getBestSolution(), sol1);
-			solutions.add(combination);
+			sol1 = combination;
 		} 
 		else { //crossover two random solutions
 			Solution sol1 = solutions.get(random.nextInt(solutions.size()));
 			Solution sol2 = solutions.get(random.nextInt(solutions.size()));
 			Solution combination = dumbCrossover(sol1, sol2);
-			solutions.add(combination);
+			sol1 = combination;
 		}
 	}
 	
