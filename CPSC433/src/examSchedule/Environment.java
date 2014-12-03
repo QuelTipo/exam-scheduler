@@ -313,7 +313,7 @@ public class Environment extends PredicateReader implements ExamSchedulePredicat
 		// Ensure the lecture object is there
 		Lecture lecture = f_lecture(c, lec);
 		if (lecture == null) {
-			lecture = new Lecture(course, lec);
+			lecture = new Lecture(course, lec, instructor, length);
 			lectureList.add(lecture);
 		}
 		// So at this point there is a lecture, which we may have to overwrite
