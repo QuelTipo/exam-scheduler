@@ -89,8 +89,12 @@ public class ExamSchedule {
 			examSchedule.Solution bestSolution = search.getBestSolution();
 			if (bestSolution != null) {
 			
+				if (bestSolution.isValidSolution() == false)
+					System.out.println("solution is invalid");
+				
 				String output = bestSolution.toString();
 
+				
 				System.out.println(search.getBestSolution().toString());
 
 				BufferedWriter writer;

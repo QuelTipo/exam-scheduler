@@ -75,41 +75,6 @@ public class Solution implements SolutionInterface {
 	}
 		
 	
-	// Add an assignment to a solution
-	public boolean addAssignment(Assign assign) {
-		
-		// Create a new map of assignment names to assignments
-		TreeMap<String, Assign> proposedAssignmentMap = new TreeMap<String, Assign>(assignmentMap);
-		proposedAssignmentMap.put(assign.getName(), assign);
-				
-		TreeSet<Assign> proposedAssignments = (TreeSet<Assign>)proposedAssignmentMap.values();
-		
-		// If the proposed solution is a partial solution
-		if (proposedAssignmentMap.size() < numLectures) {
-			// Then return false if it is invalid
-			if (isValidSolution(proposedAssignments, false) == false)
-				return false;
-		}
-		// Otherwise it should be a complete solution
-		else {
-			// Return false is it is invalid
-			if (isValidSolution(proposedAssignments, true) == false)
-				return false;
-		}
-
-		// If we've gotten to here, we know we're dealing with at least a valid partial solution
-		// Update our tree set of assignments and return; 
-		assignmentMap = proposedAssignmentMap;
-		unassignedLectures.remove(assign.getLecture());
-		addLectureToSession(assign.getSession(),assign.getLecture());
-		if (sessionsOfCourses.get(assign.getLecture().getCourse()) == null) {
-			sessionsOfCourses.put(assign.getLecture().getCourse(),assign.getSession());
-		}
-		decreaseSessionCapacity(assign.getSession(),assign.getLecture());
-		complete = assignmentMap.size() == numLectures;
-		return true;
-	}
-	
 	// This method does none of the checking required in the above method
 	public boolean dumbAddAssign(Assign assign) {
 		
@@ -145,28 +110,21 @@ public class Solution implements SolutionInterface {
 	
 	
 	// Ensure the solution is a valid solution, partial or complete
-	public boolean isValidSolution(TreeSet<Assign> proposedAssignments, boolean complete) {
+	public boolean isValidSolution() {
 		
 		for (Lecture lecture : environment.getLectureList()) {
 			int numAssigns = 0;
-			for (Assign assign : proposedAssignments) {
+			for (Assign assign : assignmentMap.values()) {
 				if (assign.getLecture().equals(lecture))
 					numAssigns++;
 			}
-			// In the case of a partial solution, ensure no lecture is assigned to more than one exam session
-			if (!complete) {
-				if (numAssigns != 1)
-					return false;
-			}
-			// In the case of a complete solution, ensure that every lecture is assigned exactly once
-			else {
-				if (numAssigns > 1)
-					return false;
-			}
+			// Ensure that every lecture is assigned exactly once
+			if (numAssigns > 1)
+				return false;
 		}
 		
 		// Ensure that the number of students writing an exam in any room is less than or equal to the capacity of that room
-		for (Assign assign : proposedAssignments) {
+		for (Assign assign : assignmentMap.values()) {
 			Session session = assign.getSession();
 			TreeSet<Lecture> sessionLectures = lecturesInSession.get(session);
 			long numberOfStudents = 0;
@@ -181,7 +139,7 @@ public class Solution implements SolutionInterface {
 
 		
 		// Ensure that every lecture's required time is less than or equal to the length of the session it is assigned to
-		for (Assign assign : proposedAssignments) {
+		for (Assign assign : assignmentMap.values()) {
 			Lecture lecture = assign.getLecture();
 			Session session = assign.getSession();
 			if (lecture.getLength() > session.getLength())
