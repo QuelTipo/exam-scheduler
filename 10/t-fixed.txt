@@ -1,0 +1,27 @@
+// Lectures ********************************
+lecture(CPSC433,L01,Kremer,3)
+lecture(CPSC433,L02,Kremer,2)
+lecture(CPSC599.68,L01,Kremer,3)
+
+// Students ****************************************
+enrolled(Alice,[CPSC433,L02,CPSC599.68,L01])
+enrolled(Bob,[CPSC433,L01,CPSC599.68,L01])
+enrolled(Carol,[CPSC433,L01])
+
+// Rooms **************************
+capacity(JackSimpson,2)
+capacity(RedGym     ,2)
+capacity(GoldGym    ,3)
+
+// Sessions ****************
+session(M1-08-G,GoldGym    ,M1,8,3)
+session(M1-11-G,GoldGym    ,M1,11,2)
+session(M1-15-G,GoldGym    ,M1,15,2)
+session(M1-18-G,GoldGym    ,M1,18,3)
+session(M1-09-R,RedGym     ,M1,9,3)
+session(M1-08-J,JackSimpson,M1,8,3)
+
+// Fixed Assignments
+assign(CPSC433, L01, M1-18-G)
+assign(CPSC433, L02, M1-15-G)
+assign(CPSC599.68, L01, M1-08-G)

@@ -1,0 +1,34 @@
+// --theEnvironment : Environment-----------------------------
+// INSTRUCTORS
+instructor(I00494656)
+
+// COURSES
+course(ASTR521)
+lecture(ASTR521,L01)
+instructs(I00494656,ASTR521,L01)
+examLength(ASTR521,L01,3)
+
+
+// STUDENTS
+student(S03884869)
+enrolled(S03884869,ASTR521,L01)
+
+
+// DAYS
+day(M0)
+
+// ROOMS
+room(KNES246)
+capacity(KNES246,10)
+
+
+// SESSIONS
+session(M0-8-3-KNES246)
+roomAssign(M0-8-3-KNES246,KNES246)
+at(M0-8-3-KNES246,M0,8,2)
+
+
+// FIXED ASSIGNMENTS
+
+// --END theEnvironment : Environment-------------------------
+
