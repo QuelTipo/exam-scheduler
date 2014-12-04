@@ -117,8 +117,10 @@ public class SolutionGenerator {
 						if (buildDown(tempSolution, random) != null) {
 							return tempSolution;
 						}
+						
 						tempSolution.removeAssignment(tryAssign);
 					}
+					
 					//if nothing was passed back up, then let's try a different session						
 				}			
 			}

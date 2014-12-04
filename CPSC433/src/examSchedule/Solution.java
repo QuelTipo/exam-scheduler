@@ -81,15 +81,20 @@ public class Solution implements SolutionInterface {
 		if (assignmentMap.containsKey(assign.getName()))
 			return false;
 		
-		assignmentMap.put(assign.getName(), assign);
-		unassignedLectures.remove(assign.getLecture());
-		complete = assignmentMap.size() == numLectures;
-		if (sessionsOfCourses.get(assign.getLecture().getCourse()) == null) {
-			sessionsOfCourses.put(assign.getLecture().getCourse(),assign.getSession());
+		if (assign.getLecture().getClassSize() <= currentRoomCapacities.get(assign.getSession())) {
+		
+			assignmentMap.put(assign.getName(), assign);
+			unassignedLectures.remove(assign.getLecture());
+			complete = assignmentMap.size() == numLectures;
+			if (sessionsOfCourses.get(assign.getLecture().getCourse()) == null) {
+				sessionsOfCourses.put(assign.getLecture().getCourse(),assign.getSession());
+			}
+			decreaseSessionCapacity(assign.getSession(),assign.getLecture());
+			addLectureToSession(assign.getSession(),assign.getLecture());
+			return true;
+		} else {
+			return false;
 		}
-		decreaseSessionCapacity(assign.getSession(),assign.getLecture());
-		addLectureToSession(assign.getSession(),assign.getLecture());
-		return true;
 	}
 	
 	

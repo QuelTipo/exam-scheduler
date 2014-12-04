@@ -74,7 +74,7 @@ public class Search {
 			Solution solution = solutions.get(random.nextInt(solutions.size()));
 			Solution mutation = dumbMutation(solution);
 			solutions.add(mutation);
-		} else if (trigger < 0.55) { //crossover the best solution and random solution
+		//} else if (trigger < 0.55) { //crossover the best solution and random solution
 			Solution sol1 = solutions.get(random.nextInt(solutions.size()));
 			Solution combination = dumbCrossover(getBestSolution(), sol1);
 			solutions.add(combination);
