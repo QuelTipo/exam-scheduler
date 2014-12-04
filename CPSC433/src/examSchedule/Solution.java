@@ -119,8 +119,10 @@ public class Solution implements SolutionInterface {
 					numAssigns++;
 			}
 			// Ensure that every lecture is assigned exactly once
-			if (numAssigns > 1)
+			if (numAssigns > 1) {
+				System.out.println(lecture.toString() + "assigned " + numAssigns + " times");
 				return false;
+			}
 		}
 		
 		// Ensure that the number of students writing an exam in any room is less than or equal to the capacity of that room
@@ -132,6 +134,7 @@ public class Solution implements SolutionInterface {
 				numberOfStudents += lecture.getClassSize();
 			}
 			if (numberOfStudents > session.getRoom().getCapacity()) {
+				System.out.println(session.toString() + " has capacity of " + session.getRoom().getCapacity() + " and has " + numberOfStudents + " students");
 				return false;
 			}
 			
@@ -142,8 +145,10 @@ public class Solution implements SolutionInterface {
 		for (Assign assign : assignmentMap.values()) {
 			Lecture lecture = assign.getLecture();
 			Session session = assign.getSession();
-			if (lecture.getLength() > session.getLength())
+			if (lecture.getLength() > session.getLength()) {
+				System.out.println("length mismatch between " + lecture.toString() + " and " + session.toString());
 				return false;
+			}
 		}
 				
 		// If we reach here, we're dealing with a valid partial solution
