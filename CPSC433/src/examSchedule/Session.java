@@ -89,6 +89,9 @@ public class Session extends Entity {
 	
 	public boolean overlapsWith(Session session) {
 		
+		if (this.equals(session))
+			return false;
+			
 		// If they're on the same day in the same room
 		if (day.equals(session.getDay()) && room.equals(session.getRoom())) {
 			
